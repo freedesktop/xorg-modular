@@ -69,6 +69,7 @@ build_proto() {
     build proto fontsproto
     build proto glproto
     build proto inputproto
+    build proto lg3dproto
     build proto kbproto
     build proto pmproto
     build proto printproto
@@ -140,6 +141,7 @@ build_lib() {
     build lib liboldX
     build lib libSM
     build lib libXt
+    build lib libXlg3d
     build lib libXmu
     build lib libXpm
     build lib libXp
