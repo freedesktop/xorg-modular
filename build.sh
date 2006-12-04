@@ -141,13 +141,13 @@ build_lib() {
     build lib liboldX
     build lib libSM
     build lib libXt
-    build lib libXlg3d
     build lib libXmu
     build lib libXpm
     build lib libXp
     build lib libXaw
     build lib libXfixes
     build lib libXcomposite
+    build lib libXlg3d
     build lib libXrender
     build lib libXdamage
     build lib libXcursor
