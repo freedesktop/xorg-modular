@@ -37,6 +37,13 @@
     <branch repo="git.freedesktop.org" module="xorg/util/macros" checkoutdir="xorg/util/macros" />
   </autotools>
 
+  <autotools id="makedepend">
+    <dependencies>
+      <dep package="macros"/>
+    </dependencies>
+    <branch repo="git.freedesktop.org" module="xorg/util/makedepend" checkoutdir="xorg/util/makedepend" />
+  </autotools>
+
   <autotools id="xorg-sgml-doctools">
     <branch repo="git.freedesktop.org"
 	module="xorg/doc/xorg-sgml-doctools"
@@ -549,6 +556,7 @@
   <autotools id="libGL" supports-non-srcdir-builds="no" check-target="false" skip-autogen="never">
     <branch repo="git.freedesktop.org" module="mesa/mesa" checkoutdir="mesa/mesa"/>
     <dependencies>
+      <dep package="makedepend"/>
       <dep package="xf86driproto"/>
       <dep package="dri2proto"/>
       <dep package="glproto"/>
