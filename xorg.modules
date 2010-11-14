@@ -1487,6 +1487,7 @@
       <dep package="xf86-video-s3"/>
       <dep package="xf86-video-s3virge"/>
       <dep package="xf86-video-siliconmotion"/>
+      <dep package="xf86-video-sunbw2"/>
       <dep package="xf86-video-v4l"/>
     </dependencies>
   </metamodule>
@@ -1527,7 +1528,6 @@
       <dep package="xf86-video-savage"/>
       <dep package="xf86-video-sis"/>
       <dep package="xf86-video-sisusb"/>
-      <dep package="xf86-video-sunbw2"/>
       <dep package="xf86-video-suncg14"/>
       <dep package="xf86-video-suncg3"/>
       <dep package="xf86-video-suncg6"/>
@@ -1558,7 +1558,6 @@
 
   <metamodule id="xorg-sun-drivers">
     <dependencies>
-      <dep package="xf86-video-sunbw2"/>
       <dep package="xf86-video-suncg14"/>
       <dep package="xf86-video-suncg3"/>
       <dep package="xf86-video-suncg6"/>
