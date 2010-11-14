@@ -527,7 +527,8 @@
     </dependencies>
   </autotools>
 
-  <autotools id="libdrm">
+  <!-- Need nouveau API to build xf86-viedo-nouveau -->
+  <autotools id="libdrm" autogenargs="--enable-nouveau-experimental-api">
     <branch repo="git.freedesktop.org" module="mesa/drm"/>
     <dependencies>
       <dep package="macros"/>
