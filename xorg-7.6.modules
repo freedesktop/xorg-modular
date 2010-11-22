@@ -1,0 +1,2190 @@
+<?xml version="1.0"?><!--*- mode: nxml; indent-tabs-mode: nil -*-->
+<!DOCTYPE moduleset SYSTEM "moduleset.dtd">
+<?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
+<!-- TODO: what to do about doc/sgml-tools? -->
+<!-- TODO: util/cf has problems, commented out -->
+<moduleset>
+  <repository type="tarball" name="www.x.org" default="yes"
+              href="http://www.x.org/releases/individual/"/>
+  <repository type="git" name="git.freedesktop.org"
+              href="git://anongit.freedesktop.org/git/"/>
+  <repository type="tarball" name="ftp.freedesktop.org"
+              href="ftp://ftp.freedesktop.org/pub/"/>
+  <repository type="tarball" name="xcb.freedesktop.org"
+              href="http://xcb.freedesktop.org/dist/"/>
+  <repository type="tarball" name="fontconfig.org"
+              href="http://fontconfig.org/release/"/>
+  <repository type="tarball" name="dri.freedesktop.org"
+              href="http://dri.freedesktop.org/"/>
+  <repository type="tarball" name="cairographics.org"
+              href="http://cairographics.org/releases/"/>
+
+  <!-- external modules -->
+  <autotools id="fontconfig">
+    <branch module="fontconfig-2.8.0.tar.gz" version="2.8.0"
+            hash="sha1:570fb55eb14f2c92a7b470b941e9d35dbfafa716"
+            repo="fontconfig.org"/>
+  </autotools>
+
+  <autotools id="pthread-stubs">
+    <branch module="libpthread-stubs-0.3.tar.gz" version="0.3"
+            hash="sha1:7174d6a5f4b158746f020b8fc7a3e3e5438dd233"
+            repo="xcb.freedesktop.org"/>
+  </autotools>
+
+  <autotools id="xcb-proto">
+    <branch module="xcb-proto-1.6.tar.gz" version="1.6"
+            hash="sha1:f2077598adc42f7cdb77cb904ab0ac0becf69f31"
+            repo="xcb.freedesktop.org"/>
+  </autotools>
+
+  <autotools id="libxcb">
+    <branch module="libxcb-1.7.tar.gz" version="1.7"
+            hash="sha1:186e243cf4e017686172bf24275be3a32aa23928"
+            repo="xcb.freedesktop.org"/>
+    <dependencies>
+      <dep package="xcb-proto"/>
+      <dep package="pthread-stubs"/>
+      <dep package="libXau"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xcb-util">
+    <branch module="xcb-util-0.3.6.tar.gz" version="0.3.6"
+            hash="sha1:c29d6006579209bf07031e8c73c44ee7b0230540"
+            repo="xcb.freedesktop.org"/>
+  </autotools>
+
+  <!-- Need nouveau API to build xf86-video-nouveau -->
+  <autotools id="libdrm" autogenargs="--enable-nouveau-experimental-api">
+    <branch module="libdrm/libdrm-2.4.22.tar.gz" version="2.4.22"
+            hash="sha1:6b241be40daaecd7dd5aea12974657db14a12c60"
+            repo="dri.freedesktop.org"/>
+    <dependencies>
+      <dep package="macros"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="pixman">
+    <branch module="pixman-0.20.0.tar.gz" version="0.20.0"
+            hash="sha1:51f264f4e8c4594d68669fb0af81312a1f0d0598"
+            repo="cairographics.org"/>
+    <dependencies/>
+  </autotools>
+
+  <autotools id="libpciaccess">
+    <branch module="lib/libpciaccess-0.12.0.tar.gz" version="0.12.0"
+            hash="sha1:831a36f487ca1ebbf86bb4c6cc37e1d399434335"/>
+    <dependencies/>
+  </autotools>
+
+  <!-- the Mesa module, which provides libGL, libGLU, and DRI drivers -->
+  <autotools id="libGL" supports-non-srcdir-builds="no" check-target="false"
+             skip-autogen="never">
+    <branch module="mesa/7.9/MesaLib-7.9.tar.gz" version="7.9"
+            hash="sha1:77b0f1b20af3af6edcedd0bbaae62559ffc1d473"
+            checkoutdir="Mesa-7.9" repo="ftp.freedesktop.org"/>
+    <dependencies>
+      <dep package="makedepend"/>
+      <dep package="xf86driproto"/>
+      <dep package="dri2proto"/>
+      <dep package="glproto"/>
+      <dep package="libXxf86vm"/>
+      <dep package="libXdamage"/>
+      <dep package="libdrm"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="libXi"/>
+      <dep package="libXmu"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="mesa-demos">
+    <branch module="mesa/demos/mesa-demos-8.0.1.tar.gz" version="8.0.1"
+            hash="sha1:002059d1cac1b010a5715f5b40d0ab41f329369a"
+            repo="ftp.freedesktop.org"/>
+    <dependencies>
+      <dep package="libGL"/>
+    </dependencies>
+  </autotools>
+
+  <!-- util -->
+  <autotools id="macros">
+    <branch module="util/util-macros-1.11.0.tar.gz" version="1.11.0"
+            hash="sha1:eb3a1b9e5542c97162188b82ede27bbc8b9e4dd1"/>
+  </autotools>
+
+  <autotools id="makedepend">
+    <branch module="util/makedepend-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:56ded7103b5a1853f6cae36196750915e28ca75b"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+    </dependencies>
+  </autotools>
+
+  <!-- docs -->
+  <autotools id="xorg-sgml-doctools">
+    <branch module="doc/xorg-sgml-doctools-1.6.tar.gz" version="1.6"
+            hash="sha1:8e05ee1581d3799aa9240ad51d05b6cbb0e064e1"/>
+    <dependencies>
+      <dep package="macros"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xorg-docs">
+    <branch module="doc/xorg-docs-1.6.tar.gz" version="1.6"
+            hash="sha1:89c359476b9344eebd3747ad8f260f6b6e3c8366"/>
+    <dependencies>
+      <dep package="xorg-sgml-doctools"/>
+      <dep package="macros"/>
+    </dependencies>
+  </autotools>
+
+  <!-- proto -->
+  <autotools id="applewmproto">
+    <branch module="proto/applewmproto-1.4.1.tar.gz" version="1.4.1"
+            hash="sha1:e470c82c27f00d46b5206073396f76709c843e05"/>
+  </autotools>
+  <autotools id="bigreqsproto">
+    <branch module="proto/bigreqsproto-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:9832f8210cffe84710beade8c203166834d7abb3"/>
+  </autotools>
+  <autotools id="compositeproto">
+    <branch module="proto/compositeproto-0.4.2.tar.gz" version="0.4.2"
+            hash="sha1:c58c2e2ce9a21336cf28cfae1a5b150a33a18477"/>
+  </autotools>
+  <autotools id="damageproto">
+    <branch module="proto/damageproto-1.2.1.tar.gz" version="1.2.1"
+            hash="sha1:6df5eccd2914ecb7c24ec0099b477aa5943c22ab"/>
+  </autotools>
+  <autotools id="dmxproto">
+    <branch module="proto/dmxproto-2.3.tar.gz" version="2.3"
+            hash="sha1:550a462311d8c9aa659a7f9233c1e5a936d78f2f"/>
+  </autotools>
+  <autotools id="fixesproto">
+    <branch module="proto/fixesproto-4.1.2.tar.gz" version="4.1.2"
+            hash="sha1:77a65b0101bb13c1b0a2bd407a9db308d6eeabb3"/>
+  </autotools>
+  <autotools id="fontsproto">
+    <branch module="proto/fontsproto-2.1.1.tar.gz" version="2.1.1"
+            hash="sha1:ba18273e930c129f028e6d3f8b2852e4e35dde23"/>
+  </autotools>
+  <autotools id="glproto">
+    <branch module="proto/glproto-1.4.12.tar.gz" version="1.4.12"
+            hash="sha1:060f774cccb8ce75f816208766661528ab2f36a1"/>
+  </autotools>
+  <autotools id="inputproto">
+    <branch module="proto/inputproto-2.0.1.tar.gz" version="2.0.1"
+            hash="sha1:88923a4c69c0a2a790b088f29d03a466f6553014"/>
+  </autotools>
+  <autotools id="kbproto">
+    <branch module="proto/kbproto-1.0.5.tar.gz" version="1.0.5"
+            hash="sha1:eb427aa13fbd48e3feb54d01e92ab5f72ab8f345"/>
+  </autotools>
+  <autotools id="randrproto">
+    <branch module="proto/randrproto-1.3.2.tar.gz" version="1.3.2"
+            hash="sha1:f0751c2572f874995e755e8e48021e97f7f04337"/>
+  </autotools>
+  <autotools id="recordproto">
+    <branch module="proto/recordproto-1.14.1.tar.gz" version="1.14.1"
+            hash="sha1:1eecfb9989d334edeb5d544fc8d46c35ee3812a7"/>
+  </autotools>
+  <autotools id="renderproto">
+    <branch module="proto/renderproto-0.11.1.tar.gz" version="0.11.1"
+            hash="sha1:522aa3e04e0c78598bb4a50157ca39e2b02d9222"/>
+  </autotools>
+  <autotools id="resourceproto">
+    <branch module="proto/resourceproto-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:ea4e9b011e7dc9dec198feff3882720d574094d3"/>
+  </autotools>
+  <autotools id="scrnsaverproto">
+    <branch module="proto/scrnsaverproto-1.2.1.tar.gz" version="1.2.1"
+            hash="sha1:e8357297c25f78ac02e6075eb7d0088108f03f08"/>
+  </autotools>
+  <autotools id="videoproto">
+    <branch module="proto/videoproto-2.3.1.tar.gz" version="2.3.1"
+            hash="sha1:924231d46c0e55b636efb19f407556f8a15a9368"/>
+  </autotools>
+  <autotools id="windowswmproto">
+    <branch module="proto/windowswmproto-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:1f34aa10cb996bc5dd02548591b09ca88f5e1508"/>
+    <dependencies>
+      <dep package="macros"/>
+    </dependencies>
+  </autotools>
+  <autotools id="xcmiscproto">
+    <branch module="proto/xcmiscproto-1.2.1.tar.gz" version="1.2.1"
+            hash="sha1:512c033f85bcb81b834ef2c699f2a9127b34d071"/>
+  </autotools>
+  <autotools id="xextproto">
+    <branch module="proto/xextproto-7.1.2.tar.gz" version="7.1.2"
+            hash="sha1:5ab3fb4f62a1cd389e0b5e29bdaa687872698783"/>
+  </autotools>
+  <autotools id="xf86bigfontproto">
+    <branch module="proto/xf86bigfontproto-1.2.0.tar.gz" version="1.2.0"
+            hash="sha1:d8e6e7e0db28af34ee598f88e574d443874e94f3"/>
+  </autotools>
+  <autotools id="xf86dgaproto">
+    <branch module="proto/xf86dgaproto-2.1.tar.gz" version="2.1"
+            hash="sha1:e7baa94bbb3f1b9bf1706be8579b2c4380df7df8"/>
+  </autotools>
+  <autotools id="xf86driproto">
+    <branch module="proto/xf86driproto-2.1.0.tar.gz" version="2.1.0"
+            hash="sha1:0a026f4f69e69f66838ff1b49d31f4f3675222dc"/>
+  </autotools>
+  <autotools id="xf86vidmodeproto">
+    <branch module="proto/xf86vidmodeproto-2.3.tar.gz" version="2.3"
+            hash="sha1:99ce8a76f7d30a151c7bfe8e79c866c2db55a9a9"/>
+  </autotools>
+  <autotools id="xineramaproto">
+    <branch module="proto/xineramaproto-1.2.tar.gz" version="1.2"
+            hash="sha1:704d60fe12f3f48a9af437f461ffdffea8608b15"/>
+  </autotools>
+  <autotools id="x11proto">
+    <branch module="proto/xproto-7.0.20.tar.gz" version="7.0.20"
+            hash="sha1:05addb6798a7f763a784aa36de9b558f9dbc2fe9"/>
+  </autotools>
+  <autotools id="dri2proto">
+    <branch module="proto/dri2proto-2.3.tar.gz" version="2.3"
+            hash="sha1:f1fd760867bffd91f130d45cda38dfdfb4c54a86"/>
+  </autotools>
+
+  <metamodule id="xorg-protos">
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="bigreqsproto"/>
+      <dep package="compositeproto"/>
+      <dep package="damageproto"/>
+      <dep package="dmxproto"/>
+      <dep package="fixesproto"/>
+      <dep package="fontsproto"/>
+      <dep package="glproto"/>
+      <dep package="inputproto"/>
+      <dep package="kbproto"/>
+      <dep package="xineramaproto"/>
+      <dep package="randrproto"/>
+      <dep package="recordproto"/>
+      <dep package="renderproto"/>
+      <dep package="resourceproto"/>
+      <dep package="scrnsaverproto"/>
+      <dep package="videoproto"/>
+      <dep package="xcmiscproto"/>
+      <dep package="xextproto"/>
+      <dep package="xf86bigfontproto"/>
+      <dep package="xf86dgaproto"/>
+      <dep package="xf86driproto"/>
+      <dep package="xf86vidmodeproto"/>
+      <dep package="x11proto"/>
+      <dep package="dri2proto"/>
+    </dependencies>
+  </metamodule>
+
+  <!-- libs -->
+
+  <autotools id="libAppleWM">
+    <branch module="lib/libAppleWM-1.4.0.tar.gz" version="1.4.0"
+            hash="sha1:8f964975757551064500dc60e9600e0e987e2819"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="xextproto"/>
+      <dep package="applewmproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libFS">
+    <branch module="lib/libFS-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:a62344b7ea73facc9d071b156e65b58da6cb0aa3"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+      <dep package="fontsproto"/>
+      <dep package="libxtrans"/>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libICE">
+    <branch module="lib/libICE-1.0.7.tar.gz" version="1.0.7"
+            hash="sha1:2b2e2bec017fbd2b28bc85ddf02667241e9e5dcc"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+      <dep package="libxtrans"/>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libSM">
+    <branch module="lib/libSM-1.2.0.tar.gz" version="1.2.0"
+            hash="sha1:a6d2cc17a457028ffa7b238943eb3ce9a096567e"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+      <dep package="libICE"/>
+      <dep package="libxtrans"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libX11">
+    <branch module="lib/libX11-1.4.0.tar.gz" version="1.4.0"
+            hash="sha1:a9d58ed4244a9c67ab12c5717d868aa9f0e28699"/>
+    <dependencies>
+      <dep package="libxcb"/>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+      <dep package="bigreqsproto"/>
+      <dep package="xextproto"/>
+      <dep package="libxtrans"/>
+      <dep package="libXau"/>
+      <dep package="xcmiscproto"/>
+      <dep package="libXdmcp"/>
+      <dep package="kbproto"/>
+      <dep package="inputproto"/>
+      <dep package="xf86bigfontproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXScrnSaver">
+    <branch module="lib/libXScrnSaver-1.2.1.tar.gz" version="1.2.1"
+            hash="sha1:a6d5e0d361a05bdac0a7835984be1b03f3c5722f"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="xextproto"/>
+      <dep package="scrnsaverproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXau">
+    <branch module="lib/libXau-1.0.6.tar.gz" version="1.0.6"
+            hash="sha1:d606755532119f9d50dab77839fd0e099ac563ce"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXaw">
+    <branch module="lib/libXaw-1.0.8.tar.gz" version="1.0.8"
+            hash="sha1:b6dc2379c8a8250c93375f84f70088dc98357678"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+      <dep package="libX11"/>
+      <dep package="libXt"/>
+      <dep package="libXmu"/>
+      <dep package="libXpm"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXcomposite">
+    <branch module="lib/libXcomposite-0.4.3.tar.gz" version="0.4.3"
+            hash="sha1:ccfa6f65e3e045e94966fc668088e43372482c65"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="compositeproto"/>
+      <dep package="libX11"/>
+      <dep package="libXfixes"/>
+      <dep package="libXext"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXcursor">
+    <branch module="lib/libXcursor-1.1.11.tar.gz" version="1.1.11"
+            hash="sha1:be61c39b0dbdfa8c953127458d2df3bc813fee8d"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libXrender"/>
+      <dep package="libX11"/>
+      <dep package="libXfixes"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXdamage">
+    <branch module="lib/libXdamage-1.1.3.tar.gz" version="1.1.3"
+            hash="sha1:df63681b7d60802e27cdec5cbff9ab209e641a6a"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="damageproto"/>
+      <dep package="libXfixes"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXdmcp">
+    <branch module="lib/libXdmcp-1.1.0.tar.gz" version="1.1.0"
+            hash="sha1:82fab4aeedca6827085d101dc439cf37b0b641e1"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXext">
+    <branch module="lib/libXext-1.2.0.tar.gz" version="1.2.0"
+            hash="sha1:d69b5ea6b5f610cecd66ecf85265cd9143a61fed"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+      <dep package="libX11"/>
+      <dep package="xextproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXfixes">
+    <branch module="lib/libXfixes-4.0.5.tar.gz" version="4.0.5"
+            hash="sha1:32586cb570f22fa458e714037e92d6be5d8cfcdd"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="fixesproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXfont">
+    <branch module="lib/libXfont-1.4.3.tar.gz" version="1.4.3"
+            hash="sha1:4929690b89623535f588325f1931b9b46994790d"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+      <dep package="libxtrans"/>
+      <dep package="fontsproto"/>
+      <dep package="libfontenc"/>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXft">
+    <branch module="lib/libXft-2.2.0.tar.gz" version="2.2.0"
+            hash="sha1:975ce43626fb0975fca00e7b07b1613bf47ef7a7"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libXrender"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXi">
+    <branch module="lib/libXi-1.4.0.tar.gz" version="1.4.0"
+            hash="sha1:09043bcedaa08fc77b24a73e422f8b0b37e198ed"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+      <dep package="libX11"/>
+      <dep package="xextproto"/>
+      <dep package="libXext"/>
+      <dep package="inputproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXinerama">
+    <branch module="lib/libXinerama-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:2c2dc0166005f9a96542b526120406131e953c83"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="xextproto"/>
+      <dep package="xineramaproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXmu">
+    <branch module="lib/libXmu-1.1.0.tar.gz" version="1.1.0"
+            hash="sha1:28cad70e242a2866aafb02297159dce343fe969a"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="libXt"/>
+      <dep package="libXext"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXpm">
+    <branch module="lib/libXpm-3.5.9.tar.gz" version="3.5.9"
+            hash="sha1:8dd9456b8b630016e4dddc0c7363d795530130b5"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="x11proto"/>
+      <dep package="libXt"/>
+      <dep package="libXext"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXrandr">
+    <branch module="lib/libXrandr-1.3.1.tar.gz" version="1.3.1"
+            hash="sha1:876ea7c54f491f49d4d3b1f5575a99f337000a37"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="randrproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXrender">
+    <branch module="lib/libXrender-0.9.6.tar.gz" version="0.9.6"
+            hash="sha1:3dcd5c20bb6d98c06ff9ce024c20c6668ad5c0b9"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="renderproto"/>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXRes">
+    <branch module="lib/libXres-1.0.5.tar.gz" version="1.0.5"
+            hash="sha1:2d71e29d48057f105ce11ce0b745ab2e339be9ab"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="resourceproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXt">
+    <branch module="lib/libXt-1.0.9.tar.gz" version="1.0.9"
+            hash="sha1:a2e5ba9287282d10baa85518f37efc43d8fb1b79"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libSM"/>
+      <dep package="libX11"/>
+      <dep package="x11proto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXtst">
+    <branch module="lib/libXtst-1.2.0.tar.gz" version="1.2.0"
+            hash="sha1:7a4dcf72a3ce0ff5f6e866d51aad8366225048b9"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="libXi"/>
+      <dep package="recordproto"/>
+      <dep package="xextproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXv">
+    <branch module="lib/libXv-1.0.6.tar.gz" version="1.0.6"
+            hash="sha1:865c862315706d98c15668071fe26ddd3c701644"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="xextproto"/>
+      <dep package="videoproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXvMC">
+    <branch module="lib/libXvMC-1.0.6.tar.gz" version="1.0.6"
+            hash="sha1:7fd0281a2890f04031632923547e87f72eb9f4f6"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="libXv"/>
+      <dep package="xextproto"/>
+      <dep package="videoproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXxf86dga">
+    <branch module="lib/libXxf86dga-1.1.2.tar.gz" version="1.1.2"
+            hash="sha1:44d137e60d75f085f35a2140d1a1aa35fda3fe4c"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="xextproto"/>
+      <dep package="xf86dgaproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libXxf86vm">
+    <branch module="lib/libXxf86vm-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:eda9719e5173a976cb7296dc1aa0a9ed6bb5ebd6"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="xextproto"/>
+      <dep package="xf86vidmodeproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libdmx">
+    <branch module="lib/libdmx-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:8d1d5980d50115895e4d44f5cb9928a4bf5da28e"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="xextproto"/>
+      <dep package="dmxproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libfontenc">
+    <branch module="lib/libfontenc-1.1.0.tar.gz" version="1.1.0"
+            hash="sha1:be4382e3e2cbaa42b25f9cc7f468f473a46f3505"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+      <dep package="font-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libxkbfile">
+    <branch module="lib/libxkbfile-1.0.7.tar.gz" version="1.0.7"
+            hash="sha1:0b2fc32cb6c7f07f5ec0c2ede46126580baafc06"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="kbproto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libxkbui">
+    <branch module="lib/libxkbui-1.0.2.tar.gz" version="1.0.2"
+            hash="sha1:25dfe8989ec780c9b051b300f9c3ed7ea7e01cb7"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="libXt"/>
+      <dep package="libxkbfile"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libxtrans">
+    <branch module="lib/xtrans-1.2.6.tar.gz" version="1.2.6"
+            hash="sha1:d0828eca4d69d6de1ee4561f04a6bead681b13f7"/>
+    <dependencies>
+      <dep package="macros"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="libWindowsWM">
+    <branch module="lib/libWindowsWM-1.0.1.tar.gz" version="1.0.1"
+            hash="sha1:40a5ca1fd5c27306e1efddcbf72437156f1b58c8"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="xextproto"/>
+      <dep package="windowswmproto"/>
+    </dependencies>
+  </autotools>
+
+  <metamodule id="xorg-libs">
+    <dependencies>
+      <dep package="libFS"/>
+      <dep package="libICE"/>
+      <dep package="libSM"/>
+      <dep package="libX11"/>
+      <dep package="libXScrnSaver"/>
+      <dep package="libXau"/>
+      <dep package="libXaw"/>
+      <dep package="libXcomposite"/>
+      <dep package="libXcursor"/>
+      <dep package="libXdamage"/>
+      <dep package="libXdmcp"/>
+      <dep package="libXext"/>
+      <dep package="libXfixes"/>
+      <dep package="libXfont"/>
+      <dep package="libXft"/>
+      <dep package="libXi"/>
+      <dep package="libXinerama"/>
+      <dep package="libXmu"/>
+      <dep package="libXpm"/>
+      <dep package="libXrandr"/>
+      <dep package="libXrender"/>
+      <dep package="libXRes"/>
+      <dep package="libXt"/>
+      <dep package="libXtst"/>
+      <dep package="libXv"/>
+      <dep package="libXvMC"/>
+      <dep package="libXxf86dga"/>
+      <dep package="libXxf86vm"/>
+      <dep package="libdmx"/>
+      <dep package="libfontenc"/>
+      <dep package="libxkbfile"/>
+      <dep package="libxtrans"/>
+      <dep package="libdrm"/>
+      <dep package="libGL"/>
+      <dep package="pixman"/>
+      <dep package="libpciaccess"/>
+      <dep package="libxcb"/>
+      <dep package="xcb-util"/>
+    </dependencies>
+  </metamodule>
+
+  <!-- data -->
+  <autotools id="bitmaps">
+    <branch module="data/xbitmaps-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:8d82a88652ac1743f57497bfd97c2b5c066f506a"/>
+    <dependencies>
+      <dep package="macros"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="cursors">
+    <branch module="data/xcursor-themes-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:9448bd8b8110777ba99def084fecd4188fa0954c"/>
+    <dependencies>
+      <dep package="xcursorgen"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xkeyboard-config">
+    <branch module="data/xkeyboard-config/xkeyboard-config-2.0.tar.gz"
+            version="2.0"
+            hash="sha1:fb809bef8e12acf68d73b1fe5b571e93ce2f1727"/>
+    <dependencies>
+      <dep package="xkbcomp"/>
+    </dependencies>
+  </autotools>
+
+  <!-- apps -->
+  <autotools id="iceauth">
+    <branch module="app/iceauth-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:d286433e24ccc3148bd793b6001e7e8548bc7883"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libICE"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="luit">
+    <branch module="app/luit-1.1.0.tar.gz" version="1.1.0"
+            hash="sha1:2f7fe2903ca3208ae8f649afedb5e1c1c900f90c"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libfontenc"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="rendercheck">
+    <branch module="app/rendercheck-1.4.tar.gz" version="1.4"
+            hash="sha1:91117381d5b0e9ada79ca5d1bbed4bc6b6a4fd71"/>
+    <dependencies>
+      <dep package="libXrender"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="scripts">
+    <branch module="app/scripts-1.0.1.tar.gz" version="1.0.1"
+            hash="sha1:6efaf8f66a047d2f42a605f117ba0ee51c6e2d6d"/>
+  </autotools>
+
+  <autotools id="sessreg">
+    <branch module="app/sessreg-1.0.6.tar.gz" version="1.0.6"
+            hash="sha1:9f2d385776e4349f6b38089e5470089139dc246d"/>
+    <dependencies>
+      <dep package="x11proto"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="setxkbmap">
+    <branch module="app/setxkbmap-1.2.0.tar.gz" version="1.2.0"
+            hash="sha1:097abcbe35a87963060e2cd5172bf63078f67a76"/>
+    <dependencies>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="smproxy">
+    <branch module="app/smproxy-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:7ec39231f39e18835686d44592c44825b6c12fc4"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libSM"/>
+      <dep package="libXt"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="twm">
+    <branch module="app/twm-1.0.6.tar.gz" version="1.0.6"
+            hash="sha1:3bd2301b843778ec41b44d24b5168128e598cce8"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXt"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="x11perf">
+    <branch module="app/x11perf-1.5.2.tar.gz" version="1.5.2"
+            hash="sha1:0e50dba524c22b967ae3e463ffc1b20946d21987"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXrender"/>
+      <dep package="libXft"/>
+      <dep package="libXext"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xauth">
+    <branch module="app/xauth-1.0.5.tar.gz" version="1.0.5"
+            hash="sha1:5e7e978f79352069062b51138a4a2977ffa701bf"/>
+    <dependencies>
+      <dep package="libXext"/>
+      <dep package="libXmu"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xbacklight">
+    <branch module="app/xbacklight-1.1.2.tar.gz" version="1.1.2"
+            hash="sha1:1ae2de424e35565cfb311e5ffecea0117373c028"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXrandr"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xcmsdb">
+    <branch module="app/xcmsdb-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:318cb9c5248d9eb5220ce2ba3905211e2bc9b5cf"/>
+    <dependencies>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xcursorgen">
+    <branch module="app/xcursorgen-1.0.4.tar.gz" version="1.0.4"
+            hash="9823ad269d25dab923b7194883e5108b7d6fad71"/>
+    <dependencies>
+      <dep package="libXcursor"/>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xdpyinfo">
+    <branch module="app/xdpyinfo-1.2.0.tar.gz" version="1.2.0"
+            hash="sha1:74fd3398f2f38a5a6834b28976610f53b27718e6"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="libXtst"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xdriinfo">
+    <branch module="app/xdriinfo-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:6e1202d2977abc04202e803de71590b75381b2c8"/>
+    <dependencies>
+      <dep package="glproto"/>
+      <dep package="libGL"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xev">
+    <branch module="app/xev-1.1.0.tar.gz" version="1.1.0"
+            hash="sha1:7d894ab8a2462d4326d41b8ff5a9ce125e0fc92e"/>
+    <dependencies>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xeyes">
+    <branch module="app/xeyes-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:b59991119c91c0783a1cff3cc31aeb2fea8f52d9"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXt"/>
+      <dep package="libXmu"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xgamma">
+    <branch module="app/xgamma-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:63133c5fddb18b5844567bdb0fd9da8d4ebea4d3"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXxf86vm"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xhost">
+    <branch module="app/xhost-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:43bc910fb36c2d82ac685e78a2ad155e775529fe"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXmu"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xinit">
+    <branch module="app/xinit-1.3.0.tar.gz" version="1.3.0"
+            hash="sha1:4f503358defd582f82da4e1253a31c15cd13f970"/>
+    <dependencies>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xinput">
+    <branch module="app/xinput-1.5.3.tar.gz" version="1.5.3"
+            hash="sha1:01f854885795bb9d55e540046f55dfaf7875db37"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXi"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xkbcomp">
+    <branch module="app/xkbcomp-1.2.0.tar.gz" version="1.2.0"
+            hash="sha1:9620679a73104cfc30abb4c9faddcb8ed32c1410"/>
+    <dependencies>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xkbevd">
+    <branch module="app/xkbevd-1.1.2.tar.gz" version="1.1.2"
+            hash="sha1:3bdbb0bc81725099c1f6af2687ae94ba3e6675ec"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libxkbfile"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xkbutils">
+    <branch module="app/xkbutils-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:3bc5118827d5effaaba2e3ccce11e0b5328840d4"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXaw"/>
+      <dep package="libXt"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xkill">
+    <branch module="app/xkill-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:91126085d89785bdb14608f20e30cc2ec717194e"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXmu"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xlogo">
+    <branch module="app/xlogo-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:48e52bc49d6d862bf9ae39fc3b74cd8e4702c36d"/>
+    <dependencies>
+      <dep package="libXaw"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xlsatoms">
+    <branch module="app/xlsatoms-1.1.0.tar.gz" version="1.1.0"
+            hash="sha1:c85649e00261045e187b04a57cface0ad4e649d0"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXmu"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xlsclients">
+    <branch module="app/xlsclients-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:f9baaa8c9d6d52f68238272cf599d8a016d23d8a"/>
+    <dependencies>
+      <dep package="libxcb"/>
+      <dep package="xcb-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xmodmap">
+    <branch module="app/xmodmap-1.0.5.tar.gz" version="1.0.5"
+            hash="sha1:2a63f0ad62db5fa41db0f992dc2003ee3279ed18"/>
+    <dependencies>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xpr">
+    <branch module="app/xpr-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:0bfb5134b0a53cd8bb56871fa65fde9a02e16882"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <!--<dep package="libXmuu"/>-->
+    </dependencies>
+  </autotools>
+
+  <autotools id="xprop">
+    <branch module="app/xprop-1.2.0.tar.gz" version="1.2.0"
+            hash="sha1:01e1a6fa9a4cdf589fb37a961a2553d585f5e866"/>
+    <dependencies>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xrandr">
+    <branch module="app/xrandr-1.3.4.tar.gz" version="1.3.4"
+            hash="sha1:70b926aab725696206159fe23e3387b08052dc8f"/>
+    <dependencies>
+      <dep package="libXrandr"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xrdb">
+    <branch module="app/xrdb-1.0.7.tar.gz" version="1.0.7"
+            hash="sha1:0462669fb44aa789206d8a7544e0c86f2648720a"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXmu"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xrefresh">
+    <branch module="app/xrefresh-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:563fbe91da40b8cd0616026bf645dd6836bd2e82"/>
+    <dependencies>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xset">
+    <branch module="app/xset-1.2.1.tar.gz" version="1.2.1"
+            hash="sha1:284952287454c662c6f29635a96214bc532bc7f7"/>
+    <dependencies>
+      <dep package="libXext"/>
+      <dep package="libXmu"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xsetroot">
+    <branch module="app/xsetroot-1.1.0.tar.gz" version="1.1.0"
+            hash="sha1:5fb1a0f1b3ee79ece352fa05d23e536e4f5647b7"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXmu"/>
+      <dep package="bitmaps"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xvinfo">
+    <branch module="app/xvinfo-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:c5ef81ed2edeede368c09f568fb9a679b5e98f2b"/>
+  </autotools>
+  <autotools id="xwd">
+    <branch module="app/xwd-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:1153dbd0453936425abafc71c38e98eb81ec55d2"/>
+    <dependencies>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xwininfo">
+    <branch module="app/xwininfo-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:780207655c394cc823a04438fb2011b25ea7da20"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xwud">
+    <branch module="app/xwud-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:cb54050af375a72dd53354f99bbdbb2385660dc5"/>
+    <dependencies>
+      <dep package="libX11"/>
+    </dependencies>
+  </autotools>
+
+  <metamodule id="xorg-apps">
+    <dependencies>
+      <dep package="iceauth"/>
+      <dep package="luit"/>
+      <dep package="sessreg"/>
+      <dep package="setxkbmap"/>
+      <dep package="smproxy"/>
+      <dep package="x11perf"/>
+      <dep package="xauth"/>
+      <dep package="xbacklight"/>
+      <dep package="xcmsdb"/>
+      <dep package="xcursorgen"/>
+      <dep package="xdpyinfo"/>
+      <dep package="xdriinfo"/>
+      <dep package="xev"/>
+      <dep package="xgamma"/>
+      <dep package="xhost"/>
+      <dep package="xinput"/>
+      <dep package="xkbcomp"/>
+      <dep package="xkbevd"/>
+      <dep package="xkbutils"/>
+      <dep package="xkill"/>
+      <dep package="xlsatoms"/>
+      <dep package="xlsclients"/>
+      <dep package="xmodmap"/>
+      <dep package="xpr"/>
+      <dep package="xprop"/>
+      <dep package="xrandr"/>
+      <dep package="xrdb"/>
+      <dep package="xrefresh"/>
+      <dep package="xset"/>
+      <dep package="xsetroot"/>
+      <dep package="xvinfo"/>
+      <dep package="xwd"/>
+      <dep package="xwininfo"/>
+      <dep package="xwud"/>
+    </dependencies>
+  </metamodule>
+
+  <!-- core font support, still required for some configurations  -->
+
+  <autotools id="bdftopcf">
+    <branch module="app/bdftopcf-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:acae574ec6b129e973f222d5ec180d411c6f8924"/>
+    <dependencies>
+      <dep package="libXfont"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="mkfontscale">
+    <branch module="app/mkfontscale-1.0.8.tar.gz" version="1.0.8"
+            hash="sha1:7c1eb2d4b58b47d984bf5df8a147f7fbae77f562"/>
+    <dependencies>
+      <dep package="libfontenc"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="mkfontdir">
+    <branch module="app/mkfontdir-1.0.6.tar.gz" version="1.0.6"
+            hash="sha1:7f27fe45aa2574f7881f57b7484e15bf5a9af595"/>
+    <dependencies>
+      <dep package="mkfontscale"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-util">
+    <branch module="font/font-util-1.2.0.tar.gz" version="1.2.0"
+            hash="sha1:6dd5f3720d1a8a84344ea58e82bfa008122aabeb"/>
+  </autotools>
+
+  <autotools id="encodings">
+    <branch module="font/encodings-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:763db63029fb08ab1056082f14f96d801036e2ff"/>
+    <dependencies>
+      <dep package="mkfontscale"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-adobe-100dpi">
+    <branch module="font/font-adobe-100dpi-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:be4841c7cc0c8d0505aaba8d04147098381f9aaf"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+      <dep package="font-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-adobe-75dpi">
+    <branch module="font/font-adobe-75dpi-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:aa2a8acf4e5a45d579ce5e7c7c69c40f7039de68"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+      <dep package="font-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-adobe-utopia-100dpi">
+    <branch module="font/font-adobe-utopia-100dpi-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:fec0c4810069bb47182d300fb73737b218ada56e"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+      <dep package="font-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-adobe-utopia-75dpi">
+    <branch module="font/font-adobe-utopia-75dpi-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:c8ed4daf49a4db89b0f9df125420b299a93747a6"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+      <dep package="font-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-adobe-utopia-type1">
+    <branch module="font/font-adobe-utopia-type1-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:289c4641ed48f509315c9dbfe60f4641f7458569"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+      <dep package="font-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-arabic-misc">
+    <branch module="font/font-arabic-misc-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:186b05721e6fea0c1b0d600704c67fdb0d777e55"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bh-100dpi">
+    <branch module="font/font-bh-100dpi-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:3845c95b62b94dc119ed2bb75bec48bf6c6d1e9a"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bh-75dpi">
+    <branch module="font/font-bh-75dpi-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:0372601465344d9e5638b59fc3fc3d933be8de7f"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bh-lucidatypewriter-100dpi">
+    <branch module="font/font-bh-lucidatypewriter-100dpi-1.0.3.tar.gz"
+            version="1.0.3"
+            hash="sha1:3e9b56f2baedd7c1eda5b2e73c7e51c2807abe8e"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bh-lucidatypewriter-75dpi">
+    <branch module="font/font-bh-lucidatypewriter-75dpi-1.0.3.tar.gz"
+            version="1.0.3"
+            hash="sha1:bfe3c96e37de55b7d7dc0c225c1713dcd8de1063"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bh-ttf">
+    <branch module="font/font-bh-ttf-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:99b473e2db79cbc7734d6f5c2b1830457333585c"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bh-type1">
+    <branch module="font/font-bh-type1-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:d7da5d0d0fa7f78977f51094b2d5245183c822be"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bitstream-100dpi">
+    <branch module="font/font-bitstream-100dpi-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:2b4df89a59d93d01393c9ea21517cce575717ecf"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bitstream-75dpi">
+    <branch module="font/font-bitstream-75dpi-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:d75e182737ef5667e2e538b081e9a6c07ff7a53c"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bitstream-type1">
+    <branch module="font/font-bitstream-type1-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:a57248a1c373b527444307b26769ca042febae48"/>
+    <dependencies>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-cronyx-cyrillic">
+    <branch module="font/font-cronyx-cyrillic-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:00c7ccf0bfb432665a0de679f409918b28cbed36"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-cursor-misc">
+    <branch module="font/font-cursor-misc-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:e9d61b27bb30c0c3a3e31fa9d30a759a8b3a0a08"/>
+    <dependencies>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-daewoo-misc">
+    <branch module="font/font-daewoo-misc-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:fd31f49a5463b587c6845e4e112c4cdd84e0f0c0"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-dec-misc">
+    <branch module="font/font-dec-misc-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:fb63bf93887c1d5b0d710dc76def35bf8d06154e"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-ibm-type1">
+    <branch module="font/font-ibm-type1-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:97bcf76406243d75d35d4c4773c16be38388190d"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-isas-misc">
+    <branch module="font/font-isas-misc-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:a810defd3e06f6b4704e5f86a30b9cc2d9d65376"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-jis-misc">
+    <branch module="font/font-jis-misc-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:27d60e701acbf0637f6a28500ed6ffded399c348"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-micro-misc">
+    <branch module="font/font-micro-misc-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:538c704b2fc648fac9f24241050b14e5079c6d8e"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-misc-cyrillic">
+    <branch module="font/font-misc-cyrillic-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:fbf4b2cda8886c1aeb4c5751db2cc42669355a2e"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-misc-ethiopic">
+    <branch module="font/font-misc-ethiopic-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:b0808ec9090bd7e05cc0e58ea0de713e0cfb5af8"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-misc-meltho">
+    <branch module="font/font-misc-meltho-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:a0f7c2a7862ba223f662e6607832afdff9feb804"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-misc-misc">
+    <branch module="font/font-misc-misc-1.1.2.tar.gz" version="1.1.2"
+            hash="sha1:d632b75fd78ea0e9a46be1a1d3085a8629304fde"/>
+    <dependencies>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+      <dep package="font-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-mutt-misc">
+    <branch module="font/font-mutt-misc-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:a039c31880810423b5d6c9a5edb26c139764c8da"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-schumacher-misc">
+    <branch module="font/font-schumacher-misc-1.1.2.tar.gz" version="1.1.2"
+            hash="sha1:b0dd290eecca80570ed30f624110506be24d4970"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-screen-cyrillic">
+    <branch module="font/font-screen-cyrillic-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:bb4e44351426dd85af79e88b97cfe7361decf937"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-sony-misc">
+    <branch module="font/font-sony-misc-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:663e09c748efa3f93391e4198ca89273ecfd9b15"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-sun-misc">
+    <branch module="font/font-sun-misc-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:e8926e7e3e370f3796a0fcdd15e0d3e373f91e2c"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-winitzki-cyrillic">
+    <branch module="font/font-winitzki-cyrillic-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:51e53351458cbcd50ddb020a5c4015e01aa634aa"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-xfree86-type1">
+    <branch module="font/font-xfree86-type1-1.0.4.tar.gz" version="1.0.4"
+            hash="sha1:3e3d382a62ff9f36b3c3e4316bf4e06001fc9f4f"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-alias">
+    <branch module="font/font-alias-1.0.3.tar.gz" version="1.0.3"
+            hash="sha1:6866f0bcb35a693293fbdaf351b2550dca5593a4"/>
+  </autotools>
+
+  <metamodule id="xorg-fonts">
+    <dependencies>
+      <dep package="font-util"/>
+      <dep package="encodings"/>
+      <dep package="font-adobe-100dpi"/>
+      <dep package="font-adobe-75dpi"/>
+      <dep package="font-adobe-utopia-100dpi"/>
+      <dep package="font-adobe-utopia-75dpi"/>
+      <dep package="font-adobe-utopia-type1"/>
+      <dep package="font-arabic-misc"/>
+      <dep package="font-bh-100dpi"/>
+      <dep package="font-bh-75dpi"/>
+      <dep package="font-bh-lucidatypewriter-100dpi"/>
+      <dep package="font-bh-lucidatypewriter-75dpi"/>
+      <dep package="font-bh-ttf"/>
+      <dep package="font-bh-type1"/>
+      <dep package="font-bitstream-100dpi"/>
+      <dep package="font-bitstream-75dpi"/>
+      <dep package="font-bitstream-type1"/>
+      <dep package="font-cronyx-cyrillic"/>
+      <dep package="font-cursor-misc"/>
+      <dep package="font-daewoo-misc"/>
+      <dep package="font-dec-misc"/>
+      <dep package="font-ibm-type1"/>
+      <dep package="font-isas-misc"/>
+      <dep package="font-jis-misc"/>
+      <dep package="font-micro-misc"/>
+      <dep package="font-misc-cyrillic"/>
+      <dep package="font-misc-ethiopic"/>
+      <dep package="font-misc-meltho"/>
+      <dep package="font-misc-misc"/>
+      <dep package="font-mutt-misc"/>
+      <dep package="font-schumacher-misc"/>
+      <dep package="font-screen-cyrillic"/>
+      <dep package="font-sony-misc"/>
+      <dep package="font-sun-misc"/>
+      <dep package="font-winitzki-cyrillic"/>
+      <dep package="font-xfree86-type1"/>
+      <dep package="font-alias"/>
+    </dependencies>
+  </metamodule>
+
+  <!-- input drivers -->
+
+  <autotools id="xf86-input-acecad">
+    <branch module="driver/xf86-input-acecad-1.4.0.tar.gz" version="1.4.0"
+            hash="sha1:dcc45c40e33ae12ab4e4bfb27353970356bf2da5"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-input-aiptek">
+    <branch module="driver/xf86-input-aiptek-1.3.1.tar.gz" version="1.3.1"
+            hash="sha1:8866c224d9446fb0dbbb8b75df2143654c3c2123"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-input-evdev">
+    <branch module="driver/xf86-input-evdev-2.5.0.tar.gz" version="2.5.0"
+            hash="sha1:4d85519bc9c022921fac5d16e7c05cb7c76d3adc"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-input-joystick">
+    <branch module="driver/xf86-input-joystick-1.5.0.tar.gz" version="1.5.0"
+            hash="sha1:537a1d7ca110f9c445533aa9f52285bf1c50809d"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-input-keyboard">
+    <branch module="driver/xf86-input-keyboard-1.5.0.tar.gz" version="1.5.0"
+            hash="sha1:993d5c23897b41302bef766c56f75430063e99e9"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-input-mouse">
+    <branch module="driver/xf86-input-mouse-1.6.0.tar.gz" version="1.6.0"
+            hash="sha1:7f00278e016f2f4a4dbd49c0bbc7929299c965d1"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-input-synaptics">
+    <branch module="driver/xf86-input-synaptics-1.3.0.tar.gz" version="1.3.0"
+            hash="sha1:ec3414152d113874976f12a0762a32daf6b54585"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-input-vmmouse">
+    <branch module="driver/xf86-input-vmmouse-12.6.10.tar.gz" version="12.6.10"
+            hash="sha1:29a223981f77fbd4b03c88aab2ab3238ce89e6e1"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-input-void">
+    <branch module="driver/xf86-input-void-1.3.1.tar.gz" version="1.3.1"
+            hash="sha1:7950ab52b28141773d306dcd25374983dc6240dd"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-apm">
+    <branch module="driver/xf86-video-apm-1.2.3.tar.gz" version="1.2.3"
+            hash="sha1:57bd83644de49e65df102bdd6b2f856d71c78fef"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-ark">
+    <branch module="driver/xf86-video-ark-0.7.3.tar.gz" version="0.7.3"
+            hash="sha1:251b2b20c996ea601025b18d7c24bf083eb6deeb"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-ast">
+    <branch module="driver/xf86-video-ast-0.91.10.tar.gz" version="0.91.10"
+            hash="sha1:f16bd9056ec8080b4be93a34c2c535546a510521"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-ati">
+    <branch module="driver/xf86-video-ati-6.13.2.tar.gz" version="6.13.2"
+            hash="sha1:b10dbc939750b42a06ee940e9dbf3ac897f141a6"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-chips">
+    <branch module="driver/xf86-video-chips-1.2.3.tar.gz" version="1.2.3"
+            hash="sha1:ca8718ab43d438348b9e85d4a78da58c31349e4a"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-cirrus">
+    <branch module="driver/xf86-video-cirrus-1.3.2.tar.gz" version="1.3.2"
+            hash="sha1:a168ef893640ed1ce9d0ea012ae698cc840662e2"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-dummy">
+    <branch module="driver/xf86-video-dummy-0.3.4.tar.gz" version="0.3.4"
+            hash="sha1:575d72d4f5e41071c75914e952e89f642db08f10"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-fbdev">
+    <branch module="driver/xf86-video-fbdev-0.4.2.tar.gz" version="0.4.2"
+            hash="sha1:96efa03db8229b83c1545c4c53fb9bf0adcab5a6"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-geode">
+    <branch module="driver/xf86-video-geode-2.11.10.tar.gz" version="2.11.10"
+            hash="sha1:dfa16052065d129b8e58aa11c0e328ecc2441a83"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-glide">
+    <branch module="driver/xf86-video-glide-1.1.0.tar.gz" version="1.1.0"
+            hash="sha1:5388bfc0646ee3f1c584310e18575a1da97df325"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-glint">
+    <branch module="driver/xf86-video-glint-1.2.5.tar.gz" version="1.2.5"
+            hash="sha1:6ec74d17cf2de4f168531b97dd65be85d1a235a3"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-i128">
+    <branch module="driver/xf86-video-i128-1.3.4.tar.gz" version="1.3.4"
+            hash="sha1:25e3df9b5a9bff62c178418a212c335fcba89995"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-i740">
+    <branch module="driver/xf86-video-i740-1.3.2.tar.gz" version="1.3.2"
+            hash="sha1:1f4887916f48f0b089a02c87b02641e4be6765f0"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-impact">
+    <branch module="driver/xf86-video-impact-0.2.0.tar.gz" version="0.2.0"
+            hash="sha1:f831a665a88cb2e1ff873b894adfbc196fd0bb4b"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-intel">
+    <branch module="driver/xf86-video-intel-2.13.0.tar.gz" version="2.13.0"
+            hash="sha1:280599540b3fecdac45a1c37ec5116e922ce698e"/>
+    <dependencies>
+      <dep package="xserver"/>
+      <dep package="x11proto"/>
+      <dep package="libXvMC"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-mach64">
+    <branch module="driver/xf86-video-mach64-6.8.2.tar.gz" version="6.8.2"
+            hash="sha1:6e678a0bb955e6fdc2f5dda0f055cb4c0d134f7e"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-mga">
+    <branch module="driver/xf86-video-mga-1.4.13.tar.gz" version="1.4.13"
+            hash="sha1:36e57c4a024ca31bd242022ac5967c8a0f9e1012"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-neomagic">
+    <branch module="driver/xf86-video-neomagic-1.2.5.tar.gz" version="1.2.5"
+            hash="sha1:d4449dea6d0e2f2bc0dcf13e5593b664e3fd90f0"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-newport">
+    <branch module="driver/xf86-video-newport-0.2.3.tar.gz" version="0.2.3"
+            hash="sha1:a7d56220e30ebf4b2e7b51895968c4c877cb2463"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-nv">
+    <branch module="driver/xf86-video-nv-2.1.18.tar.gz" version="2.1.18"
+            hash="sha1:1a9054cd1a5bc0b70da6d81f248a7ffcd3f29811"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-openchrome">
+    <branch module="driver/xf86-video-openchrome-0.2.904.tar.gz"
+            version="0.2.904"
+            hash="sha1:24dedefb8f5f69b2ed456d046d911f040a78ab70"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-r128">
+    <branch module="driver/xf86-video-r128-6.8.1.tar.gz" version="6.8.1"
+            hash="sha1:b443ce6aecc8d26df67b5fcd6b0540a88fc83f7b"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-rendition">
+    <branch module="driver/xf86-video-rendition-4.2.4.tar.gz" version="4.2.4"
+            hash="sha1:fbf2f81d5f20f6e1394163ff4edc65f4bf18b774"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-s3">
+    <branch module="driver/xf86-video-s3-0.6.3.tar.gz" version="0.6.3"
+            hash="sha1:b29b1a00f2792d891dbe406dfe2115fb05742148"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-s3virge">
+    <branch module="driver/xf86-video-s3virge-1.10.4.tar.gz" version="1.10.4"
+            hash="sha1:914c063670b25830d43d9fb34ec89fef4f47834e"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-savage">
+    <branch module="driver/xf86-video-savage-2.3.1.tar.gz" version="2.3.1"
+            hash="sha1:5fd437e936b9b42ec5425234f6f9e1784d64a172"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-siliconmotion">
+    <branch module="driver/xf86-video-siliconmotion-1.7.4.tar.gz" version="1.7.4"
+            hash="sha1:403498be779bf7b448bcfc49ec75871d0ed683c2"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-sis">
+    <branch module="driver/xf86-video-sis-0.10.3.tar.gz" version="0.10.3"
+            hash="sha1:bf01d0fb1bc353c7e68bcc487aa7f2bd638b9fcc"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-sisusb">
+    <branch module="driver/xf86-video-sisusb-0.9.4.tar.gz" version="0.9.4"
+            hash="sha1:26ab6c0ee91a069033760160d4966889cb7a2d91"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-sunbw2">
+    <branch module="driver/xf86-video-sunbw2-1.1.0.tar.gz" version="1.1.0"
+            hash="sha1:ce9ffb2b03b108311d2af1f7cfcc60c13999b00e"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-suncg14">
+    <branch module="driver/xf86-video-suncg14-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:f0fa035fd59ca57c02e098b8bb1ee314bdb107c6"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-suncg3">
+    <branch module="driver/xf86-video-suncg3-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:98b7c28606bf6964f68d68abfac293f6c7faf8b2"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-suncg6">
+    <branch module="driver/xf86-video-suncg6-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:e7db32f5f93f6fa2393b096872d32b28fe5b7130"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-sunffb">
+    <branch module="driver/xf86-video-sunffb-1.2.1.tar.gz" version="1.2.1"
+            hash="sha1:6816e36e39ab84a3e45b407b6b3be03f90ac855d"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-sunleo">
+    <branch module="driver/xf86-video-sunleo-1.2.0.tar.gz" version="1.2.0"
+            hash="sha1:7d865c23e61a1a60c56b321c1f353c035d237087"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-suntcx">
+    <branch module="driver/xf86-video-suntcx-1.1.1.tar.gz" version="1.1.1"
+            hash="sha1:3409bff7113c4d6c68ff8ff1b2b730999c2fd1ab"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-tdfx">
+    <branch module="driver/xf86-video-tdfx-1.4.3.tar.gz" version="1.4.3"
+            hash="sha1:80b16ab736fd4e62dfb3c6349ff3372510f6ec32"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-tga">
+    <branch module="driver/xf86-video-tga-1.2.1.tar.gz" version="1.2.1"
+            hash="sha1:c5895c68911790781b0acfce003a9cbeb0d2d2c8"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-trident">
+    <branch module="driver/xf86-video-trident-1.3.4.tar.gz" version="1.3.4"
+            hash="sha1:182c230dc18f2e601d147ad012263d5640689064"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-tseng">
+    <branch module="driver/xf86-video-tseng-1.2.4.tar.gz" version="1.2.4"
+            hash="sha1:35cb6556898e5e343257295499b0dd1613a5d72f"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-v4l">
+    <branch module="driver/xf86-video-v4l-0.2.0.tar.gz" version="0.2.0"
+            hash="sha1:17098d9c6fc5603580f62abeaca09adc6ba66139"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-vesa">
+    <branch module="driver/xf86-video-vesa-2.3.0.tar.gz" version="2.3.0"
+            hash="sha1:6cac168cf7e45927d663254c47616910c4153365"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-vmware">
+    <branch module="driver/xf86-video-vmware-11.0.3.tar.gz" version="11.0.3"
+            hash="sha1:5972aa17c57e718b56907482b81f4dd89767ee19"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-voodoo">
+    <branch module="driver/xf86-video-voodoo-1.2.4.tar.gz" version="1.2.4"
+            hash="sha1:7df2ae4ac609f8fd757107b61add3a4cafa32a44"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-wsfb">
+    <branch module="driver/xf86-video-wsfb-0.3.0.tar.gz" version="0.3.0"
+            hash="sha1:0e54a2a65a348a9c20d024022726aecba0d187ec"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-xgi">
+    <branch module="driver/xf86-video-xgi-1.6.0.tar.gz" version="1.6.0"
+            hash="sha1:fde86e6b6450a2a93194b8e185b55558018d45e7"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xf86-video-xgixp">
+    <branch module="driver/xf86-video-xgixp-1.8.0.tar.gz" version="1.8.0"
+            hash="sha1:2ceb8aa5ee6f85e014b52c7c9dae3cd298ad7e19"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
+  <!-- These drivers are marked unmaintained in xorg/doc/xorg-docs/MAINTAINERS and are also broken -->
+  <metamodule id="xorg-unmaintained-broken-drivers">
+    <dependencies>
+      <dep package="xf86-video-apm"/>
+      <dep package="xf86-video-ark"/>
+      <dep package="xf86-video-ast"/>
+      <dep package="xf86-video-i740"/>
+      <dep package="xf86-video-impact"/>
+      <dep package="xf86-video-imstt"/>
+      <dep package="xf86-video-newport"/>
+      <dep package="xf86-video-s3"/>
+      <dep package="xf86-video-s3virge"/>
+      <dep package="xf86-video-siliconmotion"/>
+      <dep package="xf86-video-sunbw2"/>
+      <dep package="xf86-video-v4l"/>
+    </dependencies>
+  </metamodule>
+
+  <!-- This driver is BSD specific, and should not be built on all platforms -->
+  <metamodule id="xorg-unmaintained-broken-drivers">
+    <dependencies>
+      <dep package="xf86-video-wsfb"/>
+    </dependencies>
+  </metamodule>
+
+  <metamodule id="xorg-drivers">
+    <dependencies>
+      <dep package="xf86-input-acecad"/>
+      <dep package="xf86-input-aiptek"/>
+      <dep package="xf86-input-evdev"/>
+      <dep package="xf86-input-joystick"/>
+      <dep package="xf86-input-keyboard"/>
+      <dep package="xf86-input-mouse"/>
+      <dep package="xf86-input-void"/>
+      <dep package="xf86-video-ati"/>
+      <dep package="xf86-video-chips"/>
+      <dep package="xf86-video-cirrus"/>
+      <dep package="xf86-video-dummy"/>
+      <dep package="xf86-video-fbdev"/>
+      <dep package="xf86-video-geode"/>
+      <dep package="xf86-video-glint"/>
+      <dep package="xf86-video-i128"/>
+      <dep package="xf86-video-intel"/>
+      <dep package="xf86-video-mach64"/>
+      <dep package="xf86-video-mga"/>
+      <dep package="xf86-video-neomagic"/>
+      <dep package="xf86-video-nv"/>
+      <dep package="xf86-video-openchrome"/>
+      <dep package="xf86-video-r128"/>
+      <dep package="xf86-video-rendition"/>
+      <dep package="xf86-video-savage"/>
+      <dep package="xf86-video-sis"/>
+      <dep package="xf86-video-sisusb"/>
+      <dep package="xf86-video-suncg14"/>
+      <dep package="xf86-video-suncg3"/>
+      <dep package="xf86-video-suncg6"/>
+      <dep package="xf86-video-sunffb"/>
+      <dep package="xf86-video-sunleo"/>
+      <dep package="xf86-video-suntcx"/>
+      <dep package="xf86-video-tdfx"/>
+      <dep package="xf86-video-tga"/>
+      <dep package="xf86-video-trident"/>
+      <dep package="xf86-video-tseng"/>
+      <dep package="xf86-video-vesa"/>
+      <dep package="xf86-video-vmware"/>
+      <dep package="xf86-video-voodoo"/>
+      <dep package="xf86-video-xgi"/>
+      <dep package="xf86-video-xgixp"/>
+    </dependencies>
+  </metamodule>
+
+  <!-- Modules that only build on x86 (32 and 64bit) -->
+
+  <metamodule id="xorg-x86-drivers">
+    <dependencies>
+      <dep package="xf86-input-vmmouse"/>
+    </dependencies>
+  </metamodule>
+
+  <!-- This probably isn't sufficient, but it is a start -->
+
+  <metamodule id="xorg-sun-drivers">
+    <dependencies>
+      <dep package="xf86-video-suncg14"/>
+      <dep package="xf86-video-suncg3"/>
+      <dep package="xf86-video-suncg6"/>
+      <dep package="xf86-video-sunffb"/>
+      <dep package="xf86-video-sunleo"/>
+      <dep package="xf86-video-suntcx"/>
+    </dependencies>
+  </metamodule>
+
+
+  <!-- Bogosity of depending on libraries caused by Xnest.  Sigh -->
+  <autotools id="xserver">
+    <branch module="xserver/xorg-server-1.9.3.tar.gz" version="1.9.3"
+            hash="sha1:ba630c8d4b92a30c14beab6890969c79bc6f87a3"/>
+    <dependencies>
+      <dep package="xorg-protos"/>
+      <dep package="libGL"/>
+      <dep package="libXaw"/>
+      <dep package="libXfont"/>
+      <dep package="libxtrans"/>
+      <dep package="libXau"/>
+      <dep package="libxkbfile"/>
+      <dep package="libXdmcp"/>
+      <dep package="libXxf86vm"/>
+      <dep package="libXinerama"/>
+      <dep package="libXv"/>
+      <dep package="libdrm"/>
+      <dep package="libdmx"/>
+      <dep package="libXtst"/>
+      <dep package="libXRes"/>
+      <dep package="pixman"/>
+      <dep package="libpciaccess"/>
+    </dependencies>
+  </autotools>
+
+  <metamodule id="xorg">
+    <dependencies>
+      <dep package="xorg-protos"/>
+      <dep package="xorg-libs"/>
+      <dep package="xorg-apps"/>
+      <dep package="xorg-fonts"/>
+      <dep package="xorg-drivers"/>
+      <dep package="xorg-docs"/>
+      <dep package="xserver"/>
+      <dep package="xkeyboard-config"/>
+    </dependencies>
+  </metamodule>
+
+</moduleset>
