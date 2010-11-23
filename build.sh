@@ -951,7 +951,6 @@ usage() {
     echo "  -d : run make distcheck in addition to others"
     echo "  -g : build with debug information"
     echo "  -h | --help : display this help and exit successfully"
-    echo "  -l : build libraries only (i.e. no drivers, no docs, etc.)"
     echo "  -n : do not quit after error; just print error message"
     echo "  -o module/component : build just this component"
     echo "  -p : run git pull on each component"
@@ -971,7 +970,6 @@ usage() {
 HAVE_ARCH="`uname -i`"
 DIR_ARCH=""
 DIR_CONFIG="."
-LIB_ONLY=0
 PREFIX=""
 
 # perform sanity checks on cmdline args which require arguments
@@ -1037,9 +1035,6 @@ do
 	;;
     -L)
 	LISTONLY=1
-	;;
-    -l)
-	LIB_ONLY=1
 	;;
     -n)
 	NOQUIT=1
@@ -1165,16 +1160,14 @@ if [ X"$MODFILE" = X ]; then
     build_lib
     build_mesa
 
-    if [ $LIB_ONLY -eq 0 ]; then
-	build_doc
-	build data bitmaps
-	build_app
-	build_xserver
-	build_driver
-	build_data
-	build_font
-	build_util
-    fi
+    build_doc
+    build data bitmaps
+    build_app
+    build_xserver
+    build_driver
+    build_data
+    build_font
+    build_util
 else
     process_module_file
 fi
