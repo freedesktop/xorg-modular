@@ -5,7 +5,6 @@ cat << EOF
 global environment variables you may set:
   CACHE: absolute path to a global autoconf cache
   QUIET: hush the configure script noise
-  USE_XCB: set to "NO" to not use or build xcb
 
 global environment variables you may set to replace default functionality:
   ACLOCAL:  alternate invocation for 'aclocal' (default: aclocal)
@@ -340,13 +339,6 @@ process() {
 	fi
     fi
 
-    # Special configure flags for certain modules
-    MOD_SPECIFIC=
-
-    if [ X"$1" = X"lib" ] && [ X"$2" = X"libX11" ] && [ X"${USE_XCB}" = X"NO" ]; then
-	MOD_SPECIFIC="--with-xcb=no"
-    fi
-
     LIB_FLAGS=
     if [ X"$LIBDIR" != X ]; then
 	LIB_FLAGS="--libdir=${PREFIX}/${LIBDIR}"
@@ -355,7 +347,7 @@ process() {
     # Use "sh autogen.sh" since some scripts are not executable in CVS
     if [ $needs_config -eq 1 ] || [ X"$NOAUTOGEN" = X ]; then
 	sh ${DIR_CONFIG}/${CONFCMD} --prefix=${PREFIX} ${LIB_FLAGS} \
-	    ${MOD_SPECIFIC} ${QUIET:+--quiet} \
+	    ${QUIET:+--quiet} \
 	    ${CACHE:+--cache-file=}${CACHE} ${CONFFLAGS} "$CONFCFLAGS"
 	if [ $? -ne 0 ]; then
 	    failed ${CONFCMD} $1 $2
@@ -505,9 +497,7 @@ build_proto() {
     build proto xf86driproto
     build proto xf86vidmodeproto
     build proto xineramaproto
-    if [ X"${USE_XCB}" != X"NO" ]; then
-	build xcb proto
-    fi
+    build xcb proto
 }
 
 # bitmaps is needed for building apps, so has to be done separately first
@@ -532,18 +522,13 @@ build_data() {
 # Xfixes before Xcomposite
 # Xp before XprintUtil before XprintAppUtil
 #
-# If xcb is being used for libX11, it must be built before libX11, but after
-# Xau & Xdmcp
-#
 build_lib() {
     build lib libxtrans
     build lib libXau
     build lib libXdmcp
-    if [ X"${USE_XCB}" != X"NO" ]; then
-        build xcb pthread-stubs
-	build xcb libxcb
-        build xcb util
-    fi
+    build xcb pthread-stubs
+    build xcb libxcb
+    build xcb util
     build lib libX11
     build lib libXext
     case $HOST_OS in
@@ -680,9 +665,6 @@ build_app() {
     build app xwd
     build app xwininfo
     build app xwud
-#    if [ X"${USE_XCB}" != X"NO" ]; then
-#	build xcb demo
-#    fi
 }
 
 build_mesa() {
