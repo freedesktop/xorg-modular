@@ -23,7 +23,6 @@ global environment variables you may set to augment functionality:
               you have headers in a nonstandard directory <include dir>
   CPP         C preprocessor
   CONFFLAGS:  additional flags to pass to all configure scripts
-  CONFCFLAGS: additional compile flags to pass to all configure scripts
   MAKEFLAGS:  additional flags to pass to all make invocations
   PKG_CONFIG_PATH: include paths in addition to:
                    \$DESTDIR/\$PREFIX/share/pkgconfig
@@ -361,8 +360,7 @@ process() {
 	    ${CPP:+CPP="$CPP"} \
 	    ${CPPFLAGS:+CPPFLAGS="$CPPFLAGS"} \
 	    ${CFLAGS:+CFLAGS="$CFLAGS"} \
-	    ${LDFLAGS:+LDFLAGS="$LDFLAGS"} \
-	    "$CONFCFLAGS"
+	    ${LDFLAGS:+LDFLAGS="$LDFLAGS"}
 	if [ $? -ne 0 ]; then
 	    failed ${CONFCMD} $1 $2
 	    cd $old_pwd
@@ -1021,9 +1019,7 @@ do
 	DISTCHECK=1
 	;;
     -g)
-	CFLAGS="-g3 -O0"
-	export CFLAGS
-	CONFCFLAGS="CFLAGS=-g3 -O0"
+	CFLAGS="${CFLAGS} -g3 -O0"
 	;;
     -h|--help)
 	usage
