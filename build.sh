@@ -354,7 +354,7 @@ process() {
     if [ $needs_config -eq 1 ] || [ X"$NOAUTOGEN" = X ]; then
 	sh ${DIR_CONFIG}/${CONFCMD} --prefix=${PREFIX} ${LIB_FLAGS} \
 	    ${QUIET:+--quiet} \
-	    ${CACHE:+--cache-file=}${CACHE} \
+	    ${CACHE:+--cache-file="$CACHE"} \
 	    ${CONFFLAGS} \
 	    ${CC:+CC="$CC"} \
 	    ${CPP:+CPP="$CPP"} \
