@@ -934,7 +934,8 @@ process_module_file() {
 }
 
 usage() {
-    echo "Usage: $0 [options] prefix"
+    basename="`expr "//$0" : '.*/\([^/]*\)'`"
+    echo "Usage: $basename [options] prefix"
     echo "  where options are:"
     echo "  -a : do NOT run auto config tools (autogen.sh, configure)"
     echo "  -b : use .build.$HAVE_ARCH build directory"
@@ -953,7 +954,7 @@ usage() {
     echo "  --cmd cmd : execute arbitrary git, gmake, or make command 'cmd'"
     echo "  --modfile file : only process the module/components specified in 'file'"
     echo ""
-    echo "Usage: $0 -L"
+    echo "Usage: $basename -L"
     echo "  -L : just list modules to build"
     echo ""
     envoptions
