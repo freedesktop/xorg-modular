@@ -3,7 +3,6 @@
 envoptions() {
 cat << EOF
 global environment variables you may set:
-  CACHE: absolute path to a global autoconf cache
   QUIET: hush the configure script noise
 
 global environment variables you may set to replace default functionality:
@@ -354,7 +353,6 @@ process() {
     if [ $needs_config -eq 1 ] || [ X"$NOAUTOGEN" = X ]; then
 	sh ${DIR_CONFIG}/${CONFCMD} --prefix=${PREFIX} ${LIB_FLAGS} \
 	    ${QUIET:+--quiet} \
-	    ${CACHE:+--cache-file="$CACHE"} \
 	    ${CONFFLAGS} \
 	    ${CC:+CC="$CC"} \
 	    ${CPP:+CPP="$CPP"} \
