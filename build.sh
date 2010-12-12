@@ -5,15 +5,17 @@ cat << EOF
 Environment variables specific to build.sh:
   PREFIX      Install architecture-independent files in PREFIX [/usr/local]
               Each module/components is invoked with --prefix
+  EPREFIX     Install architecture-dependent files in EPREFIX [PREFIX]
+              Each module/components is invoked with --exec-prefix
   QUIET       Do not print messages saying which checks are being made
               Each module/components is invoked with --quite
   GITROOT     Source code repository path [git://anongit.freedesktop.org/git]
               Optional when using --clone to update source code before building
   CONFFLAGS   Configure options to pass to all Autoconf configure scripts
               Refer to 'configure --help' from any module/components
-  LIBDIR      Path segment under \$PREFIX for libraries (e.g., lib64) [lib]
+  LIBDIR      Path segment under \$EPREFIX for libraries (e.g., lib64) [lib]
               Used to build the font path, search libraries and packages
-  FONTPATH    Path to fonts directories [\$PREFIX/\$LIBDIR/X11/fonts/misc/, ...]
+  FONTPATH    Path to fonts directories [\$EPREFIX/\$LIBDIR/X11/fonts/misc/, ...]
               Picked-up by the xserver as a value for --with-default-font-path
 
 Environment variables defined by the GNU Build System:
@@ -30,16 +32,16 @@ Environment variables defined by the GNU Build System:
 
 Environment variables defined by the shell:
   PATH        List of directories that the shell searches for commands
-              \$DESTDIR/\$PREFIX/bin is prepended
+              \$DESTDIR/\$EPREFIX/bin is prepended
 
 Environment variables defined by the dynamic linker:
   LD_LIBRARY_PATH List directories that the linker searches for shared objects
-                  \$DESTDIR/\$PREFIX/\$LIBDIR is prepended
+                  \$DESTDIR/\$EPREFIX/\$LIBDIR is prepended
 
 Environment variables defined by the pkg-config system:
   PKG_CONFIG_PATH List directories that pkg-config searches for libraries
                   \$DESTDIR/\$PREFIX/share/pkgconfig and
-                  \$DESTDIR/\$PREFIX/\$LIBDIR/pkgconfig are prepended
+                  \$DESTDIR/\$EPREFIX/\$LIBDIR/pkgconfig are prepended
 EOF
 }
 
@@ -57,15 +59,15 @@ setup_buildenv() {
     export ACLOCAL
 
     # The following is required to make pkg-config find our .pc metadata files
-    PKG_CONFIG_PATH=${DESTDIR}${PREFIX}/share/pkgconfig:${DESTDIR}${PREFIX}/${LIBDIR}/pkgconfig${PKG_CONFIG_PATH+:$PKG_CONFIG_PATH}
+    PKG_CONFIG_PATH=${DESTDIR}${PREFIX}/share/pkgconfig:${DESTDIR}${EPREFIX}/${LIBDIR}/pkgconfig${PKG_CONFIG_PATH+:$PKG_CONFIG_PATH}
     export PKG_CONFIG_PATH
 
     # Set the library path so that locally built libs will be found by apps
-    LD_LIBRARY_PATH=${DESTDIR}${PREFIX}/${LIBDIR}${LD_LIBRARY_PATH+:$LD_LIBRARY_PATH}
+    LD_LIBRARY_PATH=${DESTDIR}${EPREFIX}/${LIBDIR}${LD_LIBRARY_PATH+:$LD_LIBRARY_PATH}
     export LD_LIBRARY_PATH
 
     # Set the path so that locally built apps will be found and used
-    PATH=${DESTDIR}${PREFIX}/bin${PATH+:$PATH}
+    PATH=${DESTDIR}${EPREFIX}/bin${PATH+:$PATH}
     export PATH
 
     # Choose which make program to use
@@ -73,7 +75,7 @@ setup_buildenv() {
 
     # Set the default font path for xserver/xorg unless it's already set
     if [ X"$FONTPATH" = X ]; then
-	FONTPATH="${PREFIX}/${LIBDIR}/X11/fonts/misc/,${PREFIX}/${LIBDIR}/X11/fonts/Type1/,${PREFIX}/${LIBDIR}/X11/fonts/75dpi/,${PREFIX}/${LIBDIR}/X11/fonts/100dpi/,${PREFIX}/${LIBDIR}/X11/fonts/cyrillic/,${PREFIX}/${LIBDIR}/X11/fonts/TTF/"
+	FONTPATH="${EPREFIX}/${LIBDIR}/X11/fonts/misc/,${EPREFIX}/${LIBDIR}/X11/fonts/Type1/,${EPREFIX}/${LIBDIR}/X11/fonts/75dpi/,${EPREFIX}/${LIBDIR}/X11/fonts/100dpi/,${EPREFIX}/${LIBDIR}/X11/fonts/cyrillic/,${EPREFIX}/${LIBDIR}/X11/fonts/TTF/"
 	export FONTPATH
     fi
 
@@ -356,12 +358,15 @@ process() {
 
     LIB_FLAGS=
     if [ X"$LIBDIR" != X ]; then
-	LIB_FLAGS="--libdir=${PREFIX}/${LIBDIR}"
+	LIB_FLAGS="--libdir=${EPREFIX}/${LIBDIR}"
     fi
 
     # Use "sh autogen.sh" since some scripts are not executable in CVS
     if [ $needs_config -eq 1 ] || [ X"$NOAUTOGEN" = X ]; then
-	sh ${DIR_CONFIG}/${CONFCMD} --prefix=${PREFIX} ${LIB_FLAGS} \
+	sh ${DIR_CONFIG}/${CONFCMD} \
+	    --prefix=${PREFIX} \
+	    ${EPREFIX_SET:+--exec-prefix="$EPREFIX"} \
+	    ${LIB_FLAGS} \
 	    ${QUIET:+--quiet} \
 	    ${CONFFLAGS} \
 	    ${CC:+CC="$CC"} \
@@ -974,6 +979,11 @@ HAVE_ARCH="`uname -i`"
 DIR_ARCH=""
 DIR_CONFIG="."
 
+# States if the user has exported EPREFIX
+if [ X"$EPREFIX" != X ]; then
+    EPREFIX_SET=yes
+fi
+
 # perform sanity checks on cmdline args which require arguments
 # arguments:
 #   $1 - the option being examined
@@ -1136,6 +1146,11 @@ if [ X"${PREFIX}" = X ] && [ X"$LISTONLY" = X ]; then
     echo ""
     usage
     exit 1
+fi
+
+# Set the default value for EPREFIX
+if [ X"$EPREFIX_SET" = X ]; then
+    EPREFIX=$PREFIX
 fi
 
 HOST_OS=`uname -s`
