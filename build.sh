@@ -2,18 +2,22 @@
 
 envoptions() {
 cat << EOF
-global environment variables you may set:
-  QUIET: hush the configure script noise
+Environment variables specific to build.sh:
+  QUIET       Do not print messages saying which checks are being made
+              Each module/components is invoked with --quite
+  GITROOT     Source code repository path [git://anongit.freedesktop.org/git]
+              Optional when using --clone to update source code before building
+  CONFFLAGS   Configure options to pass to all Autoconf configure scripts
+              Refer to 'configure --help' from any module/components
+  LIBDIR      Path segment under \$PREFIX for libraries (e.g., lib64) [lib]
+              Used to build the font path, search libraries and packages
+  FONTPATH    Path to fonts directories [\$PREFIX/\$LIBDIR/X11/fonts/misc/, ...]
+              Picked-up by the xserver as a value for --with-default-font-path
 
-global environment variables you may set to replace default functionality:
-  ACLOCAL:  alternate invocation for 'aclocal' (default: aclocal)
-  MAKE:     program to use instead of 'make' (default: make)
-  FONTPATH: font path to use (defaults under: \$PREFIX/\$LIBDIR...)
-  LIBDIR:   path under \$PREFIX for libraries (e.g., lib64) (default: lib)
-  GITROOT:  path to freedesktop.org git root, only needed for --clone
-            (default: git://anongit.freedesktop.org/git)
-
-global environment variables you may set to augment functionality:
+Environment variables defined by the GNU Build System:
+  DESTDIR     Path to the staging area where installed objects are relocated
+  MAKE        The name of the make command [make]
+  MAKEFLAGS:  Options to pass to all \$(MAKE) invocations
   CC          C compiler command
   CFLAGS      C compiler flags
   LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
@@ -21,15 +25,19 @@ global environment variables you may set to augment functionality:
   CPPFLAGS    C/C++/Objective C preprocessor flags, e.g. -I<include dir> if
               you have headers in a nonstandard directory <include dir>
   CPP         C preprocessor
-  CONFFLAGS:  additional flags to pass to all configure scripts
-  MAKEFLAGS:  additional flags to pass to all make invocations
-  PKG_CONFIG_PATH: include paths in addition to:
-                   \$DESTDIR/\$PREFIX/share/pkgconfig
-                   \$DESTDIR/\$PREFIX/\$LIBDIR/pkgconfig
-  LD_LIBRARY_PATH: include paths in addition to:
-                   \$DESTDIR/\$PREFIX/\$LIBDIR
-  PATH:            include paths in addition to:
-                   \$DESTDIR/\$PREFIX/bin
+
+Environment variables defined by the shell:
+  PATH        List of directories that the shell searches for commands
+              \$DESTDIR/\$PREFIX/bin is prepended
+
+Environment variables defined by the dynamic linker:
+  LD_LIBRARY_PATH List directories that the linker searches for shared objects
+                  \$DESTDIR/\$PREFIX/\$LIBDIR is prepended
+
+Environment variables defined by the pkg-config system:
+  PKG_CONFIG_PATH List directories that pkg-config searches for libraries
+                  \$DESTDIR/\$PREFIX/share/pkgconfig and
+                  \$DESTDIR/\$PREFIX/\$LIBDIR/pkgconfig are prepended
 EOF
 }
 
