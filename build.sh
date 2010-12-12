@@ -3,6 +3,8 @@
 envoptions() {
 cat << EOF
 Environment variables specific to build.sh:
+  PREFIX      Install architecture-independent files in PREFIX [/usr/local]
+              Each module/components is invoked with --prefix
   QUIET       Do not print messages saying which checks are being made
               Each module/components is invoked with --quite
   GITROOT     Source code repository path [git://anongit.freedesktop.org/git]
@@ -971,7 +973,6 @@ usage() {
 HAVE_ARCH="`uname -i`"
 DIR_ARCH=""
 DIR_CONFIG="."
-PREFIX=""
 
 # perform sanity checks on cmdline args which require arguments
 # arguments:
