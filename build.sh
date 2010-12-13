@@ -7,6 +7,8 @@ Environment variables specific to build.sh:
               Each module/components is invoked with --prefix
   EPREFIX     Install architecture-dependent files in EPREFIX [PREFIX]
               Each module/components is invoked with --exec-prefix
+  BINDIR      Install user executables [EPREFIX/bin]
+              Each module/components is invoked with --bindir
   QUIET       Do not print messages saying which checks are being made
               Each module/components is invoked with --quite
   GITROOT     Source code repository path [git://anongit.freedesktop.org/git]
@@ -32,7 +34,7 @@ Environment variables defined by the GNU Build System:
 
 Environment variables defined by the shell:
   PATH        List of directories that the shell searches for commands
-              \$DESTDIR/\$EPREFIX/bin is prepended
+              \$DESTDIR/\$BINDIR is prepended
 
 Environment variables defined by the dynamic linker:
   LD_LIBRARY_PATH List directories that the linker searches for shared objects
@@ -67,7 +69,7 @@ setup_buildenv() {
     export LD_LIBRARY_PATH
 
     # Set the path so that locally built apps will be found and used
-    PATH=${DESTDIR}${EPREFIX}/bin${PATH+:$PATH}
+    PATH=${DESTDIR}${BINDIR}${PATH+:$PATH}
     export PATH
 
     # Choose which make program to use
@@ -366,6 +368,7 @@ process() {
 	sh ${DIR_CONFIG}/${CONFCMD} \
 	    --prefix=${PREFIX} \
 	    ${EPREFIX_SET:+--exec-prefix="$EPREFIX"} \
+	    ${BINDIR_SET:+--bindir="$BINDIR"} \
 	    ${LIB_FLAGS} \
 	    ${QUIET:+--quiet} \
 	    ${CONFFLAGS} \
@@ -984,6 +987,11 @@ if [ X"$EPREFIX" != X ]; then
     EPREFIX_SET=yes
 fi
 
+# States if the user has exported BINDIR
+if [ X"$BINDIR" != X ]; then
+    BINDIR_SET=yes
+fi
+
 # perform sanity checks on cmdline args which require arguments
 # arguments:
 #   $1 - the option being examined
@@ -1151,6 +1159,11 @@ fi
 # Set the default value for EPREFIX
 if [ X"$EPREFIX_SET" = X ]; then
     EPREFIX=$PREFIX
+fi
+
+# Set the default value for BINDIR
+if [ X"$BINDIR_SET" = X ]; then
+    BINDIR=$EPREFIX/bin
 fi
 
 HOST_OS=`uname -s`
