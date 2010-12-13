@@ -1148,11 +1148,11 @@ if [ X"$MODFILE" = X ]; then
     # Required by mesa
     build util makedepend
 
+    build_doc
     build_proto
     build_lib
     build_mesa
 
-    build_doc
     build data bitmaps
     build_app
     build_xserver
