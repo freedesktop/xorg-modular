@@ -9,6 +9,10 @@ Environment variables specific to build.sh:
               Each module/components is invoked with --exec-prefix
   BINDIR      Install user executables [EPREFIX/bin]
               Each module/components is invoked with --bindir
+  DATAROOTDIR Install read-only arch-independent data root [PREFIX/share]
+              Each module/components is invoked with --datarootdir
+  DATADIR     Install read-only architecture-independent data [DATAROOTDIR]
+              Each module/components is invoked with --datadir
   QUIET       Do not print messages saying which checks are being made
               Each module/components is invoked with --quite
   GITROOT     Source code repository path [git://anongit.freedesktop.org/git]
@@ -42,7 +46,7 @@ Environment variables defined by the dynamic linker:
 
 Environment variables defined by the pkg-config system:
   PKG_CONFIG_PATH List directories that pkg-config searches for libraries
-                  \$DESTDIR/\$PREFIX/share/pkgconfig and
+                  \$DESTDIR/\$DATADIR/pkgconfig and
                   \$DESTDIR/\$EPREFIX/\$LIBDIR/pkgconfig are prepended
 EOF
 }
@@ -52,7 +56,7 @@ setup_buildenv() {
     export LIBDIR
 
     # Must create local aclocal dir or aclocal fails
-    ACLOCAL_LOCALDIR="${DESTDIR}${PREFIX}/share/aclocal"
+    ACLOCAL_LOCALDIR="${DESTDIR}${DATADIR}/aclocal"
     $SUDO mkdir -p ${ACLOCAL_LOCALDIR}
 
     # The following is required to make aclocal find our .m4 macros
@@ -61,7 +65,7 @@ setup_buildenv() {
     export ACLOCAL
 
     # The following is required to make pkg-config find our .pc metadata files
-    PKG_CONFIG_PATH=${DESTDIR}${PREFIX}/share/pkgconfig:${DESTDIR}${EPREFIX}/${LIBDIR}/pkgconfig${PKG_CONFIG_PATH+:$PKG_CONFIG_PATH}
+    PKG_CONFIG_PATH=${DESTDIR}${DATADIR}/pkgconfig:${DESTDIR}${EPREFIX}/${LIBDIR}/pkgconfig${PKG_CONFIG_PATH+:$PKG_CONFIG_PATH}
     export PKG_CONFIG_PATH
 
     # Set the library path so that locally built libs will be found by apps
@@ -369,6 +373,8 @@ process() {
 	    --prefix=${PREFIX} \
 	    ${EPREFIX_SET:+--exec-prefix="$EPREFIX"} \
 	    ${BINDIR_SET:+--bindir="$BINDIR"} \
+	    ${DATAROOTDIR_SET:+--datarootdir="$DATAROOTDIR"} \
+	    ${DATADIR_SET:+--datadir="$DATADIR"} \
 	    ${LIB_FLAGS} \
 	    ${QUIET:+--quiet} \
 	    ${CONFFLAGS} \
@@ -992,6 +998,16 @@ if [ X"$BINDIR" != X ]; then
     BINDIR_SET=yes
 fi
 
+# States if the user has exported DATAROOTDIR
+if [ X"$DATAROOTDIR" != X ]; then
+    DATAROOTDIR_SET=yes
+fi
+
+# States if the user has exported DATADIR
+if [ X"$DATADIR" != X ]; then
+    DATADIR_SET=yes
+fi
+
 # perform sanity checks on cmdline args which require arguments
 # arguments:
 #   $1 - the option being examined
@@ -1164,6 +1180,16 @@ fi
 # Set the default value for BINDIR
 if [ X"$BINDIR_SET" = X ]; then
     BINDIR=$EPREFIX/bin
+fi
+
+# Set the default value for DATAROOTDIR
+if [ X"$DATAROOTDIR_SET" = X ]; then
+    DATAROOTDIR=$PREFIX/share
+fi
+
+# Set the default value for DATADIR
+if [ X"$DATADIR_SET" = X ]; then
+    DATADIR=$DATAROOTDIR
 fi
 
 HOST_OS=`uname -s`
