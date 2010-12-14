@@ -13,6 +13,8 @@ Environment variables specific to build.sh:
               Each module/components is invoked with --datarootdir
   DATADIR     Install read-only architecture-independent data [DATAROOTDIR]
               Each module/components is invoked with --datadir
+  LOCALSTATEDIR Modifiable single-machine data [PREFIX/var]
+              Each module/components is invoked with --localstatedir
   QUIET       Do not print messages saying which checks are being made
               Each module/components is invoked with --quite
   GITROOT     Source code repository path [git://anongit.freedesktop.org/git]
@@ -86,7 +88,7 @@ setup_buildenv() {
     fi
 
     # Create the log file directory
-    $SUDO mkdir -p ${DESTDIR}${PREFIX}/var/log
+    $SUDO mkdir -p ${DESTDIR}${LOCALSTATEDIR}/log
 }
 
 failed_components=""
@@ -375,6 +377,7 @@ process() {
 	    ${BINDIR_SET:+--bindir="$BINDIR"} \
 	    ${DATAROOTDIR_SET:+--datarootdir="$DATAROOTDIR"} \
 	    ${DATADIR_SET:+--datadir="$DATADIR"} \
+	    ${LOCALSTATEDIR_SET:+--localstatedir="$LOCALSTATEDIR"} \
 	    ${LIB_FLAGS} \
 	    ${QUIET:+--quiet} \
 	    ${CONFFLAGS} \
@@ -1008,6 +1011,11 @@ if [ X"$DATADIR" != X ]; then
     DATADIR_SET=yes
 fi
 
+# States if the user has exported LOCALSTATEDIR
+if [ X"$LOCALSTATEDIR" != X ]; then
+    LOCALSTATEDIR_SET=yes
+fi
+
 # perform sanity checks on cmdline args which require arguments
 # arguments:
 #   $1 - the option being examined
@@ -1190,6 +1198,11 @@ fi
 # Set the default value for DATADIR
 if [ X"$DATADIR_SET" = X ]; then
     DATADIR=$DATAROOTDIR
+fi
+
+# Set the default value for LOCALSTATEDIR
+if [ X"$LOCALSTATEDIR_SET" = X ]; then
+    LOCALSTATEDIR=$PREFIX/var
 fi
 
 HOST_OS=`uname -s`
