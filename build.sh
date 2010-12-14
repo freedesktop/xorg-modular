@@ -13,6 +13,8 @@ Environment variables specific to build.sh:
               Each module/components is invoked with --datarootdir
   DATADIR     Install read-only architecture-independent data [DATAROOTDIR]
               Each module/components is invoked with --datadir
+  LIBDIR      Install object code libraries [EPREFIX/lib]
+              Each module/components is invoked with --libdir
   LOCALSTATEDIR Modifiable single-machine data [PREFIX/var]
               Each module/components is invoked with --localstatedir
   QUIET       Do not print messages saying which checks are being made
@@ -21,9 +23,7 @@ Environment variables specific to build.sh:
               Optional when using --clone to update source code before building
   CONFFLAGS   Configure options to pass to all Autoconf configure scripts
               Refer to 'configure --help' from any module/components
-  LIBDIR      Path segment under \$EPREFIX for libraries (e.g., lib64) [lib]
-              Used to build the font path, search libraries and packages
-  FONTPATH    Path to fonts directories [\$EPREFIX/\$LIBDIR/X11/fonts/misc/, ...]
+  FONTPATH    Path to fonts directories [\$LIBDIR/X11/fonts/misc/, ...]
               Picked-up by the xserver as a value for --with-default-font-path
 
 Environment variables defined by the GNU Build System:
@@ -44,18 +44,16 @@ Environment variables defined by the shell:
 
 Environment variables defined by the dynamic linker:
   LD_LIBRARY_PATH List directories that the linker searches for shared objects
-                  \$DESTDIR/\$EPREFIX/\$LIBDIR is prepended
+                  \$DESTDIR/\$LIBDIR is prepended
 
 Environment variables defined by the pkg-config system:
   PKG_CONFIG_PATH List directories that pkg-config searches for libraries
                   \$DESTDIR/\$DATADIR/pkgconfig and
-                  \$DESTDIR/\$EPREFIX/\$LIBDIR/pkgconfig are prepended
+                  \$DESTDIR/\$LIBDIR/pkgconfig are prepended
 EOF
 }
 
 setup_buildenv() {
-    LIBDIR=${LIBDIR:="lib"}
-    export LIBDIR
 
     # Must create local aclocal dir or aclocal fails
     ACLOCAL_LOCALDIR="${DESTDIR}${DATADIR}/aclocal"
@@ -67,11 +65,11 @@ setup_buildenv() {
     export ACLOCAL
 
     # The following is required to make pkg-config find our .pc metadata files
-    PKG_CONFIG_PATH=${DESTDIR}${DATADIR}/pkgconfig:${DESTDIR}${EPREFIX}/${LIBDIR}/pkgconfig${PKG_CONFIG_PATH+:$PKG_CONFIG_PATH}
+    PKG_CONFIG_PATH=${DESTDIR}${DATADIR}/pkgconfig:${DESTDIR}${LIBDIR}/pkgconfig${PKG_CONFIG_PATH+:$PKG_CONFIG_PATH}
     export PKG_CONFIG_PATH
 
     # Set the library path so that locally built libs will be found by apps
-    LD_LIBRARY_PATH=${DESTDIR}${EPREFIX}/${LIBDIR}${LD_LIBRARY_PATH+:$LD_LIBRARY_PATH}
+    LD_LIBRARY_PATH=${DESTDIR}${LIBDIR}${LD_LIBRARY_PATH+:$LD_LIBRARY_PATH}
     export LD_LIBRARY_PATH
 
     # Set the path so that locally built apps will be found and used
@@ -83,7 +81,7 @@ setup_buildenv() {
 
     # Set the default font path for xserver/xorg unless it's already set
     if [ X"$FONTPATH" = X ]; then
-	FONTPATH="${EPREFIX}/${LIBDIR}/X11/fonts/misc/,${EPREFIX}/${LIBDIR}/X11/fonts/Type1/,${EPREFIX}/${LIBDIR}/X11/fonts/75dpi/,${EPREFIX}/${LIBDIR}/X11/fonts/100dpi/,${EPREFIX}/${LIBDIR}/X11/fonts/cyrillic/,${EPREFIX}/${LIBDIR}/X11/fonts/TTF/"
+	FONTPATH="${LIBDIR}/X11/fonts/misc/,${LIBDIR}/X11/fonts/Type1/,${LIBDIR}/X11/fonts/75dpi/,${LIBDIR}/X11/fonts/100dpi/,${LIBDIR}/X11/fonts/cyrillic/,${LIBDIR}/X11/fonts/TTF/"
 	export FONTPATH
     fi
 
@@ -364,11 +362,6 @@ process() {
 	fi
     fi
 
-    LIB_FLAGS=
-    if [ X"$LIBDIR" != X ]; then
-	LIB_FLAGS="--libdir=${EPREFIX}/${LIBDIR}"
-    fi
-
     # Use "sh autogen.sh" since some scripts are not executable in CVS
     if [ $needs_config -eq 1 ] || [ X"$NOAUTOGEN" = X ]; then
 	sh ${DIR_CONFIG}/${CONFCMD} \
@@ -377,8 +370,8 @@ process() {
 	    ${BINDIR_SET:+--bindir="$BINDIR"} \
 	    ${DATAROOTDIR_SET:+--datarootdir="$DATAROOTDIR"} \
 	    ${DATADIR_SET:+--datadir="$DATADIR"} \
+	    ${LIBDIR_SET:+--libdir="$LIBDIR"} \
 	    ${LOCALSTATEDIR_SET:+--localstatedir="$LOCALSTATEDIR"} \
-	    ${LIB_FLAGS} \
 	    ${QUIET:+--quiet} \
 	    ${CONFFLAGS} \
 	    ${CC:+CC="$CC"} \
@@ -1011,6 +1004,11 @@ if [ X"$DATADIR" != X ]; then
     DATADIR_SET=yes
 fi
 
+# States if the user has exported LIBDIR
+if [ X"$LIBDIR" != X ]; then
+    LIBDIR_SET=yes
+fi
+
 # States if the user has exported LOCALSTATEDIR
 if [ X"$LOCALSTATEDIR" != X ]; then
     LOCALSTATEDIR_SET=yes
@@ -1198,6 +1196,19 @@ fi
 # Set the default value for DATADIR
 if [ X"$DATADIR_SET" = X ]; then
     DATADIR=$DATAROOTDIR
+fi
+
+# Set the default value for LIBDIR
+if [ X"$LIBDIR_SET" = X ]; then
+    LIBDIR=$EPREFIX/lib
+# Support previous usage of LIBDIR which was a subdir relative to PREFIX
+# We use EPREFIX as this is what PREFIX really meant at the time
+elif [ X"`expr substr $LIBDIR 1 1`" != X/ ]; then
+    echo ""
+    echo "Warning: this usage of \$LIBDIR is deprecated. Use a full path name."
+    echo "The supplied value \"$LIBDIR\" has been replaced with $EPREFIX/$LIBDIR."
+    echo ""
+    LIBDIR=$EPREFIX/$LIBDIR
 fi
 
 # Set the default value for LOCALSTATEDIR
