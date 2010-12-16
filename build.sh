@@ -55,6 +55,15 @@ EOF
 
 setup_buildenv() {
 
+    # All directories variables must be full path names
+    check_full_path $PREFIX PREFIX
+    check_full_path $EPREFIX EPREFIX
+    check_full_path $BINDIR BINDIR
+    check_full_path $DATAROOTDIR DATAROOTDIR
+    check_full_path $DATADIR DATADIR
+    check_full_path $LIBDIR LIBDIR
+    check_full_path $LOCALSTATEDIR LOCALSTATEDIR
+
     # Must create local aclocal dir or aclocal fails
     ACLOCAL_LOCALDIR="${DESTDIR}${DATADIR}/aclocal"
     $SUDO mkdir -p ${ACLOCAL_LOCALDIR}
@@ -978,6 +987,21 @@ usage() {
     echo "  -L : just list modules to build"
     echo ""
     envoptions
+}
+
+# Ensure the named variable value contains a full path name
+# arguments:
+#   $1 - the variable value (the path to examin)
+#   $2 - the name of the variable
+# returns:
+#   returns nothing or exit on error with message
+check_full_path () {
+    if [ X"`expr substr $1 1 1`" != X/ ]; then
+	echo "The path \"$1\" supplied by \"$2\" must be a full path name"
+	echo ""
+	usage
+	exit 1
+    fi
 }
 
 HAVE_ARCH="`uname -i`"
