@@ -27,6 +27,7 @@ Environment variables specific to build.sh:
               Picked-up by the xserver as a value for --with-default-font-path
 
 Environment variables defined by the GNU Build System:
+  ACLOCAL     The aclocal cmd name [aclocal -I \${DESTDIR}/\${DATADIR}/aclocal]
   DESTDIR     Path to the staging area where installed objects are relocated
   MAKE        The name of the make command [make]
   MAKEFLAGS:  Options to pass to all \$(MAKE) invocations
