@@ -28,8 +28,6 @@ Environment variables specific to build.sh:
               Optional when using --clone to update source code before building
   CONFFLAGS   Configure options to pass to all Autoconf configure scripts
               Refer to 'configure --help' from any module/components
-  FONTPATH    Path to fonts directories [\$LIBDIR/X11/fonts/misc/, ...]
-              Picked-up by the xserver as a value for --with-default-font-path
 
 Environment variables defined by the GNU Build System:
   ACLOCAL     The aclocal cmd name [aclocal -I \${DESTDIR}/\${DATADIR}/aclocal]
@@ -93,12 +91,6 @@ setup_buildenv() {
 
     # Choose which make program to use
     MAKE=${MAKE:="make"}
-
-    # Set the default font path for xserver/xorg unless it's already set
-    if [ X"$FONTPATH" = X ]; then
-	FONTPATH="${LIBDIR}/X11/fonts/misc/,${LIBDIR}/X11/fonts/Type1/,${LIBDIR}/X11/fonts/75dpi/,${LIBDIR}/X11/fonts/100dpi/,${LIBDIR}/X11/fonts/cyrillic/,${LIBDIR}/X11/fonts/TTF/"
-	export FONTPATH
-    fi
 
     # Create the log file directory
     $SUDO mkdir -p ${DESTDIR}${LOCALSTATEDIR}/log
