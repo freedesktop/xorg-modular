@@ -1,4 +1,9 @@
 #!/bin/sh
+#
+# Note on portability:
+# This script is intended to run on any platform supported by X.Org.
+# The Autoconf generated configure script is a good reference as to what is permitted.
+# Basically, it should be able to run in a Bourne shell.
 
 envoptions() {
 cat << EOF
