@@ -975,6 +975,7 @@ usage() {
     echo "  --check     Run make check in addition \"all install\""
     echo "  --clone     Clone non-existing repositories (uses \$GITROOT if set)"
     echo "  --cmd <cmd> Execute arbitrary git, gmake, or make command <cmd>"
+    echo "  --confflags <options> Pass options to autgen.sh/configure"
     echo "  --modfile <file> Only process the module/components specified in <file>"
     echo ""
     echo "Usage: $basename -L"
@@ -1169,6 +1170,10 @@ do
 		exit 1
 		;;
 	esac
+	;;
+    --confflags)
+	shift
+	CONFFLAGS=$1
 	;;
     --modfile)
 	required_arg $1 $2
