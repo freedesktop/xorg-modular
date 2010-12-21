@@ -96,10 +96,6 @@ setup_buildenv() {
     $SUDO mkdir -p ${DESTDIR}${LOCALSTATEDIR}/log
 }
 
-failed_components=""
-nonexistent_components=""
-clonefailed_components=""
-
 # explain where a failure occurred
 # if you find this message in the build output it can help tell you where the failure occurred
 # arguments:
@@ -1002,40 +998,6 @@ check_full_path () {
     fi
 }
 
-HAVE_ARCH="`uname -i`"
-DIR_ARCH=""
-DIR_CONFIG="."
-
-# States if the user has exported EPREFIX
-if [ X"$EPREFIX" != X ]; then
-    EPREFIX_SET=yes
-fi
-
-# States if the user has exported BINDIR
-if [ X"$BINDIR" != X ]; then
-    BINDIR_SET=yes
-fi
-
-# States if the user has exported DATAROOTDIR
-if [ X"$DATAROOTDIR" != X ]; then
-    DATAROOTDIR_SET=yes
-fi
-
-# States if the user has exported DATADIR
-if [ X"$DATADIR" != X ]; then
-    DATADIR_SET=yes
-fi
-
-# States if the user has exported LIBDIR
-if [ X"$LIBDIR" != X ]; then
-    LIBDIR_SET=yes
-fi
-
-# States if the user has exported LOCALSTATEDIR
-if [ X"$LOCALSTATEDIR" != X ]; then
-    LOCALSTATEDIR_SET=yes
-fi
-
 # perform sanity checks on cmdline args which require arguments
 # arguments:
 #   $1 - the option being examined
@@ -1067,6 +1029,56 @@ required_arg() {
 	exit 1
     fi
 }
+
+#------------------------------------------------------------------------------
+#			Script main line
+#------------------------------------------------------------------------------
+
+# Initialize variables controlling end of run reports
+failed_components=""
+nonexistent_components=""
+clonefailed_components=""
+
+# Set variables supporting multiple binaries for a single source tree
+HAVE_ARCH="`uname -i`"
+DIR_ARCH=""
+DIR_CONFIG="."
+
+# Set variables for conditionally building some components
+HOST_OS=`uname -s`
+export HOST_OS
+HOST_CPU=`uname -m`
+export HOST_CPU
+
+# States if the user has exported EPREFIX
+if [ X"$EPREFIX" != X ]; then
+    EPREFIX_SET=yes
+fi
+
+# States if the user has exported BINDIR
+if [ X"$BINDIR" != X ]; then
+    BINDIR_SET=yes
+fi
+
+# States if the user has exported DATAROOTDIR
+if [ X"$DATAROOTDIR" != X ]; then
+    DATAROOTDIR_SET=yes
+fi
+
+# States if the user has exported DATADIR
+if [ X"$DATADIR" != X ]; then
+    DATADIR_SET=yes
+fi
+
+# States if the user has exported LIBDIR
+if [ X"$LIBDIR" != X ]; then
+    LIBDIR_SET=yes
+fi
+
+# States if the user has exported LOCALSTATEDIR
+if [ X"$LOCALSTATEDIR" != X ]; then
+    LOCALSTATEDIR_SET=yes
+fi
 
 # Process command line args
 while [ $# != 0 ]
@@ -1193,6 +1205,7 @@ do
     shift
 done
 
+# The PREFIX variable is mandatory
 if [ X"${PREFIX}" = X ] && [ X"$LISTONLY" = X ]; then
     echo "required argument 'prefix' appears to be missing"
     echo ""
@@ -1238,11 +1251,7 @@ if [ X"$LOCALSTATEDIR_SET" = X ]; then
     LOCALSTATEDIR=$PREFIX/var
 fi
 
-HOST_OS=`uname -s`
-export HOST_OS
-HOST_CPU=`uname -m`
-export HOST_CPU
-
+# All user input has been obtained, set-up the user shell variables
 if [ X"$LISTONLY" = X ]; then
     setup_buildenv
     echo "Building to run $HOST_OS / $HOST_CPU ($HOST)"
@@ -1276,8 +1285,10 @@ if [ X"$LISTONLY" != X ]; then
     exit 0
 fi
 
+# Print the end date/time to compare with the start data/time
 date
 
+# Report about components that failed for one reason or another
 if [ X"$nonexistent_components" != X ]; then
     echo ""
     echo "***** Skipped components (not available) *****"
