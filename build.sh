@@ -368,7 +368,7 @@ process() {
     # Use "sh autogen.sh" since some scripts are not executable in CVS
     if [ $needs_config -eq 1 ] || [ X"$NOAUTOGEN" = X ]; then
 	sh ${DIR_CONFIG}/${CONFCMD} \
-	    --prefix=${PREFIX} \
+	    ${PREFIX_SET:+--prefix="$PREFIX"} \
 	    ${EPREFIX_SET:+--exec-prefix="$EPREFIX"} \
 	    ${BINDIR_SET:+--bindir="$BINDIR"} \
 	    ${DATAROOTDIR_SET:+--datarootdir="$DATAROOTDIR"} \
@@ -958,7 +958,7 @@ process_module_file() {
 
 usage() {
     basename="`expr "//$0" : '.*/\([^/]*\)'`"
-    echo "Usage: $basename [options] prefix"
+    echo "Usage: $basename [options] [prefix]"
     echo "Options:"
     echo "  -a          Do NOT run auto config tools (autogen.sh, configure)"
     echo "  -b          Use .build.unknown build directory"
@@ -1050,6 +1050,11 @@ HOST_OS=`uname -s`
 export HOST_OS
 HOST_CPU=`uname -m`
 export HOST_CPU
+
+# States if the user has exported PREFIX
+if [ X"$PREFIX" != X ]; then
+    PREFIX_SET=yes
+fi
 
 # States if the user has exported EPREFIX
 if [ X"$EPREFIX" != X ]; then
@@ -1185,10 +1190,10 @@ do
 	MODFILE=$1
 	;;
     *)
-	if [ X"$PREFIX" != X ]; then
+	if [ X"$too_many" = Xyes ]; then
 	    echo "unrecognized and/or too many command-line arguments"
-	    echo "  new 'prefix':      $1"
-	    echo "  existing 'prefix': $PREFIX"
+	    echo "  PREFIX:               $PREFIX"
+	    echo "  Extra arguments:      $1"
 	    echo ""
 	    usage
 	    exit 1
@@ -1204,18 +1209,17 @@ do
 	fi
 
 	PREFIX=$1
+	PREFIX_SET=yes
+	too_many=yes
 	;;
     esac
 
     shift
 done
 
-# The PREFIX variable is mandatory
-if [ X"${PREFIX}" = X ] && [ X"$LISTONLY" = X ]; then
-    echo "required argument 'prefix' appears to be missing"
-    echo ""
-    usage
-    exit 1
+# Set the default value for PREFIX
+if [ X"$PREFIX_SET" = X ]; then
+    PREFIX=/usr/local
 fi
 
 # Set the default value for EPREFIX
@@ -1290,7 +1294,7 @@ if [ X"$LISTONLY" != X ]; then
     exit 0
 fi
 
-# Print the end date/time to compare with the start data/time
+# Print the end date/time to compare with the start date/time
 date
 
 # Report about components that failed for one reason or another
