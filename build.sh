@@ -68,6 +68,10 @@ setup_buildenv() {
     check_full_path $LIBDIR LIBDIR
     check_full_path $LOCALSTATEDIR LOCALSTATEDIR
 
+    # This will catch the case where user forgets to set PREFIX
+    # and does not have write permission in the /usr/local default location
+    check_writable_dir ${DESTDIR}${PREFIX} PREFIX
+
     # Must create local aclocal dir or aclocal fails
     ACLOCAL_LOCALDIR="${DESTDIR}${DATADIR}/aclocal"
     $SUDO mkdir -p ${ACLOCAL_LOCALDIR}
@@ -986,7 +990,7 @@ usage() {
 
 # Ensure the named variable value contains a full path name
 # arguments:
-#   $1 - the variable value (the path to examin)
+#   $1 - the variable value (the path to examine)
 #   $2 - the name of the variable
 # returns:
 #   returns nothing or exit on error with message
@@ -996,6 +1000,23 @@ check_full_path () {
 	echo ""
 	usage
 	exit 1
+    fi
+}
+
+# Ensure the named variable value contains a writable directory
+# arguments:
+#   $1 - the variable value (the path to examine)
+#   $2 - the name of the variable
+# returns:
+#   returns nothing or exit on error with message
+check_writable_dir () {
+    if [ X"$SUDO" = X ]; then
+	if [ ! -d "$1" ] || [ ! -w "$1" ]; then
+	    echo "The path \"$1\" supplied by \"$2\" must be a writable directory"
+	    echo ""
+	    usage
+	    exit 1
+	fi
     fi
 }
 
