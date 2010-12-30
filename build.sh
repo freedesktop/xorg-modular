@@ -59,6 +59,35 @@ EOF
 
 setup_buildenv() {
 
+    # Remember if the user had supplied a value through env var or cmd line
+    # A value from cmd line takes precedence of the shell environment
+    PREFIX_USER=${PREFIX:+yes}
+    EPREFIX_USER=${EPREFIX:+yes}
+    BINDIR_USER=${BINDIR:+yes}
+    DATAROOTDIR_USER=${DATAROOTDIR:+yes}
+    DATADIR_USER=${DATADIR:+yes}
+    LIBDIR_USER=${LIBDIR:+yes}
+    LOCALSTATEDIR_USER=${LOCALSTATEDIR:+yes}
+
+    # Assign a default value if no value was supplied by the user
+    PREFIX=${PREFIX:-/usr/local}
+    EPREFIX=${EPREFIX:-$PREFIX}
+    BINDIR=${BINDIR:-$EPREFIX/bin}
+    DATAROOTDIR=${DATAROOTDIR:-$PREFIX/share}
+    DATADIR=${DATADIR:-$DATAROOTDIR}
+    LIBDIR=${LIBDIR:-$EPREFIX/lib}
+    LOCALSTATEDIR=${LOCALSTATEDIR:-$PREFIX/var}
+
+    # Support previous usage of LIBDIR which was a subdir relative to PREFIX
+    # We use EPREFIX as this is what PREFIX really meant at the time
+    if [ X"`expr substr $LIBDIR 1 1`" != X/ ]; then
+	echo ""
+	echo "Warning: this usage of \$LIBDIR is deprecated. Use a full path name."
+	echo "The supplied value \"$LIBDIR\" has been replaced with $EPREFIX/$LIBDIR."
+	echo ""
+	    LIBDIR=$EPREFIX/$LIBDIR
+    fi
+
     # All directories variables must be full path names
     check_full_path $PREFIX PREFIX
     check_full_path $EPREFIX EPREFIX
@@ -372,13 +401,13 @@ process() {
     # Use "sh autogen.sh" since some scripts are not executable in CVS
     if [ $needs_config -eq 1 ] || [ X"$NOAUTOGEN" = X ]; then
 	sh ${DIR_CONFIG}/${CONFCMD} \
-	    ${PREFIX_SET:+--prefix="$PREFIX"} \
-	    ${EPREFIX_SET:+--exec-prefix="$EPREFIX"} \
-	    ${BINDIR_SET:+--bindir="$BINDIR"} \
-	    ${DATAROOTDIR_SET:+--datarootdir="$DATAROOTDIR"} \
-	    ${DATADIR_SET:+--datadir="$DATADIR"} \
-	    ${LIBDIR_SET:+--libdir="$LIBDIR"} \
-	    ${LOCALSTATEDIR_SET:+--localstatedir="$LOCALSTATEDIR"} \
+	    ${PREFIX_USER:+--prefix="$PREFIX"} \
+	    ${EPREFIX_USER:+--exec-prefix="$EPREFIX"} \
+	    ${BINDIR_USER:+--bindir="$BINDIR"} \
+	    ${DATAROOTDIR_USER:+--datarootdir="$DATAROOTDIR"} \
+	    ${DATADIR_USER:+--datadir="$DATADIR"} \
+	    ${LIBDIR_USER:+--libdir="$LIBDIR"} \
+	    ${LOCALSTATEDIR_USER:+--localstatedir="$LOCALSTATEDIR"} \
 	    ${QUIET:+--quiet} \
 	    ${CONFFLAGS} \
 	    ${CC:+CC="$CC"} \
@@ -1072,41 +1101,6 @@ export HOST_OS
 HOST_CPU=`uname -m`
 export HOST_CPU
 
-# States if the user has exported PREFIX
-if [ X"$PREFIX" != X ]; then
-    PREFIX_SET=yes
-fi
-
-# States if the user has exported EPREFIX
-if [ X"$EPREFIX" != X ]; then
-    EPREFIX_SET=yes
-fi
-
-# States if the user has exported BINDIR
-if [ X"$BINDIR" != X ]; then
-    BINDIR_SET=yes
-fi
-
-# States if the user has exported DATAROOTDIR
-if [ X"$DATAROOTDIR" != X ]; then
-    DATAROOTDIR_SET=yes
-fi
-
-# States if the user has exported DATADIR
-if [ X"$DATADIR" != X ]; then
-    DATADIR_SET=yes
-fi
-
-# States if the user has exported LIBDIR
-if [ X"$LIBDIR" != X ]; then
-    LIBDIR_SET=yes
-fi
-
-# States if the user has exported LOCALSTATEDIR
-if [ X"$LOCALSTATEDIR" != X ]; then
-    LOCALSTATEDIR_SET=yes
-fi
-
 # Process command line args
 while [ $# != 0 ]
 do
@@ -1230,56 +1224,12 @@ do
 	fi
 
 	PREFIX=$1
-	PREFIX_SET=yes
 	too_many=yes
 	;;
     esac
 
     shift
 done
-
-# Set the default value for PREFIX
-if [ X"$PREFIX_SET" = X ]; then
-    PREFIX=/usr/local
-fi
-
-# Set the default value for EPREFIX
-if [ X"$EPREFIX_SET" = X ]; then
-    EPREFIX=$PREFIX
-fi
-
-# Set the default value for BINDIR
-if [ X"$BINDIR_SET" = X ]; then
-    BINDIR=$EPREFIX/bin
-fi
-
-# Set the default value for DATAROOTDIR
-if [ X"$DATAROOTDIR_SET" = X ]; then
-    DATAROOTDIR=$PREFIX/share
-fi
-
-# Set the default value for DATADIR
-if [ X"$DATADIR_SET" = X ]; then
-    DATADIR=$DATAROOTDIR
-fi
-
-# Set the default value for LIBDIR
-if [ X"$LIBDIR_SET" = X ]; then
-    LIBDIR=$EPREFIX/lib
-# Support previous usage of LIBDIR which was a subdir relative to PREFIX
-# We use EPREFIX as this is what PREFIX really meant at the time
-elif [ X"`expr substr $LIBDIR 1 1`" != X/ ]; then
-    echo ""
-    echo "Warning: this usage of \$LIBDIR is deprecated. Use a full path name."
-    echo "The supplied value \"$LIBDIR\" has been replaced with $EPREFIX/$LIBDIR."
-    echo ""
-    LIBDIR=$EPREFIX/$LIBDIR
-fi
-
-# Set the default value for LOCALSTATEDIR
-if [ X"$LOCALSTATEDIR_SET" = X ]; then
-    LOCALSTATEDIR=$PREFIX/var
-fi
 
 # All user input has been obtained, set-up the user shell variables
 if [ X"$LISTONLY" = X ]; then
