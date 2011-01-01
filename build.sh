@@ -530,7 +530,7 @@ build() {
 # protocol headers have no build order dependencies
 build_proto() {
     case $HOST_OS in
-        Darwin*)
+        Darwin)
             build proto applewmproto
         ;;
         CYGWIN*)
@@ -598,7 +598,7 @@ build_lib() {
     build lib libX11
     build lib libXext
     case $HOST_OS in
-        Darwin*)
+        Darwin)
             build lib libAppleWM
         ;;
         CYGWIN*)
@@ -752,7 +752,7 @@ build_driver_input() {
 	    build driver xf86-input-evdev
 	    build driver xf86-input-joystick
 	    ;;
-	*BSD*)
+	FreeBSD | NetBSD | OpenBSD | Dragonfly | GNU/kFreeBSD)
 	    build driver xf86-input-joystick
 	    ;;
 	*)
@@ -779,7 +779,7 @@ build_driver_input() {
 build_driver_video() {
     # Some drivers are only buildable on some OS'es
     case $HOST_OS in
-	*FreeBSD*)
+	FreeBSD)
 	    case $HOST_CPU in
 		sparc64)
 		    build driver xf86-video-sunffb
@@ -788,11 +788,11 @@ build_driver_video() {
 		    ;;
 	    esac
 	    ;;
-	*NetBSD* | *OpenBSD*)
+	NetBSD | OpenBSD)
 	    build driver xf86-video-wsfb
 	    build driver xf86-video-sunffb
 	    ;;
-	*Linux*)
+	Linux)
 	    build driver xf86-video-sisusb
 	    build driver xf86-video-sunffb
 	    build driver xf86-video-v4l
@@ -821,7 +821,7 @@ build_driver_video() {
 
     # Some drivers are only buildable on some architectures of some OS's
     case "$HOST_CPU"-"$HOST_OS" in
-	i*86*-*Linux*)
+	i*86*-Linux)
 	    build driver xf86-video-geode
 	    ;;
 	*)
@@ -866,7 +866,7 @@ build_driver_video() {
 build_driver() {
     # XQuartz doesn't need these...
     case $HOST_OS in
-        Darwin*) return 0 ;;
+        Darwin) return 0 ;;
     esac
 
     build_driver_input
