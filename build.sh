@@ -761,7 +761,7 @@ build_driver_input() {
 
     # And some drivers are only buildable on some CPUs.
     case $HOST_CPU in
-	i*86* | amd64* | x86*64*)
+	i*86 | amd64 | x86_64)
 	    build driver xf86-input-vmmouse
 	    ;;
 	*)
@@ -804,14 +804,14 @@ build_driver_video() {
 
     # Some drivers are only buildable on some architectures
     case $HOST_CPU in
-	*sparc*)
+	sparc | sparc64)
 	    build driver xf86-video-suncg14
 	    build driver xf86-video-suncg3
 	    build driver xf86-video-suncg6
 	    build driver xf86-video-sunleo
 	    build driver xf86-video-suntcx
 	    ;;
-	i*86* | amd64* | x86*64*)
+	i*86 | amd64 | x86_64)
             build driver xf86-video-i740
             build driver xf86-video-intel
 	    ;;
@@ -821,7 +821,7 @@ build_driver_video() {
 
     # Some drivers are only buildable on some architectures of some OS's
     case "$HOST_CPU"-"$HOST_OS" in
-	i*86*-Linux)
+	i*86-Linux)
 	    build driver xf86-video-geode
 	    ;;
 	*)
