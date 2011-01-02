@@ -797,6 +797,12 @@ build_driver_video() {
 	    build driver xf86-video-sunffb
 	    build driver xf86-video-v4l
 	    build driver xf86-video-xgixp
+	    case $HOST_CPU in
+		i*86)
+                    # AMD Geode CPU. Driver contains 32 bit assembler code
+		    build driver xf86-video-geode
+		    ;;
+	    esac
 	    ;;
 	*)
 	    ;;
@@ -814,15 +820,6 @@ build_driver_video() {
 	i*86 | amd64 | x86_64)
             build driver xf86-video-i740
             build driver xf86-video-intel
-	    ;;
-	*)
-	    ;;
-    esac
-
-    # Some drivers are only buildable on some architectures of some OS's
-    case "$HOST_CPU"-"$HOST_OS" in
-	i*86-Linux)
-	    build driver xf86-video-geode
 	    ;;
 	*)
 	    ;;
