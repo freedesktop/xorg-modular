@@ -137,7 +137,7 @@ setup_buildenv() {
 # returns:
 #   (irrelevant)
 failed() {
-    echo "***** $1 failed on $2/$3"
+    echo "***** \"$1\" failed on $2/$3"
     failed_components="$failed_components $2/$3"
 }
 
@@ -437,7 +437,7 @@ process() {
 
     ${MAKE} $MAKEFLAGS
     if [ $? -ne 0 ]; then
-	failed make $1 $2
+	failed "$MAKE $MAKEFLAGS" $1 $2
 	cd $old_pwd
 	return 1
     fi
@@ -445,7 +445,7 @@ process() {
     if [ X"$CHECK" != X ]; then
 	${MAKE} $MAKEFLAGS check
 	if [ $? -ne 0 ]; then
-	    failed check $1 $2
+	    failed "$MAKE $MAKEFLAGS check" $1 $2
 	    cd $old_pwd
 	    return 1
 	fi
@@ -454,7 +454,7 @@ process() {
     if [ X"$CLEAN" != X ]; then
 	${MAKE} $MAKEFLAGS clean
 	if [ $? -ne 0 ]; then
-	    failed clean $1 $2
+	    failed "$MAKE $MAKEFLAGS clean" $1 $2
 	    cd $old_pwd
 	    return 1
 	fi
@@ -463,7 +463,7 @@ process() {
     if [ X"$DIST" != X ]; then
 	${MAKE} $MAKEFLAGS dist
 	if [ $? -ne 0 ]; then
-	    failed dist $1 $2
+	    failed "$MAKE $MAKEFLAGS dist" $1 $2
 	    cd $old_pwd
 	    return 1
 	fi
@@ -472,7 +472,7 @@ process() {
     if [ X"$DISTCHECK" != X ]; then
 	${MAKE} $MAKEFLAGS distcheck
 	if [ $? -ne 0 ]; then
-	    failed distcheck $1 $2
+	    failed "$MAKE $MAKEFLAGS distcheck" $1 $2
 	    cd $old_pwd
 	    return 1
 	fi
@@ -480,7 +480,7 @@ process() {
 
     $SUDO env LD_LIBRARY_PATH=$LD_LIBRARY_PATH ${MAKE} $MAKEFLAGS install
     if [ $? -ne 0 ]; then
-	failed install $1 $2
+	failed "$SUDO env LD_LIBRARY_PATH=$LD_LIBRARY_PATH $MAKE $MAKEFLAGS install" $1 $2
 	cd $old_pwd
 	return 1
     fi
