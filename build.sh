@@ -137,7 +137,7 @@ setup_buildenv() {
 # returns:
 #   (irrelevant)
 failed() {
-    echo "***** \"$1\" failed on $2/$3"
+    echo "build.sh: \"$1\" failed on $2/$3"
     failed_components="$failed_components $2/$3"
 }
 
@@ -515,7 +515,7 @@ build() {
 
     process $1 $2
     if [ $? -ne 0 ]; then
-	echo "error processing module/component:  \"$1/$2\""
+	echo "build.sh: error processing module/component:  \"$1/$2\""
 	if [ X"$NOQUIT" = X ]; then
 	    exit 1
 	fi
