@@ -1036,9 +1036,11 @@ check_full_path () {
 # returns:
 #   returns nothing or exit on error with message
 check_writable_dir () {
+    dir=$1
+    varname=$2
     if [ X"$SUDO" = X ]; then
-	if [ ! -d "$1" ] || [ ! -w "$1" ]; then
-	    echo "The path \"$1\" supplied by \"$2\" must be a writable directory"
+	if [ ! -d "$dir" ] || [ ! -w "$dir" ]; then
+	    echo "The path \"$dir\" supplied by \"$varname\" must be a writable directory"
 	    echo ""
 	    usage
 	    exit 1
