@@ -424,12 +424,12 @@ process() {
 
     # A custom 'make' target list was supplied through --cmd option
     if [ X"$MAKECMD" != X ]; then
-	${MAKE} $MAKECMD
+	${MAKE} $MAKEFLAGS $MAKECMD
 	rtn=$?
 	cd $old_pwd
 
 	if [ $rtn -ne 0 ]; then
-	    failed "$MAKE $MAKECMD" $1 $2
+	    failed "$MAKE $MAKEFLAGS $MAKECMD" $1 $2
 	    return 1
 	fi
 	return 0
