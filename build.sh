@@ -422,14 +422,14 @@ process() {
 	fi
     fi
 
-    # a 'make' command has been specified by the user
+    # A custom 'make' target list was supplied through --cmd option
     if [ X"$MAKECMD" != X ]; then
-	$MAKECMD
+	${MAKE} $MAKECMD
 	rtn=$?
 	cd $old_pwd
 
 	if [ $rtn -ne 0 ]; then
-	    failed "$MAKECMD" $1 $2
+	    failed "$MAKE $MAKECMD" $1 $2
 	    return 1
 	fi
 	return 0
@@ -1179,7 +1179,7 @@ do
 		GITCMD=$1
 		;;
 	    X"make" | X"gmake")
-		MAKECMD=$1
+		MAKECMD=$cmd2
 		;;
 	    *)
 		echo "The script can only process 'make', 'gmake', or 'git' commands"
