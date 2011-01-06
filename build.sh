@@ -548,8 +548,6 @@ build_proto() {
         CYGWIN*)
             build proto windowswmproto
         ;;
-        *)
-        ;;
     esac
     build proto bigreqsproto
     build proto compositeproto
@@ -615,8 +613,6 @@ build_lib() {
         ;;
         CYGWIN*)
             build lib libWindowsWM
-        ;;
-        *)
         ;;
     esac
     build lib libdmx
@@ -767,16 +763,12 @@ build_driver_input() {
 	FreeBSD | NetBSD | OpenBSD | Dragonfly | GNU/kFreeBSD)
 	    build driver xf86-input-joystick
 	    ;;
-	*)
-	    ;;
     esac
 
     # And some drivers are only buildable on some CPUs.
     case $HOST_CPU in
 	i*86 | amd64 | x86_64)
 	    build driver xf86-input-vmmouse
-	    ;;
-	*)
 	    ;;
     esac
 
@@ -796,8 +788,6 @@ build_driver_video() {
 		sparc64)
 		    build driver xf86-video-sunffb
 		    ;;
-		*)
-		    ;;
 	    esac
 	    ;;
 	NetBSD | OpenBSD)
@@ -816,8 +806,6 @@ build_driver_video() {
 		    ;;
 	    esac
 	    ;;
-	*)
-	    ;;
     esac
 
     # Some drivers are only buildable on some architectures
@@ -832,8 +820,6 @@ build_driver_video() {
 	i*86 | amd64 | x86_64)
             build driver xf86-video-i740
             build driver xf86-video-intel
-	    ;;
-	*)
 	    ;;
     esac
 
