@@ -447,6 +447,12 @@ process() {
 
     ${MAKE} $MAKEFLAGS
     if [ $? -ne 0 ]; then
+	# Rerun with Automake silent rules disabled to see failing gcc statement
+	if [ X"$RETRY_VERBOSE" != X ]; then
+	    echo ""
+	    echo "build.sh: Rebuilding $component with Automake silent rules disabled"
+	    ${MAKE} $MAKEFLAGS V=1
+	fi
 	failed "$MAKE $MAKEFLAGS" $module $component
 	cd $old_pwd
 	return 1
@@ -1005,6 +1011,7 @@ usage() {
     echo "  --cmd <cmd> Execute arbitrary git, gmake, or make command <cmd>"
     echo "  --confflags <options> Pass options to autgen.sh/configure"
     echo "  --modfile <file> Only process the module/components specified in <file>"
+    echo "  --retry-v1  Remake 'all' on failure with Automake silent rules disabled"
     echo ""
     echo "Usage: $basename -L"
     echo "  -L : just list modules to build"
@@ -1204,6 +1211,9 @@ do
 	    exit 1
 	fi
 	MODFILE=$1
+	;;
+    --retry-v1)
+	RETRY_VERBOSE=1
 	;;
     *)
 	if [ X"$too_many" = Xyes ]; then
