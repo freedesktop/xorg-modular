@@ -137,104 +137,110 @@ setup_buildenv() {
 # returns:
 #   (irrelevant)
 failed() {
-    echo "build.sh: \"$1\" failed on $2/$3"
-    failed_components="$failed_components $2/$3"
+    cmd=$1
+    module=$2
+    component=$3
+    echo "build.sh: \"$cmd\" failed on $module/$component"
+    failed_components="$failed_components $module/$component"
 }
 
 # print a pretty title to separate the processing of each module
 # arguments:
-#   $1 - string to format into title
+#   $1 - module
+#   $2 - component
 # returns:
 #   (irrelevant)
 module_title() {
+    module=$1
+    component=$2
     # preconds
-    if [ X"$1" = X ]; then
+    if [ X"$module" = X ]; then
 	return
     fi
 
     echo ""
     echo "======================================================================"
-    echo "==  Processing module/component:  \"$1/$2\""
+    echo "==  Processing module/component:  \"$module/$component\""
 }
 
 checkfortars() {
-    M=$1
-    C=$2
-    case $M in
+    module=$1
+    component=$2
+    case $module in
         "data")
-            case $C in
-                "cursors") C="xcursor-themes" ;;
-                "bitmaps") C="xbitmaps" ;;
+            case $component in
+                "cursors") component="xcursor-themes" ;;
+                "bitmaps") component="xbitmaps" ;;
             esac
             ;;
         "font")
-            if [ X"$C" != X"encodings" ]; then
-                C="font-$C"
+            if [ X"$component" != X"encodings" ]; then
+                component="font-$component"
             fi
             ;;
         "lib")
-            case $C in
-                "libXRes") C="libXres" ;;
-                "libxtrans") C="xtrans" ;;
+            case $component in
+                "libXRes") component="libXres" ;;
+                "libxtrans") component="xtrans" ;;
             esac
             ;;
         "pixman")
-            M="lib"
-            C="pixman"
+            module="lib"
+            component="pixman"
             ;;
         "proto")
-            case $C in
-                "x11proto") C="xproto" ;;
+            case $component in
+                "x11proto") component="xproto" ;;
             esac
             ;;
         "util")
-            case $C in
-                "cf") C="xorg-cf-files" ;;
-                "macros") C="util-macros" ;;
+            case $component in
+                "cf") component="xorg-cf-files" ;;
+                "macros") component="util-macros" ;;
             esac
             ;;
         "xcb")
-            case $C in
+            case $component in
                 "proto")
-                    M="xcb/proto"
-                    C="xcb-proto"
+                    module="xcb/proto"
+                    component="xcb-proto"
                     ;;
                 "pthread-stubs")
-                    M="xcb/pthread-stubs"
-                    C="libpthread-stubs"
+                    module="xcb/pthread-stubs"
+                    component="libpthread-stubs"
                     ;;
                 "libxcb")
-                    M="xcb/libxcb"
-                    C="libxcb"
+                    module="xcb/libxcb"
+                    component="libxcb"
                     ;;
                 "util")
-                    M="xcb/util"
-                    C="xcb-util"
+                    module="xcb/util"
+                    component="xcb-util"
                     ;;
             esac
             ;;
         "mesa")
-            case $C in
+            case $component in
                 "drm")
-                    M="mesa/drm"
-                    C="libdrm"
+                    module="mesa/drm"
+                    component="libdrm"
                     ;;
                 "mesa")
-                    M="mesa/mesa"
-                    C="MesaLib"
+                    module="mesa/mesa"
+                    component="MesaLib"
                     ;;
             esac
             ;;
         "xkeyboard-config")
-            C="xkeyboard-config"
+            component="xkeyboard-config"
             ;;
         "xserver")
-            C="xorg-server"
+            component="xorg-server"
             ;;
     esac
-    for ii in $M .; do
+    for ii in $module .; do
         for jj in bz2 gz; do
-            TARFILE=`ls -1rt $ii/$C-*.tar.$jj 2> /dev/null | tail -n 1`
+            TARFILE=`ls -1rt $ii/$component-*.tar.$jj 2> /dev/null | tail -n 1`
             if [ X"$TARFILE" != X ]; then
                 SRCDIR=`echo $TARFILE | sed "s,.tar.$jj,,"`
                 SRCDIR=`echo $SRCDIR | sed "s,MesaLib,Mesa,"`
@@ -245,7 +251,7 @@ checkfortars() {
                     fi
                     tar $TAROPTS $TARFILE -C $ii
 		    if [ $? -ne 0 ]; then
-			failed tar $1 $2
+			failed tar $module $component
 			return 1
 		    fi
                 fi
@@ -267,13 +273,15 @@ checkfortars() {
 #   0 - good
 #   1 - bad
 clone() {
+    module=$1
+    component=$2
     # preconds
-    if [ X"$1" = X ]; then
-	echo "clone() required argument \$1 missing"
+    if [ X"$module" = X ]; then
+	echo "clone() required first argument is missing"
 	return 1
     fi
 
-    case $1 in
+    case $module in
     "pixman")
         BASEDIR=""
         ;;
@@ -291,18 +299,18 @@ clone() {
         ;;
     esac
 
-    DIR="$1/$2"
+    DIR="$module/$component"
     GITROOT=${GITROOT:="git://anongit.freedesktop.org/git"}
 
     if [ ! -d "$DIR" ]; then
         git clone "$GITROOT/$BASEDIR$DIR" "$DIR"
         if [ $? -ne 0 ]; then
-            echo "Failed to clone $1 module component $2. Ignoring."
-            clonefailed_components="$clonefailed_components $1/$2"
+            echo "Failed to clone $module module component $component. Ignoring."
+            clonefailed_components="$clonefailed_components $module/$component"
             return 1
         fi
     else
-        echo "git cannot clone into an existing directory $1/$2"
+        echo "git cannot clone into an existing directory $module/$component"
 	return 1
     fi
 
@@ -319,45 +327,47 @@ clone() {
 process() {
     needs_config=0
 
+    module=$1
+    component=$2
     # preconds
-    if [ X"$1" = X ]; then
-	echo "process() required argument \$1 missing"
+    if [ X"$module" = X ]; then
+	echo "process() required first argument is missing"
 	return 1
     fi
 
-    module_title $1 $2
+    module_title $module $component
 
     SRCDIR=""
     CONFCMD=""
-    if [ -f $1/$2/autogen.sh ]; then
-        SRCDIR="$1/$2"
+    if [ -f $module/$component/autogen.sh ]; then
+        SRCDIR="$module/$component"
         CONFCMD="autogen.sh"
     elif [ X"$CLONE" != X ]; then
-        clone $1 $2
+        clone $module $component
         if [ $? -eq 0 ]; then
-	    SRCDIR="$1/$2"
+	    SRCDIR="$module/$component"
 	    CONFCMD="autogen.sh"
         fi
 	needs_config=1
     else
-        checkfortars $1 $2
+        checkfortars $module $component
         CONFCMD="configure"
     fi
 
     if [ X"$SRCDIR" = X ]; then
-        echo "$1 module component $2 does not exist, skipping."
-        nonexistent_components="$nonexistent_components $1/$2"
+        echo "$module module component $component does not exist, skipping."
+        nonexistent_components="$nonexistent_components $module/$component"
         return 0
     fi
 
     if [ X"$BUILT_MODULES_FILE" != X ]; then
-        echo "$1/$2" >> $BUILT_MODULES_FILE
+        echo "$module/$component" >> $BUILT_MODULES_FILE
     fi
 
     old_pwd=`pwd`
     cd $SRCDIR
     if [ $? -ne 0 ]; then
-	failed cd1 $1 $2
+	failed cd1 $module $component
 	return 1
     fi
 
@@ -367,7 +377,7 @@ process() {
 	cd $old_pwd
 
 	if [ $rtn -ne 0 ]; then
-	    failed "$GITCMD" $1 $2
+	    failed "$GITCMD" $module $component
 	    return 1
 	fi
 	return 0
@@ -376,7 +386,7 @@ process() {
     if [ X"$PULL" != X ]; then
 	git pull --rebase
 	if [ $? -ne 0 ]; then
-	    failed "git pull" $1 $2
+	    failed "git pull" $module $component
 	    cd $old_pwd
 	    return 1
 	fi
@@ -386,13 +396,13 @@ process() {
     if [ X"$DIR_ARCH" != X ] ; then
 	mkdir -p "$DIR_ARCH"
 	if [ $? -ne 0 ]; then
-	    failed mkdir $1 $2
+	    failed mkdir $module $component
 	    cd $old_pwd
 	    return 1
 	fi
 	cd "$DIR_ARCH"
 	if [ $? -ne 0 ]; then
-	    failed cd2 $1 $2
+	    failed cd2 $module $component
 	    cd ${old_pwd}
 	    return 1
 	fi
@@ -416,7 +426,7 @@ process() {
 	    ${CFLAGS:+CFLAGS="$CFLAGS"} \
 	    ${LDFLAGS:+LDFLAGS="$LDFLAGS"}
 	if [ $? -ne 0 ]; then
-	    failed ${CONFCMD} $1 $2
+	    failed ${CONFCMD} $module $component
 	    cd $old_pwd
 	    return 1
 	fi
@@ -429,7 +439,7 @@ process() {
 	cd $old_pwd
 
 	if [ $rtn -ne 0 ]; then
-	    failed "$MAKE $MAKEFLAGS $MAKECMD" $1 $2
+	    failed "$MAKE $MAKEFLAGS $MAKECMD" $module $component
 	    return 1
 	fi
 	return 0
@@ -437,7 +447,7 @@ process() {
 
     ${MAKE} $MAKEFLAGS
     if [ $? -ne 0 ]; then
-	failed "$MAKE $MAKEFLAGS" $1 $2
+	failed "$MAKE $MAKEFLAGS" $module $component
 	cd $old_pwd
 	return 1
     fi
@@ -445,7 +455,7 @@ process() {
     if [ X"$CHECK" != X ]; then
 	${MAKE} $MAKEFLAGS check
 	if [ $? -ne 0 ]; then
-	    failed "$MAKE $MAKEFLAGS check" $1 $2
+	    failed "$MAKE $MAKEFLAGS check" $module $component
 	    cd $old_pwd
 	    return 1
 	fi
@@ -454,7 +464,7 @@ process() {
     if [ X"$CLEAN" != X ]; then
 	${MAKE} $MAKEFLAGS clean
 	if [ $? -ne 0 ]; then
-	    failed "$MAKE $MAKEFLAGS clean" $1 $2
+	    failed "$MAKE $MAKEFLAGS clean" $module $component
 	    cd $old_pwd
 	    return 1
 	fi
@@ -463,7 +473,7 @@ process() {
     if [ X"$DIST" != X ]; then
 	${MAKE} $MAKEFLAGS dist
 	if [ $? -ne 0 ]; then
-	    failed "$MAKE $MAKEFLAGS dist" $1 $2
+	    failed "$MAKE $MAKEFLAGS dist" $module $component
 	    cd $old_pwd
 	    return 1
 	fi
@@ -472,7 +482,7 @@ process() {
     if [ X"$DISTCHECK" != X ]; then
 	${MAKE} $MAKEFLAGS distcheck
 	if [ $? -ne 0 ]; then
-	    failed "$MAKE $MAKEFLAGS distcheck" $1 $2
+	    failed "$MAKE $MAKEFLAGS distcheck" $module $component
 	    cd $old_pwd
 	    return 1
 	fi
@@ -480,7 +490,7 @@ process() {
 
     $SUDO env LD_LIBRARY_PATH=$LD_LIBRARY_PATH ${MAKE} $MAKEFLAGS install
     if [ $? -ne 0 ]; then
-	failed "$SUDO env LD_LIBRARY_PATH=$LD_LIBRARY_PATH $MAKE $MAKEFLAGS install" $1 $2
+	failed "$SUDO env LD_LIBRARY_PATH=$LD_LIBRARY_PATH $MAKE $MAKEFLAGS install" $module $component
 	cd $old_pwd
 	return 1
     fi
@@ -498,24 +508,26 @@ process() {
 #   0 - good
 #   1 - bad
 build() {
+    module=$1
+    component=$2
     if [ X"$LISTONLY" != X ]; then
-	echo "$1/$2"
+	echo "$module/$component"
 	return 0
     fi
 
     if [ X"$RESUME" != X ]; then
-	if [ X"$RESUME" = X"$1/$2" ]; then
+	if [ X"$RESUME" = X"$module/$component" ]; then
 	    unset RESUME
 	    # Resume build at this module
 	else
-	    echo "Skipping $1 module component $2..."
+	    echo "Skipping $module module component $component..."
 	    return 0
 	fi
     fi
 
-    process $1 $2
+    process $module $component
     if [ $? -ne 0 ]; then
-	echo "build.sh: error processing module/component:  \"$1/$2\""
+	echo "build.sh: error processing module/component:  \"$module/$component\""
 	if [ X"$NOQUIT" = X ]; then
 	    exit 1
 	fi
@@ -1021,8 +1033,10 @@ usage() {
 # returns:
 #   returns nothing or exit on error with message
 check_full_path () {
-    if [ X"`expr substr $1 1 1`" != X/ ]; then
-	echo "The path \"$1\" supplied by \"$2\" must be a full path name"
+    path=$1
+    varname=$2
+    if [ X"`expr substr $path 1 1`" != X/ ]; then
+	echo "The path \"$path\" supplied by \"$varname\" must be a full path name"
 	echo ""
 	usage
 	exit 1
@@ -1036,11 +1050,11 @@ check_full_path () {
 # returns:
 #   returns nothing or exit on error with message
 check_writable_dir () {
-    dir=$1
+    path=$1
     varname=$2
     if [ X"$SUDO" = X ]; then
-	if [ ! -d "$dir" ] || [ ! -w "$dir" ]; then
-	    echo "The path \"$dir\" supplied by \"$varname\" must be a writable directory"
+	if [ ! -d "$path" ] || [ ! -w "$path" ]; then
+	    echo "The path \"$path\" supplied by \"$varname\" must be a writable directory"
 	    echo ""
 	    usage
 	    exit 1
@@ -1056,24 +1070,26 @@ check_writable_dir () {
 #   if it returns, everything is good
 #   otherwise it exit's
 required_arg() {
+    option=$1
+    arg=$2
     # preconds
-    if [ X"$1" = X ]; then
-	echo "internal required_arg() error, missing \$1 argument"
+    if [ X"$option" = X ]; then
+	echo "internal required_arg() error, missing first argument"
 	exit 1
     fi
 
     # check for an argument
-    if [ X"$2" = X ]; then
-	echo "the '$1' option is missing its required argument"
+    if [ X"$arg" = X ]; then
+	echo "the '$option' option is missing its required argument"
 	echo ""
 	usage
 	exit 1
     fi
 
     # does the argument look like an option?
-    echo $2 | grep "^-" > /dev/null
+    echo $arg | grep "^-" > /dev/null
     if [ $? -eq 0 ]; then
-	echo "the argument '$2' of option '$1' looks like an option itself"
+	echo "the argument '$arg' of option '$option' looks like an option itself"
 	echo ""
 	usage
 	exit 1
