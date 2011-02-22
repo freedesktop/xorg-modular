@@ -704,11 +704,6 @@
     </dependencies>
   </metamodule>
 
-  <autotools id="xtrans">
-    <branch module="xorg/lib/libxtrans"
-            checkoutdir="xorg/lib/libxtrans"/>
-  </autotools>
-
   <!-- data -->
   <autotools id="bitmaps">
     <branch module="xorg/data/bitmaps"
