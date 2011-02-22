@@ -717,7 +717,7 @@
     <branch module="xorg/data/cursors"
             checkoutdir="xorg/data/cursors"/>
     <dependencies>
-      <dep package="app/xcursorgen"/>
+      <dep package="xcursorgen"/>
     </dependencies>
   </autotools>
 
@@ -805,6 +805,15 @@
     <dependencies>
       <dep package="libXext"/>
       <dep package="libXmu"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="xcursorgen">
+    <branch module="xorg/app/xcursorgen"
+            checkoutdir="xorg/app/xcursorgen"/>
+    <dependencies>
+      <dep package="libXcursor"/>
+      <dep package="libX11"/>
     </dependencies>
   </autotools>
 
@@ -1005,6 +1014,7 @@
       <dep package="twm"/>
       <dep package="x11perf"/>
       <dep package="xauth"/>
+      <dep package="xcursorgen"/>
       <dep package="xdpyinfo"/>
       <dep package="xdriinfo"/>
       <dep package="xev"/>
