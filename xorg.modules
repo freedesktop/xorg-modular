@@ -569,7 +569,7 @@
     <dependencies>
       <dep package="macros"/>
       <dep package="x11proto"/>
-      <dep package="fonts-util"/>
+      <dep package="font-util"/>
     </dependencies>
   </autotools>
 
@@ -1606,18 +1606,80 @@
     </dependencies>
   </autotools>
 
-  <autotools id="bitstream-75dpi">
-    <branch module="xorg/font/bitstream-75dpi"
-            checkoutdir="xorg/font/bitstream-75dpi"/>
+  <autotools id="font-util">
+    <branch module="xorg/font/util"
+            checkoutdir="xorg/font/util"/>
+  </autotools>
+
+  <autotools id="encodings">
+    <branch module="xorg/font/encodings"
+            checkoutdir="xorg/font/encodings"/>
+    <dependencies>
+      <dep package="mkfontscale"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-adobe-100dpi">
+    <branch module="xorg/font/adobe-100dpi"
+            checkoutdir="xorg/font/adobe-100dpi"/>
     <dependencies>
       <dep package="bdftopcf"/>
       <dep package="mkfontscale"/>
       <dep package="mkfontdir"/>
       <dep package="fontconfig"/>
+      <dep package="font-util"/>
     </dependencies>
   </autotools>
 
-  <autotools id="bitstream-100dpi">
+  <autotools id="font-adobe-75dpi">
+    <branch module="xorg/font/adobe-75dpi"
+            checkoutdir="xorg/font/adobe-75dpi"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+      <dep package="font-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-adobe-utopia-100dpi">
+    <branch module="xorg/font/adobe-utopia-100dpi"
+            checkoutdir="xorg/font/adobe-utopia-100dpi"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+      <dep package="font-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-adobe-utopia-75dpi">
+    <branch module="xorg/font/adobe-utopia-75dpi"
+            checkoutdir="xorg/font/adobe-utopia-75dpi"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+      <dep package="font-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-adobe-utopia-type1">
+    <branch module="xorg/font/adobe-utopia-type1"
+            checkoutdir="xorg/font/adobe-utopia-type1"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+      <dep package="font-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bitstream-100dpi">
     <branch module="xorg/font/bitstream-100dpi"
             checkoutdir="xorg/font/bitstream-100dpi"/>
     <dependencies>
@@ -1628,7 +1690,18 @@
     </dependencies>
   </autotools>
 
-  <autotools id="bitstream-type1">
+  <autotools id="font-bitstream-75dpi">
+    <branch module="xorg/font/bitstream-75dpi"
+            checkoutdir="xorg/font/bitstream-75dpi"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bitstream-type1">
     <branch module="xorg/font/bitstream-type1"
             checkoutdir="xorg/font/bitstream-type1"/>
     <dependencies>
@@ -1638,67 +1711,7 @@
     </dependencies>
   </autotools>
 
-  <autotools id="adobe-75dpi">
-    <branch module="xorg/font/adobe-75dpi"
-            checkoutdir="xorg/font/adobe-75dpi"/>
-    <dependencies>
-      <dep package="bdftopcf"/>
-      <dep package="mkfontscale"/>
-      <dep package="mkfontdir"/>
-      <dep package="fontconfig"/>
-      <dep package="fonts-util"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="adobe-100dpi">
-    <branch module="xorg/font/adobe-100dpi"
-            checkoutdir="xorg/font/adobe-100dpi"/>
-    <dependencies>
-      <dep package="bdftopcf"/>
-      <dep package="mkfontscale"/>
-      <dep package="mkfontdir"/>
-      <dep package="fontconfig"/>
-      <dep package="fonts-util"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="adobe-utopia-75dpi">
-    <branch module="xorg/font/adobe-utopia-75dpi"
-            checkoutdir="xorg/font/adobe-utopia-75dpi"/>
-    <dependencies>
-      <dep package="bdftopcf"/>
-      <dep package="mkfontscale"/>
-      <dep package="mkfontdir"/>
-      <dep package="fontconfig"/>
-      <dep package="fonts-util"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="adobe-utopia-100dpi">
-    <branch module="xorg/font/adobe-utopia-100dpi"
-            checkoutdir="xorg/font/adobe-utopia-100dpi"/>
-    <dependencies>
-      <dep package="bdftopcf"/>
-      <dep package="mkfontscale"/>
-      <dep package="mkfontdir"/>
-      <dep package="fontconfig"/>
-      <dep package="fonts-util"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="adobe-utopia-type1">
-    <branch module="xorg/font/adobe-utopia-type1"
-            checkoutdir="xorg/font/adobe-utopia-type1"/>
-    <dependencies>
-      <dep package="bdftopcf"/>
-      <dep package="mkfontscale"/>
-      <dep package="mkfontdir"/>
-      <dep package="fontconfig"/>
-      <dep package="fonts-util"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="fonts-cursor">
+  <autotools id="font-cursor-misc">
     <branch module="xorg/font/cursor-misc"
             checkoutdir="xorg/font/cursor-misc"/>
     <dependencies>
@@ -1708,50 +1721,37 @@
     </dependencies>
   </autotools>
 
-  <autotools id="fonts-misc">
+  <autotools id="font-misc-misc">
     <branch module="xorg/font/misc-misc"
             checkoutdir="xorg/font/misc-misc"/>
     <dependencies>
       <dep package="mkfontscale"/>
       <dep package="mkfontdir"/>
       <dep package="fontconfig"/>
-      <dep package="fonts-util"/>
+      <dep package="font-util"/>
     </dependencies>
   </autotools>
 
-  <autotools id="fonts-alias">
+  <autotools id="font-alias">
     <branch module="xorg/font/alias"
             checkoutdir="xorg/font/alias"/>
   </autotools>
 
-  <autotools id="fonts-util">
-    <branch module="xorg/font/util"
-            checkoutdir="xorg/font/util"/>
-  </autotools>
-
-  <autotools id="fonts-encodings">
-    <branch module="xorg/font/encodings"
-            checkoutdir="xorg/font/encodings"/>
-    <dependencies>
-      <dep package="mkfontscale"/>
-    </dependencies>
-  </autotools>
-
   <metamodule id="xorg-fonts">
     <dependencies>
-      <dep package="fonts-util"/>
-      <dep package="fonts-encodings"/>
-      <dep package="adobe-75dpi"/>
-      <dep package="adobe-100dpi"/>
-      <dep package="adobe-utopia-75dpi"/>
-      <dep package="adobe-utopia-100dpi"/>
-      <dep package="adobe-utopia-type1"/>
-      <dep package="bitstream-75dpi"/>
-      <dep package="bitstream-100dpi"/>
-      <dep package="bitstream-type1"/>
-      <dep package="fonts-cursor"/>
-      <dep package="fonts-misc"/>
-      <dep package="fonts-alias"/>
+      <dep package="font-util"/>
+      <dep package="encodings"/>
+      <dep package="font-adobe-100dpi"/>
+      <dep package="font-adobe-75dpi"/>
+      <dep package="font-adobe-utopia-100dpi"/>
+      <dep package="font-adobe-utopia-75dpi"/>
+      <dep package="font-adobe-utopia-type1"/>
+      <dep package="font-bitstream-100dpi"/>
+      <dep package="font-bitstream-75dpi"/>
+      <dep package="font-bitstream-type1"/>
+      <dep package="font-cursor-misc"/>
+      <dep package="font-misc-misc"/>
+      <dep package="font-alias"/>
     </dependencies>
   </metamodule>
 
