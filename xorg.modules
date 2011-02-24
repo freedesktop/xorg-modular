@@ -7,6 +7,8 @@
 <moduleset>
   <repository type="git" name="git.freedesktop.org" default="yes"
               href="git://anongit.freedesktop.org/git/"/>
+  <repository type="svn" name="svn.openchrome.org"
+              href="http://svn.openchrome.org/"/>
 
   <autotools id="fontconfig">
     <branch module="fontconfig"
@@ -1284,6 +1286,14 @@
     </dependencies>
   </autotools>
 
+  <autotools id="xf86-video-openchrome">
+    <branch module="svn" repo="svn.openchrome.org"
+            checkoutdir="xorg/driver/xf86-video-openchrome"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
   <autotools id="xf86-video-r128">
     <branch module="xorg/driver/xf86-video-r128"
             checkoutdir="xorg/driver/xf86-video-r128"/>
@@ -1715,6 +1725,7 @@
       <dep package="xf86-video-neomagic"/>
       <dep package="xf86-video-nouveau"/>
       <dep package="xf86-video-nv"/>
+      <dep package="xf86-video-openchrome"/>
       <dep package="xf86-video-r128"/>
       <dep package="xf86-video-rendition"/>
       <dep package="xf86-video-savage"/>
