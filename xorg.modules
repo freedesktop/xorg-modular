@@ -1857,7 +1857,6 @@
       <dep package="xorg-protos"/>
       <dep package="libGL"/>
       <dep package="libXaw"/>
-      <dep package="libxkbui"/>
       <dep package="libXfont"/>
       <dep package="libxtrans"/>
       <dep package="libXau"/>
