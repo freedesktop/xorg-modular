@@ -1679,6 +1679,83 @@
     </dependencies>
   </autotools>
 
+  <autotools id="font-arabic-misc">
+    <branch module="xorg/font/font-arabic-misc"
+            checkoutdir="xorg/font/font-arabic-misc"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bh-100dpi">
+    <branch module="xorg/font/font-bh-100dpi"
+            checkoutdir="xorg/font/font-bh-100dpi"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bh-75dpi">
+    <branch module="xorg/font/font-bh-75dpi"
+            checkoutdir="xorgfont/font-bh-75dpi"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bh-lucidatypewriter-100dpi">
+    <branch module="xorg/font/font-bh-lucidatypewriter-100dpi"
+            checkoutdir="xorgfont/font-bh-lucidatypewriter-100dpi"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bh-lucidatypewriter-75dpi">
+    <branch module="xorg/font/font-bh-lucidatypewriter-75dpi"
+            checkoutdir="xorgfont/font-bh-lucidatypewriter-75dpi"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bh-ttf">
+    <branch module="xorg/font/font-bh-ttf"
+            checkoutdir="xorgfont/font-bh-ttf"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-bh-type1">
+    <branch module="xorg/font/font-bh-type1"
+            checkoutdir="xorgfont/font-bh-type1"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
   <autotools id="font-bitstream-100dpi">
     <branch module="xorg/font/bitstream-100dpi"
             checkoutdir="xorg/font/bitstream-100dpi"/>
@@ -1711,10 +1788,120 @@
     </dependencies>
   </autotools>
 
+  <autotools id="font-cronyx-cyrillic">
+    <branch module="xorg/font/font-cronyx-cyrillic"
+            checkoutdir="xorg/font/font-cronyx-cyrillic"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
   <autotools id="font-cursor-misc">
     <branch module="xorg/font/cursor-misc"
             checkoutdir="xorg/font/cursor-misc"/>
     <dependencies>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-daewoo-misc">
+    <branch module="xorg/font/font-daewoo-misc"
+            checkoutdir="xorgfont/font-daewoo-misc"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-dec-misc">
+    <branch module="xorg/font/font-dec-misc"
+            checkoutdir="xorgfont/font-dec-misc"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-ibm-type1">
+    <branch module="xorg/font/font-ibm-type1"
+            checkoutdir="xorgfont/font-ibm-type1"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-isas-misc">
+    <branch module="xorg/font/font-isas-misc"
+            checkoutdir="xorgfont/font-isas-misc"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-jis-misc">
+    <branch module="xorg/font/font-jis-misc"
+            checkoutdir="xorgfont/font-jis-misc"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-micro-misc">
+    <branch module="xorg/font/font-micro-misc"
+            checkoutdir="xorgfont/font-micro-misc"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-misc-cyrillic">
+    <branch module="xorg/font/font-misc-cyrillic"
+            checkoutdir="xorgfont/font-misc-cyrillic"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-misc-ethiopic">
+    <branch module="xorg/font/font-misc-ethiopic"
+            checkoutdir="xorgfont/font-misc-ethiopic"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-misc-meltho">
+    <branch module="xorg/font/font-misc-meltho"
+            checkoutdir="xorgfont/font-misc-meltho"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
       <dep package="mkfontscale"/>
       <dep package="mkfontdir"/>
       <dep package="fontconfig"/>
@@ -1729,6 +1916,83 @@
       <dep package="mkfontdir"/>
       <dep package="fontconfig"/>
       <dep package="font-util"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-mutt-misc">
+    <branch module="xorg/font/font-mutt-misc"
+            checkoutdir="xorgfont/font-mutt-misc"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-schumacher-misc">
+    <branch module="xorg/font/font-schumacher-misc"
+            checkoutdir="xorgfont/font-schumacher-misc"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-screen-cyrillic">
+    <branch module="xorg/font/font-screen-cyrillic"
+            checkoutdir="xorgfont/font-screen-cyrillic"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-sony-misc">
+    <branch module="xorg/font/font-sony-misc"
+            checkoutdir="xorgfont/font-sony-misc"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-sun-misc">
+    <branch module="xorg/font/font-sun-misc"
+            checkoutdir="xorgfont/font-sun-misc"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-winitzki-cyrillic">
+    <branch module="xorg/font/font-winitzki-cyrillic"
+            checkoutdir="xorgfont/font-winitzki-cyrillic"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="font-xfree86-type1">
+    <branch module="xorg/font/font-xfree86-type1"
+            checkoutdir="xorgfont/font-xfree86-type1"/>
+    <dependencies>
+      <dep package="bdftopcf"/>
+      <dep package="mkfontscale"/>
+      <dep package="mkfontdir"/>
+      <dep package="fontconfig"/>
     </dependencies>
   </autotools>
 
