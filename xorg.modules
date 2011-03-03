@@ -10,6 +10,7 @@
   <repository type="svn" name="svn.openchrome.org"
               href="http://svn.openchrome.org/"/>
 
+  <!-- external modules -->
   <autotools id="fontconfig">
     <branch module="fontconfig"
             checkoutdir="fontconfig"/>
@@ -40,6 +41,55 @@
             checkoutdir="xcb/xcb-util"/>
   </autotools>
 
+  <!-- Need nouveau API to build xf86-video-nouveau -->
+  <autotools id="libdrm" autogenargs="--enable-nouveau-experimental-api">
+    <branch module="mesa/drm"/>
+    <dependencies>
+      <dep package="macros"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="pixman">
+    <branch module="pixman"
+            checkoutdir="xorg/lib/pixman"/>
+    <dependencies/>
+  </autotools>
+
+  <autotools id="libpciaccess">
+    <branch module="xorg/lib/libpciaccess"
+            checkoutdir="xorg/lib/libpciaccess"/>
+    <dependencies/>
+  </autotools>
+
+  <!-- the Mesa module, which provides libGL, libGLU, and DRI drivers -->
+  <autotools id="libGL" supports-non-srcdir-builds="no" check-target="false"
+             skip-autogen="never">
+    <branch module="mesa/mesa"
+            checkoutdir="mesa/mesa"/>
+    <dependencies>
+      <dep package="makedepend"/>
+      <dep package="xf86driproto"/>
+      <dep package="dri2proto"/>
+      <dep package="glproto"/>
+      <dep package="libXxf86vm"/>
+      <dep package="libXdamage"/>
+      <dep package="libdrm"/>
+      <dep package="libX11"/>
+      <dep package="libXext"/>
+      <dep package="libXi"/>
+      <dep package="libXmu"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="mesa-demos">
+    <branch module="mesa/demos"
+            checkoutdir="mesa/demos"/>
+    <dependencies>
+      <dep package="libGL"/>
+    </dependencies>
+  </autotools>
+
+  <!-- util -->
   <autotools id="macros">
     <branch module="xorg/util/macros"
             checkoutdir="xorg/util/macros"/>
@@ -54,6 +104,7 @@
     </dependencies>
   </autotools>
 
+  <!-- docs -->
   <autotools id="xorg-sgml-doctools">
     <branch module="xorg/doc/xorg-sgml-doctools"
             checkoutdir="xorg/doc/xorg-sgml-doctools"/>
@@ -71,6 +122,7 @@
     </dependencies>
   </autotools>
 
+  <!-- proto -->
   <autotools id="applewmproto">
     <branch module="xorg/proto/applewmproto"
             checkoutdir="xorg/proto/applewmproto"/>
@@ -599,54 +651,6 @@
             checkoutdir="xorg/lib/libxtrans"/>
     <dependencies>
       <dep package="macros"/>
-    </dependencies>
-  </autotools>
-
-  <!-- Need nouveau API to build xf86-video-nouveau -->
-  <autotools id="libdrm" autogenargs="--enable-nouveau-experimental-api">
-    <branch module="mesa/drm"/>
-    <dependencies>
-      <dep package="macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="pixman">
-    <branch module="pixman"
-            checkoutdir="xorg/lib/pixman"/>
-    <dependencies/>
-  </autotools>
-
-  <autotools id="libpciaccess">
-    <branch module="xorg/lib/libpciaccess"
-            checkoutdir="xorg/lib/libpciaccess"/>
-    <dependencies/>
-  </autotools>
-
-  <!-- the Mesa module, which provides libGL, libGLU, and DRI drivers -->
-  <autotools id="libGL" supports-non-srcdir-builds="no" check-target="false"
-             skip-autogen="never">
-    <branch module="mesa/mesa"
-            checkoutdir="mesa/mesa"/>
-    <dependencies>
-      <dep package="makedepend"/>
-      <dep package="xf86driproto"/>
-      <dep package="dri2proto"/>
-      <dep package="glproto"/>
-      <dep package="libXxf86vm"/>
-      <dep package="libXdamage"/>
-      <dep package="libdrm"/>
-      <dep package="libX11"/>
-      <dep package="libXext"/>
-      <dep package="libXi"/>
-      <dep package="libXmu"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="mesa-demos">
-    <branch module="mesa/demos"
-            checkoutdir="mesa/demos"/>
-    <dependencies>
-      <dep package="libGL"/>
     </dependencies>
   </autotools>
 
