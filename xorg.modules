@@ -2030,6 +2030,7 @@
       <dep package="xf86-video-ark"/>
       <dep package="xf86-video-ast"/>
       <dep package="xf86-video-i740"/>
+      <dep package="xf86-video-impact"/>
       <dep package="xf86-video-imstt"/>
       <dep package="xf86-video-newport"/>
       <dep package="xf86-video-s3"/>
@@ -2064,7 +2065,6 @@
       <dep package="xf86-video-geode"/>
       <dep package="xf86-video-glint"/>
       <dep package="xf86-video-i128"/>
-      <dep package="xf86-video-impact"/>
       <dep package="xf86-video-intel"/>
       <dep package="xf86-video-mach64"/>
       <dep package="xf86-video-mga"/>
