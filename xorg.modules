@@ -38,10 +38,11 @@
   </autotools>
 
   <autotools id="makedepend">
+    <branch repo="git.freedesktop.org" module="xorg/util/makedepend" checkoutdir="xorg/util/makedepend" />
     <dependencies>
       <dep package="macros"/>
+      <dep package="x11proto"/>
     </dependencies>
-    <branch repo="git.freedesktop.org" module="xorg/util/makedepend" checkoutdir="xorg/util/makedepend" />
   </autotools>
 
   <autotools id="xorg-sgml-doctools">
