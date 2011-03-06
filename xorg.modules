@@ -534,7 +534,7 @@
     </dependencies>
   </autotools>
 
-  <!-- Need nouveau API to build xf86-viedo-nouveau -->
+  <!-- Need nouveau API to build xf86-video-nouveau -->
   <autotools id="libdrm" autogenargs="--enable-nouveau-experimental-api">
     <branch repo="git.freedesktop.org" module="mesa/drm"/>
     <dependencies>
