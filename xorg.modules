@@ -1584,6 +1584,7 @@
       <dep package="libXdmcp"/>
       <dep package="libXxf86vm"/>
       <dep package="libXinerama"/>
+      <dep package="libXv">
       <dep package="libdrm"/>
       <dep package="libdmx"/>
       <dep package="libXtst"/>
