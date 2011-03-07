@@ -819,7 +819,6 @@
     <branch repo="git.freedesktop.org" module="xorg/app/xlsclients" checkoutdir="xorg/app/xlsclients" />
     <dependencies>
       <dep package="libxcb"/>
-      <dep package="xcb-util"/>
     </dependencies>
   </autotools>
 
