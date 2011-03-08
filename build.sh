@@ -309,6 +309,27 @@ clone() {
             clonefailed_components="$clonefailed_components $module/$component"
             return 1
         fi
+	old_pwd=`pwd`
+	cd $DIR
+	if [ $? -ne 0 ]; then
+            echo "Failed to cd to $module module component $component. Ignoring."
+            clonefailed_components="$clonefailed_components $module/$component"
+            return 1
+	return 1
+	fi
+	git submodule init
+        if [ $? -ne 0 ]; then
+            echo "Failed to initialize $module module component $component submodule. Ignoring."
+            clonefailed_components="$clonefailed_components $module/$component"
+            return 1
+        fi
+	git submodule update
+        if [ $? -ne 0 ]; then
+            echo "Failed to update $module module component $component submodule. Ignoring."
+            clonefailed_components="$clonefailed_components $module/$component"
+            return 1
+        fi
+	cd ${old_pwd}
     else
         echo "git cannot clone into an existing directory $module/$component"
 	return 1
@@ -390,6 +411,12 @@ process() {
 	    cd $old_pwd
 	    return 1
 	fi
+	# The parent module knows which commit the submodule should be at
+	git submodule update
+        if [ $? -ne 0 ]; then
+	    failed "git submodule update" $module $component
+            return 1
+        fi
     fi
 
     # Build outside source directory
