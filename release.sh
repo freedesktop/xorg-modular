@@ -12,6 +12,7 @@ host_xorg=xorg.freedesktop.org
 host_dri=dri.freedesktop.org
 user=
 remote=origin
+moduleset=
 
 usage()
 {
@@ -24,6 +25,7 @@ Options:
   --help        this help message
   --ignore-local-changes        don't abort on uncommitted local changes
   --remote      git remote where the change should be pushed (default "origin")
+  --moduleset   jhbuild moduleset to update with relase info
 HELP
 }
 
@@ -105,6 +107,11 @@ while [ $# != 0 ]; do
     --remote)
         shift
         remote=$1
+        shift
+        ;;
+    --moduleset)
+        shift
+        moduleset=$1
         shift
         ;;
     --*)
@@ -198,6 +205,14 @@ if [ -z "$tag_previous" ] ||
     exit 1
 fi
 
+if [ -n "$moduleset" ]; then
+    echo "checking for moduleset"
+    if ! [ -w "$moduleset" ]; then
+        echo "moduleset $moduleset does not exist or is not writable"
+        exit 1
+    fi
+fi
+
 if [ "$section" = "libdrm" ]; then
     section_path="libdrm"
     srv_path="/srv/$host_dri/www/$section_path"
@@ -235,6 +250,13 @@ fi
 echo "generating announce mail template, remember to sign it"
 gen_announce_mail >$announce
 echo "    at: $announce"
+
+if [ -n "$moduleset" ]; then
+    echo "updating moduleset $moduleset"
+    modulardir=`dirname "$0"`
+    sha1sum=`cd $tarball_dir && $SHA1SUM $targz | cut -d' ' -f1`
+    $modulardir/update-moduleset.sh $moduleset $sha1sum $targz
+fi
 
 echo "installing release into server"
 scp $tarball_dir/$targz $tarball_dir/$tarbz2 $user$host_people:$srv_path
