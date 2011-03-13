@@ -253,7 +253,8 @@ echo "    at: $announce"
 
 if [ -n "$moduleset" ]; then
     echo "updating moduleset $moduleset"
-    modulardir=`dirname "$0"`
+    real_script_path=`readlink -f "$0"`
+    modulardir=`dirname "$real_script_path"`
     sha1sum=`cd $tarball_dir && $SHA1SUM $targz | cut -d' ' -f1`
     $modulardir/update-moduleset.sh $moduleset $sha1sum $targz
 fi
