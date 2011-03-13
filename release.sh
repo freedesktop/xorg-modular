@@ -120,15 +120,15 @@ while [ $# != 0 ]; do
         exit 1
         ;;
     *)
+        if [ $# != 3 ]; then
+            echo "error: invalid argument count"
+            usage
+            exit 1
+        fi
         section="$1"
         tag_previous="$2"
         tag_current="$3"
         shift 3
-        if [ $# != 0 ]; then
-            echo "error: unknown parameter"
-            usage
-            exit 1
-        fi
         ;;
     esac
 done
