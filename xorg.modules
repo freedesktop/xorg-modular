@@ -991,7 +991,7 @@
 
   <autotools id="xpr">
     <branch module="xorg/app/xpr"
-            checkoudir="xorg/app/xpr"/>
+            checkoutdir="xorg/app/xpr"/>
     <dependencies>
       <dep package="libX11"/>
       <!--<dep package="libXmuu"/>-->
@@ -1025,7 +1025,7 @@
 
   <autotools id="xrefresh">
     <branch module="xorg/app/xrefresh"
-            checkoudir="xorg/app/xrefresh"/>
+            checkoutdir="xorg/app/xrefresh"/>
     <dependencies>
       <dep package="libX11"/>
     </dependencies>
