@@ -1056,7 +1056,12 @@
   <autotools id="xvinfo">
     <branch module="xorg/app/xvinfo"
             checkoutdir="xorg/app/xvinfo"/>
+    <dependencies>
+      <dep package="libX11"/>
+      <dep package="libXv"/>
+    </dependencies>
   </autotools>
+
   <autotools id="xwd">
     <branch module="xorg/app/xwd"
             checkoutdir="xorg/app/xwd"/>
