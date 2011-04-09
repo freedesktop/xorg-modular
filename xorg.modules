@@ -39,6 +39,9 @@
   <autotools id="xcb-util">
     <branch module="xcb/util"
             checkoutdir="xcb/xcb-util"/>
+    <dependencies>
+      <dep package="libxcb"/>
+    </dependencies>
   </autotools>
 
   <!-- Need nouveau API to build xf86-video-nouveau -->
