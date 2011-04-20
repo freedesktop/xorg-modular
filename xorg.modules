@@ -2033,6 +2033,9 @@
 
   <autotools id="xts">
     <branch repo="git.freedesktop.org" module="xorg/test/xts" checkoutdir="xorg/test/xts"/>
+    <dependencies>
+      <dep package="libX11"/>
+    </dependencies>
   </autotools>
 
   <!-- These drivers are marked unmaintained in xorg/doc/xorg-docs/MAINTAINERS and are also broken -->
