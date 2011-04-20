@@ -2035,6 +2035,8 @@
     <branch repo="git.freedesktop.org" module="xorg/test/xts" checkoutdir="xorg/test/xts"/>
     <dependencies>
       <dep package="libX11"/>
+      <dep package="xdpyinfo"/>
+      <dep package="xset"/>
     </dependencies>
   </autotools>
 
