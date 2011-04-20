@@ -2031,6 +2031,10 @@
     </dependencies>
   </autotools>
 
+  <autotools id="xts">
+    <branch repo="git.freedesktop.org" module="xorg/test/xts" checkoutdir="xorg/test/xts"/>
+  </autotools>
+
   <!-- These drivers are marked unmaintained in xorg/doc/xorg-docs/MAINTAINERS and are also broken -->
   <metamodule id="xorg-unmaintained-broken-drivers">
     <dependencies>
