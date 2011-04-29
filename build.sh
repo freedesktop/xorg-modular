@@ -1280,11 +1280,11 @@ if [ X"$MODFILE" = X ]; then
     # We must install the global macros before anything else
     build util macros
     build font util
-    # Required by mesa
-    build util makedepend
 
     build_doc
     build_proto
+    # Required by mesa and depends on xproto
+    build util makedepend
     build_lib
     build_mesa
 
