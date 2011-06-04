@@ -872,7 +872,6 @@ build_driver_video() {
     build driver xf86-video-neomagic
     build driver xf86-video-newport
     build driver xf86-video-nv
-    build driver xf86-video-qxl
     build driver xf86-video-rendition
     build driver xf86-video-r128
     build driver xf86-video-s3
