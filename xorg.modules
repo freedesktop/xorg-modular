@@ -46,7 +46,8 @@
 
   <!-- Need nouveau API to build xf86-video-nouveau -->
   <autotools id="libdrm" autogenargs="--enable-nouveau-experimental-api">
-    <branch module="mesa/drm"/>
+    <branch module="mesa/drm"
+            checkoutdir="mesa/drm"/>
     <dependencies>
       <dep package="macros"/>
     </dependencies>
