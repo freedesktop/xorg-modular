@@ -51,6 +51,7 @@ esac
 
 MD5SUM=`which md5sum || which gmd5sum`
 SHA1SUM=`which sha1sum || which gsha1sum`
+SHA256SUM=`which sha256sum || which gsha256sum`
 
 if [ "$section" = "libdrm" ]; then
     host=$host_dri
@@ -75,10 +76,12 @@ git tag: $tag_current
 http://$host/$section_path/$tarbz2
 MD5:  `cd $tarball_dir && $MD5SUM $tarbz2`
 SHA1: `cd $tarball_dir && $SHA1SUM $tarbz2`
+SHA256: `cd $tarball_dir && $SHA256SUM $tarbz2`
 
 http://$host/$section_path/$targz
 MD5:  `cd $tarball_dir && $MD5SUM $targz`
 SHA1: `cd $tarball_dir && $SHA1SUM $targz`
+SHA256: `cd $tarball_dir && $SHA256SUM $targz`
 
 RELEASE
 }
