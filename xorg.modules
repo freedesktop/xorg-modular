@@ -365,6 +365,19 @@
     </dependencies>
   </autotools>
 
+  <autotools id="libXaw3d">
+    <branch module="xorg/lib/libXaw3d"
+            checkoutdir="xorg/lib/libXaw3d"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="x11proto"/>
+      <dep package="libX11"/>
+      <dep package="libXt"/>
+      <dep package="libXmu"/>
+      <dep package="libXext"/>
+    </dependencies>
+  </autotools>
+
   <autotools id="libXcomposite">
     <branch module="xorg/lib/libXcomposite"
             checkoutdir="xorg/lib/libXcomposite"/>
@@ -668,6 +681,7 @@
       <dep package="libXScrnSaver"/>
       <dep package="libXau"/>
       <dep package="libXaw"/>
+      <dep package="libXaw3d"/>
       <dep package="libXcomposite"/>
       <dep package="libXcursor"/>
       <dep package="libXdamage"/>
