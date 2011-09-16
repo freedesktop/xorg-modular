@@ -17,7 +17,8 @@ moduleset=
 usage()
 {
     cat <<HELP
-Usage: `basename $0` [options] <section> <tag_previous> <tag_current>
+Usage: `basename $0` [options] [<section> [<tag_previous> [<tag_current>]]]
+   or: `basename $0` [options] <section> initial [<tag_current>]
 
 Options:
   --force       force overwritting an existing release
@@ -123,18 +124,67 @@ while [ $# != 0 ]; do
         exit 1
         ;;
     *)
-        if [ $# != 3 ]; then
-            echo "error: invalid argument count"
+        section="$1"
+        shift
+        if [ $# != 0 ]; then
+            tag_previous="$1"
+            shift
+            if [ $# != 0 ]; then
+                tag_current="$1"
+                shift
+            fi
+        fi
+        if [ $# != 0 ]; then
+            echo "error: unknown parameter"
             usage
             exit 1
         fi
-        section="$1"
-        tag_previous="$2"
-        tag_current="$3"
-        shift 3
         ;;
     esac
 done
+
+
+# Attempt to auto-detect values if not specified
+if [ -z "$section" ]; then
+    section="$(git config --get "remote.${remote}.url" | sed -n 's%^.*freedesktop.org/git/xorg/\([^/]*\).*$%\1%p')"
+    echo "Detected section: $section"
+fi
+
+if [ -z "$tag_previous" ]; then
+    tag_previous="$(git describe --abbrev=0 HEAD^)"
+    echo "Detected previous tag: $tag_previous"
+fi
+
+if [ -z "$tag_current" ]; then
+    tag_current="$(git describe --abbrev=0)"
+    echo "Detected current tag: $tag_current"
+fi
+
+
+# Check for required values
+if [ -z "$section" ]; then
+    echo "error: section not found."
+    usage
+    exit 1
+fi
+
+if [ -z "$tag_previous" ] ; then
+    echo "error: previous tag not found."
+    usage
+    exit 1
+fi
+
+if [ -z "$tag_current" ] ; then
+    echo "error: current tag not found."
+    usage
+    exit 1
+fi
+
+if [ "x$tag_previous" = "x$tag_current" ] ; then
+    echo "current tag ($tag_current) must be different than"
+    echo "previous tag ($tag_previous)"
+    exit 1
+fi
 
 # Check for uncommitted/queued changes.
 if [ "x$ignorechanges" != "x1" ]; then
@@ -197,13 +247,6 @@ echo "checking parameters"
 if ! [ -f "$tarball_dir/$tarbz2" ] ||
    ! [ -f "$tarball_dir/$targz" ]; then
     echo "error: tarballs not found.  Did you run make dist?"
-    usage
-    exit 1
-fi
-
-if [ -z "$tag_previous" ] ||
-   [ -z "$section" ]; then
-    echo "error: previous tag or section not found."
     usage
     exit 1
 fi
