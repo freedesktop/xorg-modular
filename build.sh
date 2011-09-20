@@ -213,9 +213,9 @@ checkfortars() {
                     module="xcb/libxcb"
                     component="libxcb"
                     ;;
-                "util")
-                    module="xcb/util"
-                    component="xcb-util"
+                util*)
+                    module="xcb/$component"
+                    component="xcb-$component"
                     ;;
             esac
             ;;
@@ -638,6 +638,10 @@ build_lib() {
     build xcb pthread-stubs
     build xcb libxcb
     build xcb util
+    build xcb util-image
+    build xcb util-keysyms
+    build xcb util-renderutil
+    build xcb util-wm
     build lib libX11
     build lib libXext
     case $HOST_OS in
