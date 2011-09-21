@@ -145,21 +145,36 @@ done
 
 
 # Attempt to auto-detect values if not specified
+auto_detected="no"
+
 if [ -z "$section" ]; then
     section="$(git config --get "remote.${remote}.url" | sed -n 's%^.*freedesktop.org/git/xorg/\([^/]*\).*$%\1%p')"
     echo "Detected section: $section"
+    auto_detected="yes"
 fi
 
 if [ -z "$tag_previous" ]; then
     tag_previous="$(git describe --abbrev=0 HEAD^)"
     echo "Detected previous tag: $tag_previous"
+    auto_detected="yes"
 fi
 
 if [ -z "$tag_current" ]; then
     tag_current="$(git describe --abbrev=0)"
     echo "Detected current tag: $tag_current"
+    auto_detected="yes"
 fi
 
+if [ "${auto_detected}" = "yes" ] ; then
+    echo -n "Proceed? (Y/N) "
+    while read answer ; do
+        case "$answer" in
+            y*|Y*) break ;;
+            n*|N*) exit 1 ;;
+            *) echo -n "Incorrect Response.  Proceed? (Y/N) " ; continue ;;
+        esac
+    done
+fi
 
 # Check for required values
 if [ -z "$section" ]; then
