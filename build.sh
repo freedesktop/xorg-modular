@@ -793,7 +793,6 @@ build_driver_input() {
     # Some drivers are only buildable on some OS'es
     case $HOST_OS in
 	Linux)
-	    build driver xf86-input-aiptek
 	    build driver xf86-input-evdev
 	    build driver xf86-input-joystick
 	    ;;
@@ -809,10 +808,8 @@ build_driver_input() {
 	    ;;
     esac
 
-    build driver xf86-input-acecad
     build driver xf86-input-keyboard
     build driver xf86-input-mouse
-    build driver xf86-input-penmount
     build driver xf86-input-synaptics
     build driver xf86-input-void
 }
