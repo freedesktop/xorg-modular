@@ -50,6 +50,7 @@
             checkoutdir="mesa/drm"/>
     <dependencies>
       <dep package="macros"/>
+      <dep package="libpciaccess"/>
     </dependencies>
   </autotools>
 
