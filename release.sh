@@ -4,7 +4,7 @@ set -e
 
 announce_list="xorg-announce@lists.freedesktop.org"
 xorg_list="xorg@lists.freedesktop.org"
-dri_list="dri-devel@lists.sourceforge.net"
+dri_list="dri-devel@lists.freedesktop.org"
 xkb_list="xkb@listserv.bat.ru"
 
 host_people=annarchy.freedesktop.org
