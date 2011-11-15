@@ -1763,8 +1763,15 @@
     <branch module="xorg/driver/xf86-video-intel"
             checkoutdir="xorg/driver/xf86-video-intel"/>
     <dependencies>
+      <dep package="macros"/>
       <dep package="xserver"/>
+      <dep package="fontsproto"/>
+      <dep package="glproto"/>
+      <dep package="randrproto"/>
+      <dep package="renderproto"/>
+      <dep package="xextproto"/>
       <dep package="x11proto"/>
+      <dep package="dri2proto"/>
       <dep package="libXvMC"/>
     </dependencies>
   </autotools>
