@@ -1,328 +1,671 @@
 #!/bin/sh
+#
+#		Creates and upload a git module tarball
+#
+# Note on portability:
+# This script is intended to run on any platform supported by X.Org.
+# Basically, it should be able to run in a Bourne shell.
+#
+#
 
-set -e
+export LC_ALL=C
 
-announce_list="xorg-announce@lists.freedesktop.org"
-xorg_list="xorg@lists.freedesktop.org"
-dri_list="dri-devel@lists.freedesktop.org"
-xkb_list="xkb@listserv.bat.ru"
-
-host_people=annarchy.freedesktop.org
-host_xorg=xorg.freedesktop.org
-host_dri=dri.freedesktop.org
-user=
-remote=origin
-moduleset=
-
-usage()
-{
-    cat <<HELP
-Usage: `basename $0` [options] [<section> [<tag_previous> [<tag_current>]]]
-   or: `basename $0` [options] <section> initial [<tag_current>]
-
-Options:
-  --force       force overwritting an existing release
-  --user <name> username on $host_people
-  --help        this help message
-  --ignore-local-changes        don't abort on uncommitted local changes
-  --remote      git remote where the change should be pushed (default "origin")
-  --moduleset   jhbuild moduleset to update with relase info
-HELP
+#------------------------------------------------------------------------------
+#			Function: check_local_changes
+#------------------------------------------------------------------------------
+#
+check_local_changes() {
+    git diff --quiet HEAD > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+	echo ""
+	echo "Uncommitted changes found. Did you forget to commit? Aborting."
+	echo ""
+	echo "You can perform a 'git stash' to save your local changes and"
+	echo "a 'git stash apply' to recover them after the tarball release."
+	echo "Make sure to rebuild and run 'make distcheck' again."
+	echo ""
+	echo "Alternatively, you can clone the module in another directory"
+	echo "and run ./configure. No need to build if testing was finished."
+	echo ""
+	return 1
+    fi
+    return 0
 }
 
-abort_for_changes()
-{
-    cat <<ERR
-Uncommitted changes found. Did you forget to commit? Aborting.
-Use --ignore-local-changes to skip this check.
-ERR
-    exit 1
+#------------------------------------------------------------------------------
+#			Function: check_option_args
+#------------------------------------------------------------------------------
+#
+# perform sanity checks on cmdline args which require arguments
+# arguments:
+#   $1 - the option being examined
+#   $2 - the argument to the option
+# returns:
+#   if it returns, everything is good
+#   otherwise it exit's
+check_option_args() {
+    option=$1
+    arg=$2
+
+    # check for an argument
+    if [ x"$arg" = x ]; then
+	echo ""
+	echo "Error: the '$option' option is missing its required argument."
+	echo ""
+	usage
+	exit 1
+    fi
+
+    # does the argument look like an option?
+    echo $arg | grep "^-" > /dev/null
+    if [ $? -eq 0 ]; then
+	echo ""
+	echo "Error: the argument '$arg' of option '$option' looks like an option itself."
+	echo ""
+	usage
+	exit 1
+    fi
 }
 
-gen_announce_mail()
-{
-case "$tag_previous" in
-initial)
-	range="$tag_current"
-	;;
-*)
-	range="$tag_previous".."$tag_current"
-	;;
-esac
+#------------------------------------------------------------------------------
+#			Function: check_modules_specification
+#------------------------------------------------------------------------------
+#
+check_modules_specification() {
 
-MD5SUM=`which md5sum || which gmd5sum`
-SHA1SUM=`which sha1sum || which gsha1sum`
-SHA256SUM=`which sha256sum || which gsha256sum`
-
-if [ "$section" = "libdrm" ]; then
-    host=$host_dri
-    list=$dri_list
-elif [ "$section" = "xkeyboard-config" ]; then
-    host=$host_xorg
-    list=$xkb_list
-else
-    host=$host_xorg
-    list=$xorg_list
+if [ x"$MODFILE" = x ]; then
+    if [ x"${INPUT_MODULES}" = x ]; then
+	echo ""
+	echo "Error: no modules specified (blank command line)."
+	usage
+	exit 1
+    fi
 fi
 
+}
+
+#------------------------------------------------------------------------------
+#			Function: generate_announce
+#------------------------------------------------------------------------------
+#
+generate_announce()
+{
     cat <<RELEASE
-Subject: [ANNOUNCE] $module $version
-To: $announce_list
-CC: $list
+Subject: [ANNOUNCE] $pkg_name $pkg_version
+To: $list_to
+CC: $list_cc
 
-`git log --no-merges "$range" | git shortlog`
+`git log --no-merges "$tag_range" | git shortlog`
 
-git tag: $tag_current
+git tag: $tar_name
 
-http://$host/$section_path/$tarbz2
-MD5:  `cd $tarball_dir && $MD5SUM $tarbz2`
-SHA1: `cd $tarball_dir && $SHA1SUM $tarbz2`
-SHA256: `cd $tarball_dir && $SHA256SUM $tarbz2`
+http://$host_current/$section_path/$tarbz2
+MD5:  `$MD5SUM $tarbz2`
+SHA1: `$SHA1SUM $tarbz2`
+SHA256: `$SHA256SUM $tarbz2`
 
-http://$host/$section_path/$targz
-MD5:  `cd $tarball_dir && $MD5SUM $targz`
-SHA1: `cd $tarball_dir && $SHA1SUM $targz`
-SHA256: `cd $tarball_dir && $SHA256SUM $targz`
+http://$host_current/$section_path/$targz
+MD5:  `$MD5SUM $targz`
+SHA1: `$SHA1SUM $targz`
+SHA256: `$SHA256SUM $targz`
 
 RELEASE
 }
 
-export LC_ALL=C
+#------------------------------------------------------------------------------
+#			Function: read_modfile
+#------------------------------------------------------------------------------
+#
+# Read the module names from the file and set a variable to hold them
+# This will be the same interface as cmd line supplied modules
+#
+read_modfile() {
 
-while [ $# != 0 ]; do
-    case "$1" in
-    --force)
-        force="yes"
-        shift
-        ;;
-    --help)
-        usage
-        exit 0
-        ;;
-    --user)
-	shift
-	user=$1@
-	shift
+    if [ x"$MODFILE" != x ]; then
+	# Make sure the file is sane
+	if [ ! -r "$MODFILE" ]; then
+	    echo "Error: module file '$MODFILE' is not readable or does not exist."
+	    exit 1
+	fi
+	# read from input file, skipping blank and comment lines
+	while read line; do
+	    # skip blank lines
+	    if [ x"$line" = x ]; then
+		continue
+	    fi
+	    # skip comment lines
+	    if echo "$line" | grep -q "^#" ; then
+		continue;
+	    fi
+	    INPUT_MODULES="$INPUT_MODULES $line"
+	done <"$MODFILE"
+    fi
+    return 0
+}
+
+#------------------------------------------------------------------------------
+#			Function: print_epilog
+#------------------------------------------------------------------------------
+#
+print_epilog() {
+
+    epilog="========  Successful Completion"
+    if [ x"$NO_QUIT" != x ]; then
+	if [ x"$failed_modules" != x ]; then
+	    epilog="========  Partial Completion"
+	fi
+    elif [ x"$failed_modules" != x ]; then
+	epilog="========  Stopped on Error"
+    fi
+
+    echo ""
+    echo "$epilog `date`"
+
+    # Report about modules that failed for one reason or another
+    if [ x"$failed_modules" != x ]; then
+	echo "	List of failed modules:"
+	for mod in $failed_modules; do
+	    echo "	$mod"
+	done
+	echo "========"
+	echo ""
+    fi
+}
+
+#------------------------------------------------------------------------------
+#			Function: process_modules
+#------------------------------------------------------------------------------
+#
+# Loop through each module to release
+# Exit on error if --no-quit was not specified
+#
+process_modules() {
+    for MODULE_RPATH in ${INPUT_MODULES}; do
+	if ! process_module ; then
+	    echo "Error: processing module \"$MODULE_RPATH\" failed."
+	    failed_modules="$failed_modules $MODULE_RPATH"
+	    if [ x"$NO_QUIT" = x ]; then
+		print_epilog
+		exit 1
+	    fi
+	fi
+    done
+}
+
+#------------------------------------------------------------------------------
+#			Function: process_module
+#------------------------------------------------------------------------------
+# Code 'return 0' on success to process the next module
+# Code 'return 1' on error to process next module if invoked with --no-quit
+#
+process_module() {
+
+    top_src=`pwd`
+    echo ""
+    echo "========  Processing \"$top_src/$MODULE_RPATH\""
+
+    # This is the location where the script has been invoked
+    if [ ! -d $MODULE_RPATH ] ; then
+	echo "Error: $MODULE_RPATH cannot be found under $top_src."
+	return 1
+    fi
+
+    # Change directory to be in the git module
+    cd $MODULE_RPATH
+    if [ $? -ne 0 ]; then
+	echo "Error: failed to cd to $MODULE_RPATH."
+	return 1
+    fi
+
+    # ----- Now in the git module *root* directory ----- #
+
+    # Check that this is indeed a git module
+    if [ ! -d .git ]; then
+	echo "Error: there is no git module here: `pwd`"
+	return 1
+    fi
+
+    # Change directory to be in the git build directory (could be out-of-source)
+    # More than one can be found when distcheck has run and failed
+    configNum=`find . -name config.status -type f | wc -l | sed 's:^ *::'`
+    if [ $? -ne 0 ]; then
+	echo "Error: failed to locate config.status."
+	echo "Has the module been configured?"
+	return 1
+    fi
+    if [ x"$configNum" = x0 ]; then
+	echo "Error: failed to locate config.status, has the module been configured?"
+	return 1
+    fi
+    if [ x"$configNum" != x1 ]; then
+	echo "Error: more than one config.status file was found,"
+	echo "       clean-up previously failed attempts at distcheck"
+	return 1
+    fi
+    status_file=`find . -name config.status -type f`
+    if [ $? -ne 0 ]; then
+	echo "Error: failed to locate config.status."
+	echo "Has the module been configured?"
+	return 1
+    fi
+    build_dir=`dirname $status_file`
+    cd $build_dir
+    if [ $? -ne 0 ]; then
+	echo "Error: failed to cd to $MODULE_RPATH/$build_dir."
+	cd $top_src
+	return 1
+    fi
+
+    # ----- Now in the git module *build* directory ----- #
+
+    # Check for uncommitted/queued changes.
+    check_local_changes
+    if [ $? -ne 0 ]; then
+	cd $top_src
+	return 1
+    fi
+
+    # Determine what is the current branch and the remote name
+    current_branch=`git branch | grep "\*" | sed -e "s/\* //"`
+    remote_name=`git config --get branch.$current_branch.remote`
+    echo "Info: working off the \"$current_branch\" branch tracking the remote \"$remote_name\"."
+
+    # Run 'make dist/distcheck' to ensure the tarball matches the git module content
+    # Important to run make dist/distcheck before looking in Makefile, may need to reconfigure
+    echo "Info: running \"make $MAKE_DIST_CMD\" to create tarballs:"
+    ${MAKE} $MAKEFLAGS $MAKE_DIST_CMD > /dev/null
+    if [ $? -ne 0 ]; then
+	echo "Error: \"$MAKE $MAKEFLAGS $MAKE_DIST_CMD\" failed."
+	cd $top_src
+	return 1
+    fi
+
+    # Find out the tarname from the makefile
+    pkg_name=`grep '^PACKAGE = ' Makefile | sed 's|PACKAGE = ||'`
+    pkg_version=`grep '^VERSION = ' Makefile | sed 's|VERSION = ||'`
+    tar_name="$pkg_name-$pkg_version"
+    targz=$tar_name.tar.gz
+    tarbz2=$tar_name.tar.bz2
+    ls -l $targz
+    ls -l $tarbz2
+
+    # Obtain the top commit SHA which should be the version bump
+    # It should not have been tagged yet (the script will do it later)
+    local_top_commit_sha=`git  rev-list --max-count=1 HEAD`
+    if [ $? -ne 0 ]; then
+	echo "Error: unable to obtain the local top commit id."
+	cd $top_src
+	return 1
+    fi
+
+    # Check that the top commit looks like a version bump
+    git diff --unified=0 HEAD^ | grep $pkg_version >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+	echo "Error: the local top commit does not look like a version bump."
+	echo "       the diff does not contain the string \"$pkg_version\"."
+	local_top_commit_descr=`git log --oneline --max-count=1 $local_top_commit_sha`
+	echo "       the local top commit is: \"$local_top_commit_descr\""
+	cd $top_src
+	return 1
+    fi
+
+    # Check that the top commit has been pushed to remote
+    remote_top_commit_sha=`git  rev-list --max-count=1 $remote_name/$current_branch`
+    if [ $? -ne 0 ]; then
+	echo "Error: unable to obtain top commit from the remote repository."
+	cd $top_src
+	return 1
+    fi
+    if [ x"$remote_top_commit_sha" != x"$local_top_commit_sha" ]; then
+	echo "Error: the local top commit has not been pushed to the remote."
+	local_top_commit_descr=`git log --oneline --max-count=1 $local_top_commit_sha`
+	echo "       the local top commit is: \"$local_top_commit_descr\""
+	cd $top_src
+	return 1
+    fi
+
+    # If a tag exists with the the tar name, ensure it is tagging the top commit
+    # It may happen if the version set in configure.ac has been previously released
+    tagged_commit_sha=`git  rev-list --max-count=1 $tar_name 2>/dev/null`
+    if [ $? -eq 0 ]; then
+	# Check if the tag is pointing to the top commit
+	if [ x"$tagged_commit_sha" != x"$remote_top_commit_sha" ]; then
+	    echo "Error: the \"$tar_name\" already exists."
+	    echo "       this tag is not tagging the top commit."
+	    remote_top_commit_descr=`git log --oneline --max-count=1 $remote_top_commit_sha`
+	    echo "       the top commit is: \"$remote_top_commit_descr\""
+	    local_tag_commit_descr=`git log --oneline --max-count=1 $tagged_commit_sha`
+	    echo "       tag \"$tar_name\" is tagging some other commit: \"$local_tag_commit_descr\""
+	    cd $top_src
+	    return 1
+	else
+	    echo "Info: module already tagged with \"$tar_name\"."
+	fi
+    else
+	# Tag the top commit with the tar name
+	if [ x"$DRY_RUN" = x ]; then
+	    git tag -m $tar_name $tar_name
+	    if [ $? -ne 0 ]; then
+		echo "Error:  unable to tag module with \"$tar_name\"."
+		cd $top_src
+		return 1
+	    else
+		echo "Info: module tagged with \"$tar_name\"."
+	    fi
+	else
+	    echo "Info: skipping the commit tagging in dry-run mode."
+	fi
+    fi
+
+    # --------- Now the tarballs are ready to upload ----------
+
+    # The hostname which is used to connect to the development resources
+    hostname="annarchy.freedesktop.org"
+
+    # Some hostnames are also used as /srv subdirs
+    host_xorg="xorg.freedesktop.org"
+    host_dri="dri.freedesktop.org"
+
+    # Mailing lists where to post the all [Announce] e-mails
+    list_to="xorg-announce@lists.freedesktop.org"
+
+    # Mailing lists to be CC according to the project (xorg|dri|xkb)
+    list_xorg_user="xorg@lists.freedesktop.org"
+    list_dri_devel="dri-devel@lists.freedesktop.net"
+    list_xkb="xkb@listserv.bat.ru"
+    list_xcb="xcb@lists.freedesktop.org"
+
+    # Obtain the git url in order to find the section to which this module belongs
+    full_module_url=`git config --get remote.$remote_name.url | sed 's:\.git$::'`
+    if [ $? -ne 0 ]; then
+	echo "Error: unable to obtain git url for remote \"$remote_name\"."
+	cd $top_src
+	return 1
+    fi
+
+    # The last part of the git url will tell us the section. Look for xorg first
+    module_url=`echo "$full_module_url" | grep -o "/xorg/.*"`
+    if [ $? -eq 0 ]; then
+	module_url=`echo $module_url | cut -d'/' -f3,4`
+    else
+	# The look for mesa, xcb, etc...
+	module_url=`echo "$full_module_url" | grep -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config"`
+	if [ $? -eq 0 ]; then
+	     module_url=`echo $module_url | cut -d'/' -f2,3`
+	else
+	    echo "Error: unable to locate a valid project url from \"$full_module_url\"."
+	    echo "Cannot establish url as one of xorg, mesa, xcb or xkeyboard-config."
+	    cd $top_src
+	    return 1
+	fi
+    fi
+
+    # Find the section (subdirs) where the tarballs are to be uploaded
+    # The module relative path can be app/xfs, xserver, or mesa/drm for example
+    section=`echo $module_url | cut -d'/' -f1`
+    if [ $? -ne 0 ]; then
+	echo "Error: unable to extract section from $module_url first field."
+	cd $top_src
+	return 1
+    else
+	host_current=$host_xorg
+	section_path=archive/individual/$section
+	srv_path="/srv/$host_current/$section_path"
+	list_cc=$list_xorg_user
+    fi
+
+    # Handle special cases such as non xorg projects or migrated xorg projects
+    # Xcb has a separate mailing list
+    if [ x"$section" = xxcb ]; then
+	list_cc=$list_xcb
+    fi
+    # Module mesa/drm goes in the dri "libdrm" section
+    if [ x"$section" = xmesa ]; then
+	section=`echo $module_url | cut -d'/' -f2`
+	if [ $? -ne 0 ]; then
+	    echo "Error: unable to extract section from $module_url second field."
+	    cd $top_src
+	    return 1
+	elif [ x"$section" = xdrm ]; then
+	    host_current=$host_dri
+	    section_path=www/libdrm
+	    srv_path="/srv/$host_current/$section_path"
+	    list_cc=$list_dri_devel
+	else
+	    echo "Error: section $section is not supported, only libdrm is."
+	    cd $top_src
+	    return 1
+	fi
+    fi
+    # Module xkeyboard-config goes in a subdir of the xorg "data" section
+    if [ x"$section" = xxkeyboard-config ]; then
+	host_current=$host_xorg
+	section_path=archive/individual/data/$section
+	srv_path="/srv/$host_current/$section_path"
+	list_cc=$list_xkb
+    fi
+
+    # Use personal web space on the host for unit testing (leave commented out)
+    # srv_path="~/public_html$srv_path"
+
+    # Check that the server path actually does exist
+    ssh $USER_NAME$hostname ls $srv_path >/dev/null 2>&1 ||
+    if [ $? -ne 0 ]; then
+	echo "Error: the path \"$srv_path\" on the web server does not exist."
+	cd $top_src
+	return 1
+    fi
+
+    # Check for already existing tarballs
+    ssh $USER_NAME$hostname ls $srv_path/$targz >/dev/null 2>&1 ||
+    ssh $USER_NAME$hostname ls $srv_path/$tarbz2  >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+	if [ "x$FORCE" = "xyes" ]; then
+	    echo "Warning: overwriting released tarballs due to --force option."
+	else
+	    echo "Error: tarball $tar_name already exists. Use --force to overwrite."
+	    cd $top_src
+	    return 1
+	fi
+    fi
+
+    # Upload to host using the 'scp' remote file copy program
+    if [ x"$DRY_RUN" = x ]; then
+	echo "Info: uploading tarballs to web server:"
+	scp $targz $tarbz2 $USER_NAME@$hostname:$srv_path
+	if [ $? -ne 0 ]; then
+	    echo "Error: the tarballs uploading failed."
+	    cd $top_src
+	    return 1
+	fi
+    else
+	echo "Info: skipping tarballs uploading in dry-run mode."
+	echo "      \"$srv_path\"."
+    fi
+
+    # Pushing the top commit tag to the remote repository
+    if [ x$DRY_RUN = x ]; then
+	echo "Info: pushing tag \"$tar_name\" to remote \"$remote_name\":"
+	git push $remote_name $tar_name
+	if [ $? -ne 0 ]; then
+	    echo "Error: unable to push tag \"$tar_name\" to the remote repository."
+	    echo "       it is recommended you fix this manually and not run the script again"
+	    cd $top_src
+	    return 1
+	fi
+    else
+	echo "Info: skipped pushing tag \"$tar_name\" to the remote repository in dry-run mode."
+    fi
+
+    MD5SUM=`which md5sum || which gmd5sum`
+    SHA1SUM=`which sha1sum || which gsha1sum`
+    SHA256SUM=`which sha256sum || which gsha256sum`
+
+    # --------- Generate the announce e-mail ------------------
+    # Failing to generate the announce is not considered a fatal error
+
+    # Git-describe returns only "the most recent tag", it may not be the expected one
+    # However, we only use it for the commit history which will be the same anyway.
+    tag_previous=`git describe --abbrev=0 HEAD^ 2>/dev/null`
+    # Git fails with rc=128 if no tags can be found prior to HEAD^
+    if [ $? -ne 0 ]; then
+	if [ $? -ne 0 ]; then
+	    echo "Warning: unable to find a previous tag."
+	    echo "         perhaps a first release on this branch."
+	    echo "         Please check the commit history in the announce."
+	fi
+    fi
+    if [ x"$tag_previous" != x ]; then
+	# The top commit may not have been tagged in dry-run mode. Use commit.
+	tag_range=$tag_previous..$local_top_commit_sha
+    else
+	tag_range=$tar_name
+    fi
+    generate_announce > "$tar_name.announce"
+    echo "Info: [ANNOUNCE] template generated in \"$tar_name.announce\" file."
+    echo "      Please pgp sign and send it."
+
+    # --------- Update the JH Build moduleset -----------------
+    # Failing to update the jh moduleset is not considered a fatal error
+    if [ x"$JH_MODULESET" != x ]; then
+	if [ x$DRY_RUN = x ]; then
+	    sha1sum=`$SHA1SUM $targz | cut -d' ' -f1`
+	    $top_src/util/modular/update-moduleset.sh $JH_MODULESET $sha1sum $targz
+	    echo "Info: updated jh moduleset: \"$JH_MODULESET\""
+	else
+	    echo "Info: skipping jh moduleset \"$JH_MODULESET\" update in dry-run mode."
+	fi
+    fi
+
+    # --------- Successful completion --------------------------
+    cd $top_src
+    return 0
+
+}
+
+#------------------------------------------------------------------------------
+#			Function: usage
+#------------------------------------------------------------------------------
+# Displays the script usage and exits successfully
+#
+usage() {
+    basename="`expr "//$0" : '.*/\([^/]*\)'`"
+    cat <<HELP
+
+Usage: $basename [options] path...
+
+Where "path" is a relative path to a git module, including '.'.
+
+Options:
+  --distcheck         Use 'distcheck' rather than 'dist' to create tarballs
+  --dry-run           Does everything except tagging and uploading tarballs
+  --force             Force overwriting an existing release
+  --help              Display this help and exit successfully
+  --modfile <file>    Release the git modules specified in <file>
+  --moduleset <file>  The jhbuild moduleset full pathname to be updated
+  --no-quit           Do not quit after error; just print error message
+  --user <name>       Username of your fdo account if not configured in ssh
+
+Environment variables defined by the "make" program and used by release.sh:
+  MAKE        The name of the make command [make]
+  MAKEFLAGS:  Options to pass to all \$(MAKE) invocations
+
+HELP
+}
+
+#------------------------------------------------------------------------------
+#			Script main line
+#------------------------------------------------------------------------------
+#
+
+# Choose which make program to use (could be gmake)
+MAKE=${MAKE:="make"}
+
+# Set the default make tarball creation command
+MAKE_DIST_CMD=dist
+
+# Process command line args
+while [ $# != 0 ]
+do
+    case $1 in
+    # Use 'distcheck' rather than 'dist' to create tarballs
+    --distcheck)
+	MAKE_DIST_CMD=distcheck
 	;;
-    --ignore-local-changes)
-        ignorechanges=1
-        shift
-        ;;
-    --remote)
-        shift
-        remote=$1
-        shift
-        ;;
+    # Does everything except uploading tarball
+    --dry-run)
+	DRY_RUN=yes
+	;;
+    # Force overwriting an existing release
+    # Use only if nothing changed in the git repo
+    --force)
+	FORCE=yes
+	;;
+    # Display this help and exit successfully
+    --help)
+	usage
+	exit 0
+	;;
+    # Release the git modules specified in <file>
+    --modfile)
+	check_option_args $1 $2
+	shift
+	MODFILE=$1
+	;;
+    # The jhbuild moduleset to update with relase info
     --moduleset)
-        shift
-        moduleset=$1
-        shift
-        ;;
+	check_option_args $1 $2
+	shift
+	JH_MODULESET=$1
+	;;
+    # Do not quit after error; just print error message
+    --no-quit)
+	NO_QUIT=yes
+	;;
+    # Username of your fdo account if not configured in ssh
+    --user)
+	check_option_args $1 $2
+	shift
+	USER_NAME=$1
+	;;
     --*)
-        echo "error: unknown option"
-        usage
-        exit 1
-        ;;
+	echo ""
+	echo "Error: unknown option: $1"
+	echo ""
+	usage
+	exit 1
+	;;
+    -*)
+	echo ""
+	echo "Error: unknown option: $1"
+	echo ""
+	usage
+	exit 1
+	;;
     *)
-        section="$1"
-        shift
-        if [ $# != 0 ]; then
-            tag_previous="$1"
-            shift
-            if [ $# != 0 ]; then
-                tag_current="$1"
-                shift
-            fi
-        fi
-        if [ $# != 0 ]; then
-            echo "error: unknown parameter"
-            usage
-            exit 1
-        fi
-        ;;
+	if [ x"${MODFILE}" != x ]; then
+	    echo ""
+	    echo "Error: specifying both modules and --modfile is not permitted"
+	    echo ""
+	    usage
+	    exit 1
+	fi
+	INPUT_MODULES="${INPUT_MODULES} $1"
+	;;
     esac
+
+    shift
 done
 
+# If no modules specified (blank cmd line) display help
+check_modules_specification
 
-# Attempt to auto-detect values if not specified
-auto_detected="no"
+# Read the module file and normalize input in INPUT_MODULES
+read_modfile
 
-if [ -z "$section" ]; then
-    section="$(git config --get "remote.${remote}.url" | sed -n 's%^.*freedesktop.org/git/xorg/\([^/]*\).*$%\1%p')"
-    echo "Detected section: $section"
-    auto_detected="yes"
-fi
+# Loop through each module to release
+# Exit on error if --no-quit no specified
+process_modules
 
-if [ -z "$tag_previous" ]; then
-    tag_previous="$(git describe --abbrev=0 HEAD^)"
-    echo "Detected previous tag: $tag_previous"
-    auto_detected="yes"
-fi
-
-if [ -z "$tag_current" ]; then
-    tag_current="$(git describe --abbrev=0)"
-    echo "Detected current tag: $tag_current"
-    auto_detected="yes"
-fi
-
-if [ "${auto_detected}" = "yes" ] ; then
-    echo -n "Proceed? (Y/N) "
-    while read answer ; do
-        case "$answer" in
-            y*|Y*) break ;;
-            n*|N*) exit 1 ;;
-            *) echo -n "Incorrect Response.  Proceed? (Y/N) " ; continue ;;
-        esac
-    done
-fi
-
-# Check for required values
-if [ -z "$section" ]; then
-    echo "error: section not found."
-    usage
-    exit 1
-fi
-
-if [ -z "$tag_previous" ] ; then
-    echo "error: previous tag not found."
-    usage
-    exit 1
-fi
-
-if [ -z "$tag_current" ] ; then
-    echo "error: current tag not found."
-    usage
-    exit 1
-fi
-
-if [ "x$tag_previous" = "x$tag_current" ] ; then
-    echo "current tag ($tag_current) must be different than"
-    echo "previous tag ($tag_previous)"
-    exit 1
-fi
-
-# Check for uncommitted/queued changes.
-if [ "x$ignorechanges" != "x1" ]; then
-    set +e
-    git diff --quiet HEAD > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        abort_for_changes
-    fi
-    set -e
-fi
-
-# Check if the object has been pushed. Do do so
-# 1. Check if the current branch has the object. If not, abort.
-# 2. Check if the object is on $remote/branchname. If not, abort.
-local_sha=`git rev-list -1 $tag_current`
-current_branch=`git branch | grep "\*" | sed -e "s/\* //"`
-set +e
-git rev-list $current_branch | grep $local_sha > /dev/null
-if [ $? -eq 1 ]; then
-    echo "Cannot find tag '$tag_current' on current branch. Aborting."
-    echo "Switch to the correct branch and re-run the script."
-    exit 1
-fi
-
-revs=`git rev-list $remote/$current_branch..$current_branch | wc -l`
-if [ $revs -ne 0 ]; then
-    git rev-list $remote/$current_branch..$current_branch | grep $local_sha > /dev/null
-
-    if [ $? -ne 1 ]; then
-        echo "$remote/$current_branch doesn't have object $local_sha"
-        echo "for tag '$tag_current'. Did you push branch first? Aborting."
-        exit 1
-    fi
-fi
-set -e
-
-tarball_dir="$(dirname $(find . -name config.status))"
-module="${tag_current%-*}"
-if [ "x$module" = "x$tag_current" ]; then
-    # version-number-only tag.
-    pwd=`pwd`
-    module=`basename $pwd`
-    version="$tag_current"
-else
-    # module-and-version style tag
-    version="${tag_current##*-}"
-fi
-
-detected_module=`grep 'PACKAGE = ' $tarball_dir/Makefile | sed 's|PACKAGE = ||'`
-if [ -f $detected_module-$version.tar.bz2 ]; then
-    module=$detected_module
-fi
-
-modulever=$module-$version
-tarbz2="$modulever.tar.bz2"
-targz="$modulever.tar.gz"
-announce="$tarball_dir/$modulever.announce"
-
-echo "checking parameters"
-if ! [ -f "$tarball_dir/$tarbz2" ] ||
-   ! [ -f "$tarball_dir/$targz" ]; then
-    echo "error: tarballs not found.  Did you run make dist?"
-    usage
-    exit 1
-fi
-
-if [ -n "$moduleset" ]; then
-    echo "checking for moduleset"
-    if ! [ -w "$moduleset" ]; then
-        echo "moduleset $moduleset does not exist or is not writable"
-        exit 1
-    fi
-fi
-
-if [ "$section" = "libdrm" ]; then
-    section_path="libdrm"
-    srv_path="/srv/$host_dri/www/$section_path"
-elif [ "$section" = "xkeyboard-config" ]; then
-    section_path="archive/individual/data"
-    srv_path="/srv/$host_xorg/$section_path"
-else
-    section_path="archive/individual/$section"
-    srv_path="/srv/$host_xorg/$section_path"
-fi
-
-echo "checking for proper current dir"
-if ! [ -d .git ]; then
-    echo "error: do this from your git dir, weenie"
-    exit 1
-fi
-
-echo "checking for an existing tag"
-if ! git tag -l $tag_current >/dev/null; then
-    echo "error: you must tag your release first!"
-    exit 1
-fi
-
-echo "checking for an existing release"
-if ssh $user$host_people ls $srv_path/$targz >/dev/null 2>&1 ||
-   ssh $user$host_people ls $srv_path/$tarbz2 >/dev/null 2>&1; then
-    if [ "x$force" = "xyes" ]; then
-        echo "warning: overriding released file ... here be dragons."
-    else
-        echo "error: file already exists!"
-        exit 1
-    fi
-fi
-
-echo "generating announce mail template, remember to sign it"
-gen_announce_mail >$announce
-echo "    at: $announce"
-
-if [ -n "$moduleset" ]; then
-    echo "updating moduleset $moduleset"
-    real_script_path=`readlink -f "$0"`
-    modulardir=`dirname "$real_script_path"`
-    sha1sum=`cd $tarball_dir && $SHA1SUM $targz | cut -d' ' -f1`
-    $modulardir/update-moduleset.sh $moduleset $sha1sum $targz
-fi
-
-echo "installing release into server"
-scp $tarball_dir/$targz $tarball_dir/$tarbz2 $user$host_people:$srv_path
-
-echo "pushing tag upstream"
-git push $remote $tag_current
-
+# Print the epilog with final status
+print_epilog
