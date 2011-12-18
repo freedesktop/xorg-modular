@@ -2024,14 +2024,6 @@
     </dependencies>
   </autotools>
 
-  <autotools id="xf86-video-xgi">
-    <branch module="xorg/driver/xf86-video-xgi"
-            checkoutdir="xorg/driver/xf86-video-xgi"/>
-    <dependencies>
-      <dep package="xserver"/>
-    </dependencies>
-  </autotools>
-
   <autotools id="xf86-video-xgixp">
     <branch module="xorg/driver/xf86-video-xgixp"
             checkoutdir="xorg/driver/xf86-video-xgixp"/>
