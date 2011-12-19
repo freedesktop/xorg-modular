@@ -2108,7 +2108,6 @@
       <dep package="xf86-video-vesa"/>
       <dep package="xf86-video-vmware"/>
       <dep package="xf86-video-voodoo"/>
-      <dep package="xf86-video-xgi"/>
       <dep package="xf86-video-xgixp"/>
     </dependencies>
   </metamodule>
