@@ -80,12 +80,14 @@ setup_buildenv() {
 
     # Support previous usage of LIBDIR which was a subdir relative to PREFIX
     # We use EPREFIX as this is what PREFIX really meant at the time
-    if [ X"`expr substr $LIBDIR 1 1`" != X/ ]; then
-	echo ""
-	echo "Warning: this usage of \$LIBDIR is deprecated. Use a full path name."
-	echo "The supplied value \"$LIBDIR\" has been replaced with $EPREFIX/$LIBDIR."
-	echo ""
-	    LIBDIR=$EPREFIX/$LIBDIR
+    if [ X"$LIBDIR" != X ]; then
+	if [ X"`expr $LIBDIR : "\(.\)"`" != X/ ]; then
+	    echo ""
+	    echo "Warning: this usage of \$LIBDIR is deprecated. Use a full path name."
+	    echo "The supplied value \"$LIBDIR\" has been replaced with $EPREFIX/$LIBDIR."
+	    echo ""
+		LIBDIR=$EPREFIX/$LIBDIR
+	fi
     fi
 
     # All directories variables must be full path names
@@ -1055,7 +1057,7 @@ usage() {
 check_full_path () {
     path=$1
     varname=$2
-    if [ X"`expr substr $path 1 1`" != X/ ]; then
+    if [ X"`expr $path : "\(.\)"`" != X/ ]; then
 	echo "The path \"$path\" supplied by \"$varname\" must be a full path name"
 	echo ""
 	usage
