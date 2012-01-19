@@ -388,10 +388,6 @@ process() {
         return 0
     fi
 
-    if [ X"$BUILT_MODULES_FILE" != X ]; then
-        echo "$module/$component" >> $BUILT_MODULES_FILE
-    fi
-
     old_pwd=`pwd`
     cd $SRCDIR
     if [ $? -ne 0 ]; then
@@ -407,6 +403,9 @@ process() {
 	if [ $rtn -ne 0 ]; then
 	    failed "$GITCMD" $module $component
 	    return 1
+	fi
+	if [ X"$BUILT_MODULES_FILE" != X ]; then
+	    echo "$module/$component" >> $BUILT_MODULES_FILE
 	fi
 	return 0
     fi
@@ -476,6 +475,9 @@ process() {
 	    failed "$MAKE $MAKEFLAGS $MAKECMD" $module $component
 	    return 1
 	fi
+	if [ X"$BUILT_MODULES_FILE" != X ]; then
+	    echo "$module/$component" >> $BUILT_MODULES_FILE
+	fi
 	return 0
     fi
 
@@ -536,6 +538,11 @@ process() {
     fi
 
     cd ${old_pwd}
+
+    if [ X"$BUILT_MODULES_FILE" != X ]; then
+	echo "$module/$component" >> $BUILT_MODULES_FILE
+    fi
+
     return 0
 }
 
