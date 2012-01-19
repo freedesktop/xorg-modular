@@ -150,11 +150,13 @@ failed() {
 # arguments:
 #   $1 - module
 #   $2 - component
+#   $3 - configuration options
 # returns:
 #   (irrelevant)
 module_title() {
     module=$1
     component=$2
+    confopts="$3"
     # preconds
     if [ X"$module" = X ]; then
 	return
@@ -163,6 +165,7 @@ module_title() {
     echo ""
     echo "======================================================================"
     echo "==  Processing module/component:  \"$module/$component\""
+    echo "==        configuration options:  $CONFFLAGS $confopts"
 }
 
 checkfortars() {
@@ -343,7 +346,8 @@ clone() {
 # perform processing of each module/component
 # arguments:
 #   $1 - module
-#   $2 - component (optional)
+#   $2 - component
+#   $3 - configure options
 # returns:
 #   0 - good
 #   1 - bad
@@ -352,13 +356,14 @@ process() {
 
     module=$1
     component=$2
+    confopts="$3"
     # preconds
     if [ X"$module" = X ]; then
 	echo "process() required first argument is missing"
 	return 1
     fi
 
-    module_title $module $component
+    module_title $module "$component" "$confopts"
 
     SRCDIR=""
     CONFCMD=""
@@ -448,7 +453,7 @@ process() {
 	    ${LIBDIR_USER:+--libdir="$LIBDIR"} \
 	    ${LOCALSTATEDIR_USER:+--localstatedir="$LOCALSTATEDIR"} \
 	    ${QUIET:+--quiet} \
-	    ${CONFFLAGS} \
+	    ${CONFFLAGS} $confopts \
 	    ${CC:+CC="$CC"} \
 	    ${CPP:+CPP="$CPP"} \
 	    ${CPPFLAGS:+CPPFLAGS="$CPPFLAGS"} \
@@ -538,13 +543,15 @@ process() {
 # LISTONLY, RESUME, NOQUIT, and BUILD_ONE
 # arguments:
 #   $1 - module
-#   $2 - component (optional)
+#   $2 - component
+#   $3 - configure options
 # returns:
 #   0 - good
 #   1 - bad
 build() {
     module=$1
     component=$2
+    confopts="$3"
     if [ X"$LISTONLY" != X ]; then
 	echo "$module/$component"
 	return 0
@@ -560,7 +567,7 @@ build() {
 	fi
     fi
 
-    process $module $component
+    process $module "$component" "$confopts"
     if [ $? -ne 0 ]; then
 	echo "build.sh: error processing module/component:  \"$module/$component\""
 	if [ X"$NOQUIT" = X ]; then
@@ -982,6 +989,7 @@ build_doc() {
 # (prerequisites and ordering are the responsibility of the user)
 # globals used:
 #   $MODFILE - readable file containing list of modules to process
+#              and their optional configuration options
 # arguments:
 #   (none)
 # returns:
@@ -1011,9 +1019,15 @@ process_module_file() {
 	    continue
 	fi
 
-	module=`echo $line | cut -d'/' -f1`
-	component=`echo $line | cut -d'/' -f2`
-	build $module $component
+	module=`echo $line | cut -d' ' -f1 | cut -d'/' -f1`
+	component=`echo $line | cut -d' ' -f1 | cut -d'/' -f2`
+	confopts_check=`echo $line | cut -d' ' -f2-`
+	if [ "$module/$component" = "$confopts_check" ]; then
+	    confopts=""
+	else
+	    confopts="$confopts_check"
+	fi
+	build $module "$component" "$confopts"
     done <"$MODFILE"
 
     return 0
@@ -1038,8 +1052,11 @@ usage() {
     echo "  --check     Run make check in addition \"all install\""
     echo "  --clone     Clone non-existing repositories (uses \$GITROOT if set)"
     echo "  --cmd <cmd> Execute arbitrary git, gmake, or make command <cmd>"
-    echo "  --confflags <options> Pass options to autgen.sh/configure"
+    echo "  --confflags <options> Pass <options> to autgen.sh/configure of all modules"
     echo "  --modfile <file> Only process the module/components specified in <file>"
+    echo "              Any text after, and on the same line as, the module/component"
+    echo "              is assumed to be configuration options for the configuration"
+    echo "              of each module/component specifically"
     echo "  --retry-v1  Remake 'all' on failure with Automake silent rules disabled"
     echo ""
     echo "Usage: $basename -L"
