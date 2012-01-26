@@ -20,7 +20,8 @@ Environment variables specific to build.sh:
               Each module/components is invoked with --datadir
   LIBDIR      Install object code libraries [EPREFIX/lib]
               Each module/components is invoked with --libdir
-  LOCALSTATEDIR Modifiable single-machine data [PREFIX/var]
+  LOCALSTATEDIR
+              Modifiable single-machine data [PREFIX/var]
               Each module/components is invoked with --localstatedir
   QUIET       Do not print messages saying which checks are being made
               Each module/components is invoked with --quite
@@ -33,7 +34,7 @@ Environment variables defined by the GNU Build System:
   ACLOCAL     The aclocal cmd name [aclocal -I \${DESTDIR}/\${DATADIR}/aclocal]
   DESTDIR     Path to the staging area where installed objects are relocated
   MAKE        The name of the make command [make]
-  MAKEFLAGS:  Options to pass to all \$(MAKE) invocations
+  MAKEFLAGS   Options to pass to all \$(MAKE) invocations
   CC          C compiler command
   CFLAGS      C compiler flags
   LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
@@ -47,13 +48,15 @@ Environment variables defined by the shell:
               \$DESTDIR/\$BINDIR is prepended
 
 Environment variables defined by the dynamic linker:
-  LD_LIBRARY_PATH List directories that the linker searches for shared objects
-                  \$DESTDIR/\$LIBDIR is prepended
+  LD_LIBRARY_PATH
+              List directories that the linker searches for shared objects
+              \$DESTDIR/\$LIBDIR is prepended
 
 Environment variables defined by the pkg-config system:
-  PKG_CONFIG_PATH List directories that pkg-config searches for libraries
-                  \$DESTDIR/\$DATADIR/pkgconfig and
-                  \$DESTDIR/\$LIBDIR/pkgconfig are prepended
+  PKG_CONFIG_PATH
+              List directories that pkg-config searches for libraries
+              \$DESTDIR/\$DATADIR/pkgconfig and
+              \$DESTDIR/\$LIBDIR/pkgconfig are prepended
 EOF
 }
 
@@ -1052,22 +1055,26 @@ usage() {
     echo "  -g          Compile and link with debug information"
     echo "  -h, --help  Display this help and exit successfully"
     echo "  -n          Do not quit after error; just print error message"
-    echo "  -o <module/component> Build just this <module/component>"
+    echo "  -o <module/component>"
+    echo "              Build just this <module/component>"
     echo "  -p          Update source code before building (git pull --rebase)"
     echo "  -s <sudo>   The command name providing superuser privilege"
-    echo "  --autoresume <file> Append module being built to, and autoresume from, <file>"
+    echo "  --autoresume <file>"
+    echo "              Append module being built to, and autoresume from, <file>"
     echo "  --check     Run make check in addition \"all install\""
     echo "  --clone     Clone non-existing repositories (uses \$GITROOT if set)"
     echo "  --cmd <cmd> Execute arbitrary git, gmake, or make command <cmd>"
-    echo "  --confflags <options> Pass <options> to autgen.sh/configure of all modules"
-    echo "  --modfile <file> Only process the module/components specified in <file>"
+    echo "  --confflags <options>"
+    echo "              Pass <options> to autgen.sh/configure of all modules"
+    echo "  --modfile <file>"
+    echo "              Only process the module/components specified in <file>"
     echo "              Any text after, and on the same line as, the module/component"
     echo "              is assumed to be configuration options for the configuration"
     echo "              of each module/component specifically"
     echo "  --retry-v1  Remake 'all' on failure with Automake silent rules disabled"
     echo ""
     echo "Usage: $basename -L"
-    echo "  -L : just list modules to build"
+    echo "  -L          Just list modules to build"
     echo ""
     envoptions
 }
