@@ -906,7 +906,6 @@ build_driver_video() {
     build driver xf86-video-vesa
     build driver xf86-video-vmware
     build driver xf86-video-voodoo
-    build driver xf86-video-xgi
 }
 
 # The server must be built before the drivers
