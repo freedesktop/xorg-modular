@@ -407,9 +407,6 @@ process() {
 	    failed "$GITCMD" $module $component
 	    return 1
 	fi
-	if [ X"$BUILT_MODULES_FILE" != X ]; then
-	    echo "$module/$component" >> $BUILT_MODULES_FILE
-	fi
 	return 0
     fi
 
@@ -478,9 +475,6 @@ process() {
 	    failed "$MAKE $MAKEFLAGS $MAKECMD" $module $component
 	    return 1
 	fi
-	if [ X"$BUILT_MODULES_FILE" != X ]; then
-	    echo "$module/$component" >> $BUILT_MODULES_FILE
-	fi
 	return 0
     fi
 
@@ -542,10 +536,6 @@ process() {
 
     cd ${old_pwd}
 
-    if [ X"$BUILT_MODULES_FILE" != X ]; then
-	echo "$module/$component" >> $BUILT_MODULES_FILE
-    fi
-
     return 0
 }
 
@@ -578,11 +568,21 @@ build() {
     fi
 
     process $module "$component" "$confopts"
-    if [ $? -ne 0 ]; then
+    process_rtn=$?
+    if [ X"$BUILT_MODULES_FILE" != X ]; then
+	if [ $process_rtn -ne 0 ]; then
+	    echo "FAIL: $module/$component" >> $BUILT_MODULES_FILE
+	else
+	    echo "PASS: $module/$component" >> $BUILT_MODULES_FILE
+	fi
+    fi
+
+    if [ $process_rtn -ne 0 ]; then
 	echo "build.sh: error processing module/component:  \"$module/$component\""
 	if [ X"$NOQUIT" = X ]; then
 	    exit 1
 	fi
+	return $process_rtn
     fi
 
     if [ X"$BUILD_ONE" != X ]; then
@@ -1219,7 +1219,6 @@ do
 	required_arg $1 $2
 	shift
 	BUILT_MODULES_FILE=$1
-	[ -f $1 ] && RESUME=`tail -n 1 $1`
 	;;
     --check)
 	CHECK=1
@@ -1306,6 +1305,78 @@ if [ X"$LISTONLY" = X ]; then
     setup_buildenv
     echo "Building to run $HOST_OS / $HOST_CPU ($HOST)"
     date
+fi
+
+# if   there is a BUILT_MODULES_FILE
+# then start off by checking for and trying to build any modules which failed
+#      and aren't the last line
+if [ X"$BUILT_MODULES_FILE" != X -a -r $BUILT_MODULES_FILE ]; then
+    built_lines=`cat $BUILT_MODULES_FILE | wc -l | sed 's:^ *::'`
+    built_lines_m1=`expr $built_lines - 1`
+    orig_BUILT_MODULES_FILE=$BUILT_MODULES_FILE
+    unset BUILT_MODULES_FILE
+    curline=1
+    while read line; do
+	built_status=`echo $line | cut -c-6`
+	if [ X"$built_status" = X"FAIL: " ]; then
+	    line=`echo $line | cut -c7-`
+	    module=`echo $line | cut -d' ' -f1 | cut -d'/' -f1`
+	    component=`echo $line | cut -d' ' -f1 | cut -d'/' -f2`
+	    confopts_check=`echo $line | cut -d' ' -f2-`
+	    if [ "$module/$component" = "$confopts_check" ]; then
+		confopts=""
+	    else
+		confopts="$confopts_check"
+	    fi
+
+	    build_ret=""
+
+	    # quick check for the module in $MODFILE (if present)
+	    if [ X"$MODFILE" = X ]; then
+		build $module "$component" "$confopts"
+		if [ $? -eq 0 ]; then
+		    build_ret="PASS"
+		fi
+	    else
+		cat $MODFILE | grep "$module/$component" > /dev/null
+		if [ $? -eq 0 ]; then
+		    build $module "$component" "$confopts"
+		    if [ $? -eq 0 ]; then
+			build_ret="PASS"
+		    fi
+		fi
+	    fi
+
+	    if [ X"$build_ret" = X"PASS" ]; then
+		built_temp=`mktemp`
+		if [ $? -ne 0 ]; then
+		    echo "can't create tmp file, $orig_BUILT_MODULES_FILE not modified"
+		else
+		    head -n `expr $curline - 1` $orig_BUILT_MODULES_FILE > $built_temp
+		    echo "PASS: $module/$component" >> $built_temp
+		    tail -n `expr $built_lines - $curline` $orig_BUILT_MODULES_FILE >> $built_temp
+		    mv $built_temp $orig_BUILT_MODULES_FILE
+		fi
+	    fi
+	fi
+	if [ $curline -eq $built_lines_m1 ]; then
+	    break
+	fi
+	curline=`expr $curline + 1`
+    done <"$orig_BUILT_MODULES_FILE"
+
+    BUILT_MODULES_FILE=$orig_BUILT_MODULES_FILE
+    RESUME=`tail -n 1 $BUILT_MODULES_FILE | cut -c7-`
+
+    # remove last line of $BUILT_MODULES_FILE
+    # to avoid a duplicate entry
+    built_temp=`mktemp`
+    if [ $? -ne 0 ]; then
+	echo "can't create tmp file, last built item will be duplicated"
+    else
+	head -n $built_lines_m1 $BUILT_MODULES_FILE > $built_temp
+	mv $built_temp $BUILT_MODULES_FILE
+    fi
 fi
 
 if [ X"$MODFILE" = X ]; then
