@@ -1202,6 +1202,11 @@ do
 	NOQUIT=1
 	;;
     -o)
+	if [ -n "$BUILT_MODULES_FILE" ]; then
+	    echo "The '-o' and '--autoresume' options are mutually exclusive."
+	    usage
+	    exit 1
+	fi
 	required_arg $1 $2
 	shift
 	RESUME=$1
@@ -1216,6 +1221,11 @@ do
 	SUDO=$1
 	;;
     --autoresume)
+	if [ -n "$BUILD_ONE" ]; then
+	    echo "The '-o' and '--autoresume' options are mutually exclusive."
+	    usage
+	    exit 1
+	fi
 	required_arg $1 $2
 	shift
 	BUILT_MODULES_FILE=$1
