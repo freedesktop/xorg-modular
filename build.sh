@@ -1320,7 +1320,7 @@ fi
 # if   there is a BUILT_MODULES_FILE
 # then start off by checking for and trying to build any modules which failed
 #      and aren't the last line
-if [ X"$BUILT_MODULES_FILE" != X -a -r $BUILT_MODULES_FILE ]; then
+if [ X"$BUILT_MODULES_FILE" != X -a -r "$BUILT_MODULES_FILE" ]; then
     built_lines=`cat $BUILT_MODULES_FILE | wc -l | sed 's:^ *::'`
     built_lines_m1=`expr $built_lines - 1`
     orig_BUILT_MODULES_FILE=$BUILT_MODULES_FILE
