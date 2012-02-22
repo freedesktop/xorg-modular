@@ -1792,6 +1792,14 @@
     </dependencies>
   </autotools>
 
+  <autotools id="xf86-video-modesetting">
+    <branch module="xorg/driver/xf86-video-modesetting"
+            checkoutdir="xorg/driver/xf86-video-modesetting"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
   <autotools id="xf86-video-neomagic">
     <branch module="xorg/driver/xf86-video-neomagic"
             checkoutdir="xorg/driver/xf86-video-neomagic"/>
