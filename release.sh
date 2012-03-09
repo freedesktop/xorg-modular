@@ -57,7 +57,7 @@ check_option_args() {
     fi
 
     # does the argument look like an option?
-    echo $arg | grep "^-" > /dev/null
+    echo $arg | $GREP "^-" > /dev/null
     if [ $? -eq 0 ]; then
 	echo ""
 	echo "Error: the argument '$arg' of option '$option' looks like an option itself."
@@ -134,7 +134,7 @@ read_modfile() {
 		continue
 	    fi
 	    # skip comment lines
-	    if echo "$line" | grep -q "^#" ; then
+	    if echo "$line" | $GREP -q "^#" ; then
 		continue;
 	    fi
 	    INPUT_MODULES="$INPUT_MODULES $line"
@@ -266,7 +266,7 @@ process_module() {
     fi
 
     # Determine what is the current branch and the remote name
-    current_branch=`git branch | grep "\*" | sed -e "s/\* //"`
+    current_branch=`git branch | $GREP "\*" | sed -e "s/\* //"`
     remote_name=`git config --get branch.$current_branch.remote`
     echo "Info: working off the \"$current_branch\" branch tracking the remote \"$remote_name\"."
 
@@ -281,8 +281,8 @@ process_module() {
     fi
 
     # Find out the tarname from the makefile
-    pkg_name=`grep '^PACKAGE = ' Makefile | sed 's|PACKAGE = ||'`
-    pkg_version=`grep '^VERSION = ' Makefile | sed 's|VERSION = ||'`
+    pkg_name=`$GREP '^PACKAGE = ' Makefile | sed 's|PACKAGE = ||'`
+    pkg_version=`$GREP '^VERSION = ' Makefile | sed 's|VERSION = ||'`
     tar_name="$pkg_name-$pkg_version"
     targz=$tar_name.tar.gz
     tarbz2=$tar_name.tar.bz2
@@ -299,7 +299,7 @@ process_module() {
     fi
 
     # Check that the top commit looks like a version bump
-    git diff --unified=0 HEAD^ | grep $pkg_version >/dev/null 2>&1
+    git diff --unified=0 HEAD^ | $GREP -F $pkg_version >/dev/null 2>&1
     if [ $? -ne 0 ]; then
 	echo "Error: the local top commit does not look like a version bump."
 	echo "       the diff does not contain the string \"$pkg_version\"."
@@ -384,12 +384,13 @@ process_module() {
     fi
 
     # The last part of the git url will tell us the section. Look for xorg first
-    module_url=`echo "$full_module_url" | grep -o "/xorg/.*"`
+    echo "$full_module_url"
+    module_url=`echo "$full_module_url" | $GREP -o "/xorg/.*"`
     if [ $? -eq 0 ]; then
 	module_url=`echo $module_url | cut -d'/' -f3,4`
     else
 	# The look for mesa, xcb, etc...
-	module_url=`echo "$full_module_url" | grep -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config"`
+	module_url=`echo "$full_module_url" | $GREP -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config"`
 	if [ $? -eq 0 ]; then
 	     module_url=`echo $module_url | cut -d'/' -f2,3`
 	else
@@ -580,6 +581,16 @@ HELP
 
 # Choose which make program to use (could be gmake)
 MAKE=${MAKE:="make"}
+
+# Choose which grep program to use (on Solaris, must be gnu grep)
+if [ "x$GREP" = "x" ] ; then
+    if [ -x /usr/gnu/bin/grep ] ; then
+	GREP=/usr/gnu/bin/grep
+    else
+	GREP=grep
+    fi
+fi
+
 
 # Set the default make tarball creation command
 MAKE_DIST_CMD=dist
