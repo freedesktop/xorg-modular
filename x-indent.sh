@@ -1,5 +1,15 @@
 #!/bin/sh
-indent -linux -bad -bap -blf -bli0 -cbi0 -cdw -nce -cs -i4 -lc80 -psl -nbbo \
+
+# We want GNU indent, so first search for gindent to avoid /usr/bin/indent
+# on the BSDs, which won't work for us
+INDENT=`which gnuindent || which gindent || which indent`
+
+if [ -z "${INDENT}" ] ; then
+    echo "Could not find indent, sorry..." >&2
+    exit 1
+fi
+
+$INDENT -linux -bad -bap -blf -bli0 -cbi0 -cdw -nce -cs -i4 -lc80 -psl -nbbo \
     -nbc -psl -nbfda -nut -nss -T pointer -T ScreenPtr -T ScrnInfoPtr -T pointer \
     -T DeviceIntPtr -T DevicePtr -T ClientPtr -T CallbackListPtr \
     -T CallbackProcPtr -T OsTimerPtr -T CARD32 -T CARD16 -T CARD8 \
