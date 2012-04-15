@@ -26,8 +26,31 @@ while read name; do
     fi
     for i in $list; do
 	i=`echo $i | sed "s|$individual_dir||g"`
-	mkdir -p `dirname $i`
+	typedir=`dirname $i`
+	tarname=`basename $i`
+
+	mkdir -p $typedir
 	ln -sf $relative_dir/$i $i
-	ln -sf $relative_dir/$i everything/`basename $i`
+	ln -sf $relative_dir/$i everything/$tarname
+
+	# cd first and use $tarname so that only filename appears in output
+	md5=`cd everything ; md5sum $tarname`
+	sha1=`cd everything ; sha1sum $tarname`
+	sha256=`cd everything ; sha256sum $tarname`
+	cat >> $typedir/CHECKSUMS <<EOF
+${tarname}:
+MD5:    $md5
+SHA1:   $sha1
+SHA256: $sha256
+
+EOF
+	cat >> everything/CHECKSUMS <<EOF
+${tarname}:
+MD5:    $md5
+SHA1:   $sha1
+SHA256: $sha256
+
+EOF
+
     done
 done
