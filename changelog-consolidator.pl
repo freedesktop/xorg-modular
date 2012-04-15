@@ -165,11 +165,13 @@ while ($_= <>) {
 	  }
 	}
 	close $gsl;
+	my $newtagdate = `git --git-dir=$modtype/$moddir/.git log -1 --tags --simplify-by-decoration --pretty="format:%ad" --date=short $newtag`;
 	$module_info{"$modtype/$module"} =
 	  {
 	   changes => \%changes,
 	   oldtag => $oldtag,
 	   newtag => $newtag,
+	   newtagdate => $newtagdate,
 	   modtype => $modtype,
 	   moddir => $moddir,
 	   module => $module,
@@ -197,10 +199,20 @@ if ($output_type eq 'html') {
 			  $q->Link({-rel => 'home',
 				    -href => 'http://www.x.org/'}),
 			  $q->Link({-rel => 'SHORTCUT ICON',
-				    -href => 'favicon.ico'})
-		       ]
-		      ),
-    $q->h1($title), "\n";
+				    -href => 'favicon.ico'}),
+			  $q->Link({-rel => 'up',
+				    -href => 'index.html'}),
+		       ],
+		       -itemscope => undef,
+		       -itemtype => 'http://schema.org/WebPage'
+      ), "\n";
+  print
+      $q->div({ -style => 'text-align: center;',
+		-itemprop => 'publisher', -content => 'X.Org Foundation' },
+	      $q->a({ -href => 'http://www.x.org/', -rel => 'home'},
+		    $q->img({ -src => 'logo.png', -border => '0',
+			      -alt => 'X.Org Foundation' }))), "\n",
+      $q->h1($title), "\n";
 
   print $q->start_table({ -class => 'modules', -cols => '4' }), "\n",
     $q->Tr($q->th({-colspan=>"2"}, 'Module'),
@@ -232,11 +244,22 @@ if ($output_type eq 'html') {
     my $modname = $module_info{$m}->{module};
     my $modtype = $module_info{$m}->{modtype};
     my $moddir = $module_info{$m}->{moddir};
+    my $modvers = $module_info{$m}->{newvers};
+    my $modtar = "$modname-$modvers.tar.bz2";
     my $moddisplay = $m;
     $moddisplay =~ s{^\./}{};
-    print $q->start_div({-class => "content"}),
-      $q->h2(cgit_link($q, $modtype, $moddir, 'top', $modname, $moddisplay)),
-      "\n";
+    print
+	$q->start_div({-class => "content", -itemscope => undef,
+		       -itemtype=>'http://schema.org/SoftwareApplication'}),
+	$q->h2($q->span({-itemprop => "name"},
+	       cgit_link($q, $modtype, $moddir, 'top', $modname, $moddisplay)),
+	       $q->span({ -itemprop => 'version' }, $modvers)),
+	"\n";
+    print
+	$q->a({ -href => "src/everything/$modtar",
+		-itemprop => 'downloadURL' }, $modtar),
+	' &mdash; ', $q->span({ -itemprop => 'datePublished' },
+			      $module_info{$m}->{newtagdate}), "\n";
     print $q->h3('Commits from',
 		 ($module_info{$m}->{oldtag} eq '') ?
 		 'the beginning' :
@@ -247,11 +270,11 @@ if ($output_type eq 'html') {
 		 'to',
 		 cgit_link($q, $modtype, $moddir, 'tag',
 			   $module_info{$m}->{newtag},
-			   $module_info{$m}->{newtag},
+			   $module_info{$m}->{newtag}
 			  )
 		), "\n";
 
-    print $q->start_ul({ -class => 'authors' });
+    print $q->start_ul({ -class => 'authors', -itemprop => 'versionChanges' });
     my $changes = $module_info{$m}->{changes};
     foreach my $a (sort keys %{$changes}) {
       my @au_changes = @{$changes->{$a}};
