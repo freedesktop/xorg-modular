@@ -1,7 +1,7 @@
-#! /usr/perl5/5.10.0/bin/perl -w
+#! /usr/bin/perl -w
 
 #
-# Copyright (c) 2009, 2010, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2009, 2012, Oracle and/or its affiliates. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -110,10 +110,10 @@ while ($_= <>) {
 #      system('git', "--git-dir=$modtype/$moddir/.git", 'log',
 #	     '--pretty=short', "$oldtag..$newtag");
 
-      # special cases for X11R7.6
-#      if ($module eq 'xorg-server') {
-#	  $oldtag = '9edb9e9b4dde6f73dc5241d078425a7a70699ec9';
-#      }
+      # special cases for X11R7.7
+      if ($module eq 'xkeyboard-config') {
+	  $oldtag = 'xkeyboard-config-2.0';
+      }
 
       my $tagrange = ($oldtag ne '') ? "$oldtag..$newtag" : "$newtag";
 
@@ -186,7 +186,7 @@ while ($_= <>) {
 if ($output_type eq 'html') {
   my $q = new CGI;
 
-  my $title = 'Consolidated ChangeLog for X11R7.6';
+  my $title = 'Consolidated ChangeLog for X11R7.7';
   print $q->start_html(-title => $title,
 		       -style=>{-src =>'http://cgit.freedesktop.org/cgit.css',
 				-code => '.modules { float: left; }' .
@@ -204,7 +204,9 @@ if ($output_type eq 'html') {
 
   print $q->start_table({ -class => 'modules', -cols => '4' }), "\n",
     $q->Tr($q->th({-colspan=>"2"}, 'Module'),
-	   $q->th([' X11R7.5 ', ' X11R7.6 '])), "\n";
+	   $q->th([' X11R7.6 ', ' X11R7.7 '])), "\n";
+
+  my $midpoint = scalar(keys %module_info) / 2;
 
   foreach my $m (sort keys %module_info) {
     my $modname = $module_info{$m}->{module};
@@ -216,11 +218,11 @@ if ($output_type eq 'html') {
 			  $module_info{$m}->{oldvers},
 			  $module_info{$m}->{newvers}
 			 ])), "\n";
-    if ($modname =~ m{xf86-video-xgixp}) {
+    if (--$midpoint == 0) {
       print $q->end_table();
       print $q->start_table({ -class => 'modules', -cols => '4' }).
 	$q->Tr($q->th({-colspan=>"2"}, 'Module'),
-	       $q->th([' X11R7.5 ', ' X11R7.6 '])), "\n";
+	       $q->th([' X11R7.6 ', ' X11R7.7 '])), "\n";
     }
   }
   print $q->end_table();
@@ -282,8 +284,12 @@ sub cgit_link {
       $modtype = "xorg/$modtype";
     }
   }
+  my $modpath = "$modtype/$moddir";
+  if ($moddir eq "xkeyboard-config") {
+      $modpath = "xkeyboard-config";
+  }
 
-  my %link_attrs = (-href => "http://cgit.freedesktop.org/$modtype/$moddir/");
+  my %link_attrs = (-href => "http://cgit.freedesktop.org/$modpath/");
   if ($type eq 'top') {
     $link_attrs{-name} = $id;
   } else {
@@ -317,17 +323,22 @@ sub find_tag {
     }
   }
 
+  $vers =~ s/\./\\./g;
+
   open(my $tag_fh, '-|', "git --git-dir=$modtype/$moddir/.git tag -l")
     or die "Failed to run git --git-dir=$modtype/$moddir/.git tag -l";
 
+  my $found;
   while (my $t = <$tag_fh>) {
     chomp($t);
     if (($t =~ m/$vers$/) || ($t =~ m/$oldvers$/)) {
-      close($tag_fh);
-      return $t;
+      $found = $t;
     }
   }
   close($tag_fh);
+  if ($found) {
+      return $found;
+  }
 
   if (-f "$modtype/$moddir/.git/refs/tags/XORG-7_1") {
     return 'XORG-7_1';
