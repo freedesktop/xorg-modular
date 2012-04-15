@@ -17,7 +17,12 @@ mkdir -p everything
 while read name; do
     list=`find $individual_dir -name $name.tar\* `
     if test "x$list" = x; then
-	echo "Couldn't find module ${name}"
+	# Since .../xcb is a symlink, find doesn't follow it normally,
+	# so explicitly double-check there
+	list=`find ${individual_dir}xcb/ -name $name.tar\* `
+	if test "x$list" = x; then
+	    echo "Couldn't find module ${name}"
+	fi
     fi
     for i in $list; do
 	i=`echo $i | sed "s|$individual_dir||g"`
