@@ -87,6 +87,17 @@
             checkoutdir="mesa/demos"/>
     <dependencies>
       <dep package="libGL"/>
+      <dep package="mesa-glut"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="mesa-glut" supports-non-srcdir-builds="no" check-target="false"
+             skip-autogen="never">
+    <branch module="mesa/glut"
+            checkoutdir="mesa/glut"/>
+    <dependencies>
+      <dep package="libGL"/>
+      <dep package="makedepend"/>
     </dependencies>
   </autotools>
 
