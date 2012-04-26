@@ -509,6 +509,7 @@
       <dep package="macros"/>
       <dep package="libX11"/>
       <dep package="randrproto"/>
+      <dep package="libXrender"/>
     </dependencies>
   </autotools>
 
