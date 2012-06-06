@@ -167,7 +167,7 @@ xlsatoms-1.1.1
 xlsclients-1.1.2
 xmodmap-1.0.7
 xorg-docs-1.7
-xorg-server-1.12.1
+xorg-server-1.12.2
 xorg-sgml-doctools-1.11
 xpr-1.0.4
 xprop-1.2.1
