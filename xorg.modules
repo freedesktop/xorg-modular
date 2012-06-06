@@ -2057,7 +2057,6 @@
     <dependencies>
       <dep package="xf86-video-apm"/>
       <dep package="xf86-video-ark"/>
-      <dep package="xf86-video-ast"/>
       <dep package="xf86-video-i740"/>
       <dep package="xf86-video-impact"/>
       <dep package="xf86-video-imstt"/>
@@ -2086,6 +2085,7 @@
       <dep package="xf86-input-keyboard"/>
       <dep package="xf86-input-mouse"/>
       <dep package="xf86-input-void"/>
+      <dep package="xf86-video-ast"/>
       <dep package="xf86-video-ati"/>
       <dep package="xf86-video-chips"/>
       <dep package="xf86-video-cirrus"/>
