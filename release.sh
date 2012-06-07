@@ -371,7 +371,7 @@ process_module() {
 
     # Mailing lists to be CC according to the project (xorg|dri|xkb)
     list_xorg_user="xorg@lists.freedesktop.org"
-    list_dri_devel="dri-devel@lists.freedesktop.net"
+    list_dri_devel="dri-devel@lists.freedesktop.org"
     list_xkb="xkb@listserv.bat.ru"
     list_xcb="xcb@lists.freedesktop.org"
 
