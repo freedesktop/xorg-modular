@@ -450,7 +450,7 @@ process_module() {
     # srv_path="~/public_html$srv_path"
 
     # Check that the server path actually does exist
-    ssh $USER_NAME$hostname ls $srv_path >/dev/null 2>&1 ||
+    ssh $USER_NAME@$hostname ls $srv_path >/dev/null 2>&1 ||
     if [ $? -ne 0 ]; then
 	echo "Error: the path \"$srv_path\" on the web server does not exist."
 	cd $top_src
@@ -458,8 +458,8 @@ process_module() {
     fi
 
     # Check for already existing tarballs
-    ssh $USER_NAME$hostname ls $srv_path/$targz >/dev/null 2>&1 ||
-    ssh $USER_NAME$hostname ls $srv_path/$tarbz2  >/dev/null 2>&1
+    ssh $USER_NAME@$hostname ls $srv_path/$targz >/dev/null 2>&1 ||
+    ssh $USER_NAME@$hostname ls $srv_path/$tarbz2  >/dev/null 2>&1
     if [ $? -eq 0 ]; then
 	if [ "x$FORCE" = "xyes" ]; then
 	    echo "Warning: overwriting released tarballs due to --force option."
