@@ -7,8 +7,6 @@
 <moduleset>
   <repository type="git" name="git.freedesktop.org" default="yes"
               href="git://anongit.freedesktop.org/git/"/>
-  <repository type="svn" name="svn.openchrome.org"
-              href="http://svn.openchrome.org/"/>
 
   <!-- external modules -->
   <autotools id="fontconfig">
@@ -1836,7 +1834,7 @@
   </autotools>
 
   <autotools id="xf86-video-openchrome">
-    <branch module="svn" repo="svn.openchrome.org"
+    <branch module="openchrome/xf86-video-openchrome"
             checkoutdir="xorg/driver/xf86-video-openchrome"/>
     <dependencies>
       <dep package="xserver"/>
