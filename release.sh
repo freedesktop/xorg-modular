@@ -450,7 +450,7 @@ process_module() {
     # srv_path="~/public_html$srv_path"
 
     # Check that the server path actually does exist
-    ssh $USER_NAME@$hostname ls $srv_path >/dev/null 2>&1 ||
+    ssh $USER_NAME$hostname ls $srv_path >/dev/null 2>&1 ||
     if [ $? -ne 0 ]; then
 	echo "Error: the path \"$srv_path\" on the web server does not exist."
 	cd $top_src
@@ -458,8 +458,8 @@ process_module() {
     fi
 
     # Check for already existing tarballs
-    ssh $USER_NAME@$hostname ls $srv_path/$targz >/dev/null 2>&1 ||
-    ssh $USER_NAME@$hostname ls $srv_path/$tarbz2  >/dev/null 2>&1
+    ssh $USER_NAME$hostname ls $srv_path/$targz >/dev/null 2>&1 ||
+    ssh $USER_NAME$hostname ls $srv_path/$tarbz2  >/dev/null 2>&1
     if [ $? -eq 0 ]; then
 	if [ "x$FORCE" = "xyes" ]; then
 	    echo "Warning: overwriting released tarballs due to --force option."
@@ -473,7 +473,7 @@ process_module() {
     # Upload to host using the 'scp' remote file copy program
     if [ x"$DRY_RUN" = x ]; then
 	echo "Info: uploading tarballs to web server:"
-	scp $targz $tarbz2 $USER_NAME@$hostname:$srv_path
+	scp $targz $tarbz2 $USER_NAME$hostname:$srv_path
 	if [ $? -ne 0 ]; then
 	    echo "Error: the tarballs uploading failed."
 	    cd $top_src
@@ -565,7 +565,7 @@ Options:
   --modfile <file>    Release the git modules specified in <file>
   --moduleset <file>  The jhbuild moduleset full pathname to be updated
   --no-quit           Do not quit after error; just print error message
-  --user <name>       Username of your fdo account if not configured in ssh
+  --user <name>@      Username of your fdo account if not configured in ssh
 
 Environment variables defined by the "make" program and used by release.sh:
   MAKE        The name of the make command [make]
