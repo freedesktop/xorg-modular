@@ -429,8 +429,8 @@ process_module() {
 	    return 1
 	elif [ x"$section" = xdrm ]; then
 	    host_current=$host_dri
-	    section_path=www/libdrm
-	    srv_path="/srv/$host_current/$section_path"
+	    section_path=libdrm
+	    srv_path="/srv/$host_current/www/$section_path"
 	    list_cc=$list_dri_devel
 	else
 	    echo "Error: section $section is not supported, only libdrm is."
