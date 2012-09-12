@@ -390,12 +390,12 @@ process_module() {
 	module_url=`echo $module_url | cut -d'/' -f3,4`
     else
 	# The look for mesa, xcb, etc...
-	module_url=`echo "$full_module_url" | $GREP -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config"`
+	module_url=`echo "$full_module_url" | $GREP -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config" -e "/nouveau/xf86-video-nouveau"`
 	if [ $? -eq 0 ]; then
 	     module_url=`echo $module_url | cut -d'/' -f2,3`
 	else
 	    echo "Error: unable to locate a valid project url from \"$full_module_url\"."
-	    echo "Cannot establish url as one of xorg, mesa, xcb or xkeyboard-config."
+	    echo "Cannot establish url as one of xorg, mesa, xcb, xf86-video-nouveau or xkeyboard-config."
 	    cd $top_src
 	    return 1
 	fi
@@ -409,6 +409,11 @@ process_module() {
 	cd $top_src
 	return 1
     else
+	# nouveau is very special.. sigh
+	if [ x"$section" = xnouveau ]; then
+		section=driver
+	fi
+
 	host_current=$host_xorg
 	section_path=archive/individual/$section
 	srv_path="/srv/$host_current/$section_path"
