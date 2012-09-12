@@ -374,6 +374,7 @@ process_module() {
     list_dri_devel="dri-devel@lists.freedesktop.org"
     list_xkb="xkb@listserv.bat.ru"
     list_xcb="xcb@lists.freedesktop.org"
+    list_nouveau="nouveau@lists.freedesktop.org"
 
     # Obtain the git url in order to find the section to which this module belongs
     full_module_url=`git config --get remote.$remote_name.url | sed 's:\.git$::'`
@@ -412,12 +413,14 @@ process_module() {
 	# nouveau is very special.. sigh
 	if [ x"$section" = xnouveau ]; then
 		section=driver
+		list_cc=$list_nouveau
+	else
+		list_cc=$list_xorg_user
 	fi
 
 	host_current=$host_xorg
 	section_path=archive/individual/$section
 	srv_path="/srv/$host_current/$section_path"
-	list_cc=$list_xorg_user
     fi
 
     # Handle special cases such as non xorg projects or migrated xorg projects
