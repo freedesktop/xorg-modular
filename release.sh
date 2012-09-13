@@ -268,7 +268,8 @@ process_module() {
     # Determine what is the current branch and the remote name
     current_branch=`git branch | $GREP "\*" | sed -e "s/\* //"`
     remote_name=`git config --get branch.$current_branch.remote`
-    echo "Info: working off the \"$current_branch\" branch tracking the remote \"$remote_name\"."
+    remote_branch=`git config --get branch.$current_branch.merge | cut -d'/' -f3,4`
+    echo "Info: working off the \"$current_branch\" branch tracking the remote \"$remote_name/$remote_branch\"."
 
     # Run 'make dist/distcheck' to ensure the tarball matches the git module content
     # Important to run make dist/distcheck before looking in Makefile, may need to reconfigure
@@ -310,7 +311,7 @@ process_module() {
     fi
 
     # Check that the top commit has been pushed to remote
-    remote_top_commit_sha=`git  rev-list --max-count=1 $remote_name/$current_branch`
+    remote_top_commit_sha=`git  rev-list --max-count=1 $remote_name/$remote_branch`
     if [ $? -ne 0 ]; then
 	echo "Error: unable to obtain top commit from the remote repository."
 	cd $top_src
