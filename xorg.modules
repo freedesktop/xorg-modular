@@ -65,12 +65,10 @@
   </autotools>
 
   <!-- the Mesa module, which provides libGL, libGLU, and DRI drivers -->
-  <autotools id="libGL" supports-non-srcdir-builds="no" check-target="false"
-             skip-autogen="never">
+  <autotools id="libGL">
     <branch module="mesa/mesa"
             checkoutdir="mesa/mesa"/>
     <dependencies>
-      <dep package="makedepend"/>
       <dep package="xf86driproto"/>
       <dep package="dri2proto"/>
       <dep package="glproto"/>
