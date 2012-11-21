@@ -1883,6 +1883,14 @@
     </dependencies>
   </autotools>
 
+  <autotools id="xf86-video-nested">
+    <branch module="xorg/driver/xf86-video-nested"
+            checkoutdir="xorg/driver/xf86-video-nested"/>
+    <dependencies>
+      <dep package="xserver"/>
+    </dependencies>
+  </autotools>
+
   <autotools id="xf86-video-newport">
     <branch module="xorg/driver/xf86-video-newport"
             checkoutdir="xorg/driver/xf86-video-newport"/>
@@ -2170,6 +2178,7 @@
       <dep package="xf86-video-mach64"/>
       <dep package="xf86-video-mga"/>
       <dep package="xf86-video-neomagic"/>
+      <dep package="xf86-video-nested"/>
       <dep package="xf86-video-nouveau"/>
       <dep package="xf86-video-nv"/>
       <dep package="xf86-video-openchrome"/>
