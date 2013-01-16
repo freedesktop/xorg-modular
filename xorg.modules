@@ -639,17 +639,6 @@
     </dependencies>
   </autotools>
 
-  <autotools id="libxkbui">
-    <branch module="xorg/lib/libxkbui"
-            checkoutdir="xorg/lib/libxkbui"/>
-    <dependencies>
-      <dep package="macros"/>
-      <dep package="libX11"/>
-      <dep package="libXt"/>
-      <dep package="libxkbfile"/>
-    </dependencies>
-  </autotools>
-
   <autotools id="libxtrans">
     <branch module="xorg/lib/libxtrans"
             checkoutdir="xorg/lib/libxtrans"/>
@@ -703,7 +692,6 @@
       <dep package="libdmx"/>
       <dep package="libfontenc"/>
       <dep package="libxkbfile"/>
-      <dep package="libxkbui"/>
       <dep package="libxtrans"/>
       <dep package="libdrm"/>
       <dep package="libGL"/>
