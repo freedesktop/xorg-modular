@@ -567,7 +567,8 @@ Usage: $basename [options] path...
 Where "path" is a relative path to a git module, including '.'.
 
 Options:
-  --distcheck         Use 'distcheck' rather than 'dist' to create tarballs
+  --dist              make 'dist' instead of 'distcheck'; use with caution
+  --distcheck         Default, ignored for compatibility
   --dry-run           Does everything except tagging and uploading tarballs
   --force             Force overwriting an existing release
   --help              Display this help and exit successfully
@@ -602,13 +603,19 @@ fi
 
 
 # Set the default make tarball creation command
-MAKE_DIST_CMD=dist
+MAKE_DIST_CMD=distcheck
 
 # Process command line args
 while [ $# != 0 ]
 do
     case $1 in
-    # Use 'distcheck' rather than 'dist' to create tarballs
+    # Use 'dist' rather than 'distcheck' to create tarballs
+    # You really only want to do this if you're releasing a module you can't
+    # possibly build-test.  Please consider carefully the wisdom of doing so.
+    --dist)
+	MAKE_DIST_CMD=dist
+	;;
+    # Use 'distcheck' to create tarballs
     --distcheck)
 	MAKE_DIST_CMD=distcheck
 	;;
