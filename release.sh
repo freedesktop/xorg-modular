@@ -93,7 +93,7 @@ generate_announce()
     cat <<RELEASE
 Subject: [ANNOUNCE] $pkg_name $pkg_version
 To: $list_to
-CC: $list_cc
+Cc: $list_cc
 
 `git log --no-merges "$tag_range" | git shortlog`
 
