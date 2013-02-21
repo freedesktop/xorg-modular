@@ -64,7 +64,7 @@
     <dependencies/>
   </autotools>
 
-  <!-- the Mesa module, which provides libGL, libGLU, and DRI drivers -->
+  <!-- the Mesa module, which provides libGL and DRI drivers -->
   <autotools id="libGL">
     <branch module="mesa/mesa"
             checkoutdir="mesa/mesa"/>
@@ -88,6 +88,7 @@
     <dependencies>
       <dep package="libGL"/>
       <dep package="mesa-glut"/>
+      <dep package="mesa-glu"/>
     </dependencies>
   </autotools>
 
@@ -98,6 +99,13 @@
     <dependencies>
       <dep package="libGL"/>
       <dep package="makedepend"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="mesa-glu">
+    <branch module="mesa/glu" checkoutdir="mesa/glu"/>
+    <dependencies>
+      <dep package="libGL"/>
     </dependencies>
   </autotools>
 
