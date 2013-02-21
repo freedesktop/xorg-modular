@@ -42,16 +42,6 @@
     </dependencies>
   </autotools>
 
-  <!-- Need nouveau API to build xf86-video-nouveau -->
-  <autotools id="libdrm" autogenargs="--enable-nouveau-experimental-api">
-    <branch module="mesa/drm"
-            checkoutdir="mesa/drm"/>
-    <dependencies>
-      <dep package="macros"/>
-      <dep package="libpciaccess"/>
-    </dependencies>
-  </autotools>
-
   <autotools id="pixman">
     <branch module="pixman"
             checkoutdir="xorg/lib/pixman"/>
@@ -62,6 +52,18 @@
     <branch module="xorg/lib/libpciaccess"
             checkoutdir="xorg/lib/libpciaccess"/>
     <dependencies/>
+  </autotools>
+
+  <!-- mesa -->
+
+  <!-- Need nouveau API to build xf86-video-nouveau -->
+  <autotools id="libdrm" autogenargs="--enable-nouveau-experimental-api">
+    <branch module="mesa/drm"
+            checkoutdir="mesa/drm"/>
+    <dependencies>
+      <dep package="macros"/>
+      <dep package="libpciaccess"/>
+    </dependencies>
   </autotools>
 
   <!-- the Mesa module, which provides libGL and DRI drivers -->
@@ -108,6 +110,16 @@
       <dep package="libGL"/>
     </dependencies>
   </autotools>
+
+  <metamodule id="mesa">
+    <dependencies>
+      <dep package="libdrm"/>
+      <dep package="libGL"/>
+      <dep package="mesa-demos"/>
+      <dep package="mesa-glut"/>
+      <dep package="mesa-glu"/>
+    </dependencies>
+  </metamodule>
 
   <!-- util -->
   <autotools id="macros">
