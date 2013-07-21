@@ -99,17 +99,17 @@ Cc: $list_cc
 
 git tag: $tar_name
 
-http://$host_current/$section_path/$tarbz2
-MD5:  `$MD5SUM $tarbz2`
-SHA1: `$SHA1SUM $tarbz2`
-SHA256: `$SHA256SUM $tarbz2`
+RELEASE
 
-http://$host_current/$section_path/$targz
-MD5:  `$MD5SUM $targz`
-SHA1: `$SHA1SUM $targz`
-SHA256: `$SHA256SUM $targz`
+    for tarball in $targz $tarbz2; do
+	cat <<RELEASE
+http://$host_current/$section_path/$tarball
+MD5:  `$MD5SUM $tarball`
+SHA1: `$SHA1SUM $tarball`
+SHA256: `$SHA256SUM $tarball`
 
 RELEASE
+    done
 }
 
 #------------------------------------------------------------------------------
@@ -287,8 +287,15 @@ process_module() {
     tar_name="$pkg_name-$pkg_version"
     targz=$tar_name.tar.gz
     tarbz2=$tar_name.tar.bz2
-    ls -l $targz
-    ls -l $tarbz2
+
+    [ -e $targz ] && ls -l $targz || unset targz
+    [ -e $tarbz2 ] && ls -l $tarbz2 || unset tarbz2
+
+    if [ -z "$targz" -a -z "$tarbz2" ]; then
+	echo "Error: no compatible tarballs found."
+	cd $top_src
+	return 1
+    fi
 
     # Obtain the top commit SHA which should be the version bump
     # It should not have been tagged yet (the script will do it later)
@@ -467,17 +474,18 @@ process_module() {
     fi
 
     # Check for already existing tarballs
-    ssh $USER_NAME$hostname ls $srv_path/$targz >/dev/null 2>&1 ||
-    ssh $USER_NAME$hostname ls $srv_path/$tarbz2  >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
-	if [ "x$FORCE" = "xyes" ]; then
-	    echo "Warning: overwriting released tarballs due to --force option."
-	else
-	    echo "Error: tarball $tar_name already exists. Use --force to overwrite."
-	    cd $top_src
-	    return 1
+    for tarball in $targz $tarbz2; do
+	ssh $USER_NAME$hostname ls $srv_path/$tarball  >/dev/null 2>&1
+	if [ $? -eq 0 ]; then
+	    if [ "x$FORCE" = "xyes" ]; then
+		echo "Warning: overwriting released tarballs due to --force option."
+	    else
+		echo "Error: tarball $tar_name already exists. Use --force to overwrite."
+		cd $top_src
+		return 1
+	    fi
 	fi
-    fi
+    done
 
     # Upload to host using the 'scp' remote file copy program
     if [ x"$DRY_RUN" = x ]; then
@@ -538,14 +546,21 @@ process_module() {
     # --------- Update the JH Build moduleset -----------------
     # Failing to update the jh moduleset is not considered a fatal error
     if [ x"$JH_MODULESET" != x ]; then
-	if [ x$DRY_RUN = x ]; then
-	    sha1sum=`$SHA1SUM $targz | cut -d' ' -f1`
-	    $top_src/util/modular/update-moduleset.sh $JH_MODULESET $sha1sum $targz
-	    echo "Info: updated jh moduleset: \"$JH_MODULESET\""
-	else
-	    echo "Info: skipping jh moduleset \"$JH_MODULESET\" update in dry-run mode."
-	fi
+	for tarball in $targz $tarbz2; do
+	    if [ x$DRY_RUN = x ]; then
+		sha1sum=`$SHA1SUM $tarball | cut -d' ' -f1`
+		$top_src/util/modular/update-moduleset.sh $JH_MODULESET $sha1sum $tarball
+		echo "Info: updated jh moduleset: \"$JH_MODULESET\""
+	    else
+		echo "Info: skipping jh moduleset \"$JH_MODULESET\" update in dry-run mode."
+	    fi
+
+	    # $tar* may be unset, so simply loop through all of them and the
+	    # first one that is set updates the module file
+	    break
+	done
     fi
+
 
     # --------- Successful completion --------------------------
     cd $top_src
