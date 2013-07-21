@@ -101,7 +101,7 @@ git tag: $tar_name
 
 RELEASE
 
-    for tarball in $targz $tarbz2; do
+    for tarball in $tarbz2 $targz $tarxz; do
 	cat <<RELEASE
 http://$host_current/$section_path/$tarball
 MD5:  `$MD5SUM $tarball`
@@ -287,11 +287,13 @@ process_module() {
     tar_name="$pkg_name-$pkg_version"
     targz=$tar_name.tar.gz
     tarbz2=$tar_name.tar.bz2
+    tarxz=$tar_name.tar.xz
 
     [ -e $targz ] && ls -l $targz || unset targz
     [ -e $tarbz2 ] && ls -l $tarbz2 || unset tarbz2
+    [ -e $targz ] && ls -l $tarxz || unset tarxz
 
-    if [ -z "$targz" -a -z "$tarbz2" ]; then
+    if [ -z "$targz" -a -z "$tarbz2" -a -z "$tarxz" ]; then
 	echo "Error: no compatible tarballs found."
 	cd $top_src
 	return 1
@@ -474,7 +476,7 @@ process_module() {
     fi
 
     # Check for already existing tarballs
-    for tarball in $targz $tarbz2; do
+    for tarball in $targz $tarbz2 $tarxz; do
 	ssh $USER_NAME$hostname ls $srv_path/$tarball  >/dev/null 2>&1
 	if [ $? -eq 0 ]; then
 	    if [ "x$FORCE" = "xyes" ]; then
@@ -490,7 +492,7 @@ process_module() {
     # Upload to host using the 'scp' remote file copy program
     if [ x"$DRY_RUN" = x ]; then
 	echo "Info: uploading tarballs to web server:"
-	scp $targz $tarbz2 $USER_NAME$hostname:$srv_path
+	scp $targz $tarbz2 $tarxz $USER_NAME$hostname:$srv_path
 	if [ $? -ne 0 ]; then
 	    echo "Error: the tarballs uploading failed."
 	    cd $top_src
@@ -546,7 +548,7 @@ process_module() {
     # --------- Update the JH Build moduleset -----------------
     # Failing to update the jh moduleset is not considered a fatal error
     if [ x"$JH_MODULESET" != x ]; then
-	for tarball in $targz $tarbz2; do
+	for tarball in $targz $tarbz2 $tarxz; do
 	    if [ x$DRY_RUN = x ]; then
 		sha1sum=`$SHA1SUM $tarball | cut -d' ' -f1`
 		$top_src/util/modular/update-moduleset.sh $JH_MODULESET $sha1sum $tarball
