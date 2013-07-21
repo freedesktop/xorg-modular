@@ -373,6 +373,7 @@ process_module() {
     hostname="annarchy.freedesktop.org"
 
     # Some hostnames are also used as /srv subdirs
+    host_fdo="www.freedesktop.org"
     host_xorg="xorg.freedesktop.org"
     host_dri="dri.freedesktop.org"
 
@@ -401,7 +402,7 @@ process_module() {
 	module_url=`echo $module_url | cut -d'/' -f3,4`
     else
 	# The look for mesa, xcb, etc...
-	module_url=`echo "$full_module_url" | $GREP -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config" -e "/nouveau/xf86-video-nouveau"`
+	module_url=`echo "$full_module_url" | $GREP -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config" -e "/nouveau/xf86-video-nouveau" -e "/libevdev"`
 	if [ $? -eq 0 ]; then
 	     module_url=`echo $module_url | cut -d'/' -f2,3`
 	else
@@ -462,6 +463,14 @@ process_module() {
 	section_path=archive/individual/data/$section
 	srv_path="/srv/$host_current/$section_path"
 	list_cc=$list_xkb
+    fi
+
+    if [ x"$section" = xlibevdev ]; then
+	host_current=$host_fdo
+	section_path="software/$section"
+	srv_path="/srv/$host_current/www/$section_path"
+	list_to=input-tools@lists.freedesktop.org
+	unset list_cc
     fi
 
     # Use personal web space on the host for unit testing (leave commented out)
