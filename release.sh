@@ -291,7 +291,7 @@ process_module() {
 
     [ -e $targz ] && ls -l $targz || unset targz
     [ -e $tarbz2 ] && ls -l $tarbz2 || unset tarbz2
-    [ -e $targz ] && ls -l $tarxz || unset tarxz
+    [ -e $tarxz ] && ls -l $tarxz || unset tarxz
 
     if [ -z "$targz" -a -z "$tarbz2" -a -z "$tarxz" ]; then
 	echo "Error: no compatible tarballs found."
