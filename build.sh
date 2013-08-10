@@ -822,7 +822,7 @@ build_driver_input() {
 
     # And some drivers are only buildable on some CPUs.
     case $HOST_CPU in
-	i*86 | amd64 | x86_64)
+	i*86 | amd64 | x86_64 | i86pc)
 	    build driver xf86-input-vmmouse
 	    ;;
     esac
@@ -870,7 +870,7 @@ build_driver_video() {
 	    build driver xf86-video-sunleo
 	    build driver xf86-video-suntcx
 	    ;;
-	i*86 | amd64 | x86_64)
+	i*86 | amd64 | x86_64 | i86pc)
             build driver xf86-video-i740
             build driver xf86-video-intel
 	    ;;
