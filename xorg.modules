@@ -2140,7 +2140,6 @@
       <dep package="xf86-video-i740"/>
       <dep package="xf86-video-impact"/>
       <dep package="xf86-video-imstt"/>
-      <dep package="xf86-video-newport"/>
       <dep package="xf86-video-s3"/>
       <dep package="xf86-video-s3virge"/>
       <dep package="xf86-video-siliconmotion"/>
