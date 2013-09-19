@@ -680,6 +680,7 @@ build_lib() {
     build lib libXmu
     build lib libXpm
     build lib libXaw
+    build lib libXaw3d
     build lib libXfixes
     build lib libXcomposite
     build lib libXrender
@@ -889,6 +890,7 @@ build_driver_video() {
     build driver xf86-video-i128
     build driver xf86-video-mach64
     build driver xf86-video-mga
+    build driver xf86-video-modesetting
     build driver xf86-video-neomagic
     build driver xf86-video-nv
     build driver xf86-video-rendition
