@@ -302,6 +302,9 @@ clone() {
     "xkeyboard-config")
         BASEDIR=""
         ;;
+    "libevdev")
+        BASEDIR=""
+        ;;
     *)
         BASEDIR="xorg/"
         ;;
@@ -916,6 +919,12 @@ build_driver() {
         Darwin) return 0 ;;
     esac
 
+# Build the Wrapper library for evdev devices
+    case $HOST_OS in
+	Linux)
+	    build libevdev ""
+	    ;;
+    esac
     build_driver_input
     build_driver_video
 }
