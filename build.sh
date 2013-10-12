@@ -138,15 +138,16 @@ setup_buildenv() {
 # if you find this message in the build output it can help tell you where the failure occurred
 # arguments:
 #   $1 - which command failed
-#   $2/$3 - which module/component failed
+#   $2 - module
+#   $3 - component
 # returns:
 #   (irrelevant)
 failed() {
     cmd=$1
     module=$2
     component=$3
-    echo "build.sh: \"$cmd\" failed on $module/$component"
-    failed_components="$failed_components $module/$component"
+    echo "build.sh: \"$cmd\" failed on $module${component:+/}$component"
+    failed_components="$failed_components $module${component:+/}$component"
 }
 
 # print a pretty title to separate the processing of each module
@@ -167,7 +168,7 @@ module_title() {
 
     echo ""
     echo "======================================================================"
-    echo "==  Processing module/component:  \"$module/$component\""
+    echo "==  Processing:  \"$module${component:+/}$component\""
     echo "==        configuration options:  $CONFFLAGS $confopts"
 }
 
@@ -251,7 +252,7 @@ checkfortars() {
     esac
     for ii in $module .; do
         for jj in bz2 gz; do
-            TARFILE=`ls -1rt $ii/$component-*.tar.$jj 2> /dev/null | tail -n 1`
+            TARFILE=`ls -1rt $ii${component:+/}$component-*.tar.$jj 2> /dev/null | tail -n 1`
             if [ X"$TARFILE" != X ]; then
                 SRCDIR=`echo $TARFILE | sed "s,.tar.$jj,,"`
                 SRCDIR=`echo $SRCDIR | sed "s,MesaLib,Mesa,"`
@@ -313,39 +314,39 @@ clone() {
         ;;
     esac
 
-    DIR="$module/$component"
+    DIR="$module${component:+/}$component"
     GITROOT=${GITROOT:="git://anongit.freedesktop.org/git"}
 
     if [ ! -d "$DIR" ]; then
         git clone "$GITROOT/$BASEDIR$DIR" "$DIR"
         if [ $? -ne 0 ]; then
-            echo "Failed to clone $module module component $component. Ignoring."
-            clonefailed_components="$clonefailed_components $module/$component"
+            echo "Failed to clone $module${component:+/}$component. Ignoring."
+            clonefailed_components="$clonefailed_components $module${component:+/}$component"
             return 1
         fi
 	old_pwd=`pwd`
 	cd $DIR
 	if [ $? -ne 0 ]; then
-            echo "Failed to cd to $module module component $component. Ignoring."
-            clonefailed_components="$clonefailed_components $module/$component"
+            echo "Failed to cd to $module${component:+/}$component. Ignoring."
+            clonefailed_components="$clonefailed_components $module${component:+/}$component"
             return 1
 	return 1
 	fi
 	git submodule init
         if [ $? -ne 0 ]; then
-            echo "Failed to initialize $module module component $component submodule. Ignoring."
-            clonefailed_components="$clonefailed_components $module/$component"
+            echo "Failed to initialize $module${component:+/}$component submodule. Ignoring."
+            clonefailed_components="$clonefailed_components $module${component:+/}$component"
             return 1
         fi
 	git submodule update
         if [ $? -ne 0 ]; then
-            echo "Failed to update $module module component $component submodule. Ignoring."
-            clonefailed_components="$clonefailed_components $module/$component"
+            echo "Failed to update $module${component:+/}$component submodule. Ignoring."
+            clonefailed_components="$clonefailed_components $module${component:+/}$component"
             return 1
         fi
 	cd ${old_pwd}
     else
-        echo "git cannot clone into an existing directory $module/$component"
+        echo "git cannot clone into an existing directory $module${component:+/}$component"
 	return 1
     fi
 
@@ -376,13 +377,13 @@ process() {
 
     SRCDIR=""
     CONFCMD=""
-    if [ -f $module/$component/autogen.sh ]; then
-        SRCDIR="$module/$component"
+    if [ -f $module${component:+/}$component/autogen.sh ]; then
+        SRCDIR="$module${component:+/}$component"
         CONFCMD="autogen.sh"
     elif [ X"$CLONE" != X ]; then
         clone $module $component
         if [ $? -eq 0 ]; then
-	    SRCDIR="$module/$component"
+	    SRCDIR="$module${component:+/}$component"
 	    CONFCMD="autogen.sh"
         fi
 	needs_config=1
@@ -392,8 +393,8 @@ process() {
     fi
 
     if [ X"$SRCDIR" = X ]; then
-        echo "$module module component $component does not exist, skipping."
-        nonexistent_components="$nonexistent_components $module/$component"
+        echo "$module${component:+/}$component does not exist, skipping."
+        nonexistent_components="$nonexistent_components $module${component:+/}$component"
         return 0
     fi
 
@@ -559,16 +560,16 @@ build() {
     component=$2
     confopts="$3"
     if [ X"$LISTONLY" != X ]; then
-	echo "$module/$component"
+	echo "$module${component:+/}$component"
 	return 0
     fi
 
     if [ X"$RESUME" != X ]; then
-	if [ X"$RESUME" = X"$module/$component" ]; then
+	if [ X"$RESUME" = X"$module${component:+/}$component" ]; then
 	    unset RESUME
 	    # Resume build at this module
 	else
-	    echo "Skipping $module module component $component..."
+	    echo "Skipping $module${component:+/}$component..."
 	    return 0
 	fi
     fi
@@ -577,14 +578,14 @@ build() {
     process_rtn=$?
     if [ X"$BUILT_MODULES_FILE" != X ]; then
 	if [ $process_rtn -ne 0 ]; then
-	    echo "FAIL: $module/$component" >> $BUILT_MODULES_FILE
+	    echo "FAIL: $module${component:+/}$component" >> $BUILT_MODULES_FILE
 	else
-	    echo "PASS: $module/$component" >> $BUILT_MODULES_FILE
+	    echo "PASS: $module${component:+/}$component" >> $BUILT_MODULES_FILE
 	fi
     fi
 
     if [ $process_rtn -ne 0 ]; then
-	echo "build.sh: error processing module/component:  \"$module/$component\""
+	echo "build.sh: error processing:  \"$module${component:+/}$component\""
 	if [ X"$NOQUIT" = X ]; then
 	    exit 1
 	fi
@@ -1041,15 +1042,14 @@ process_module_file() {
 	    continue
 	fi
 
-	module=`echo $line | cut -d' ' -f1 | cut -d'/' -f1`
-	component=`echo $line | cut -d' ' -f1 | cut -d'/' -f2`
-	confopts_check=`echo $line | cut -d' ' -f2-`
-	if [ "$module/$component" = "$confopts_check" ]; then
-	    confopts=""
-	else
-	    confopts="$confopts_check"
-	fi
+	# parse each line to extract module, component and options name
+	field1=`echo $line | cut -d' ' -f1`
+	module=`echo $field1 | cut -d'/' -f1`
+	component=`echo $field1 | cut -d'/' -s -f2`
+	confopts=`echo $line | cut -d' ' -s -f2-`
+
 	build $module "$component" "$confopts"
+
     done <"$MODFILE"
 
     return 0
@@ -1222,7 +1222,7 @@ do
 	fi
 	required_arg $1 $2
 	shift
-	RESUME=$1
+	RESUME=`echo $1 | sed "s,/$,,"`
 	BUILD_ONE=1
 	;;
     -p)
@@ -1343,14 +1343,10 @@ if [ X"$BUILT_MODULES_FILE" != X -a -r "$BUILT_MODULES_FILE" ]; then
 	built_status=`echo $line | cut -c-6`
 	if [ X"$built_status" = X"FAIL: " ]; then
 	    line=`echo $line | cut -c7-`
-	    module=`echo $line | cut -d' ' -f1 | cut -d'/' -f1`
-	    component=`echo $line | cut -d' ' -f1 | cut -d'/' -f2`
-	    confopts_check=`echo $line | cut -d' ' -f2-`
-	    if [ "$module/$component" = "$confopts_check" ]; then
-		confopts=""
-	    else
-		confopts="$confopts_check"
-	    fi
+	    field1=`echo $line | cut -d' ' -f1`
+	    module=`echo $field1 | cut -d'/' -f1`
+	    component=`echo $field1 | cut -d'/' -s -f2`
+	    confopts=`echo $line | cut -d' ' -s -f2-`
 
 	    build_ret=""
 
@@ -1361,7 +1357,7 @@ if [ X"$BUILT_MODULES_FILE" != X -a -r "$BUILT_MODULES_FILE" ]; then
 		    build_ret="PASS"
 		fi
 	    else
-		cat $MODFILE | grep "$module/$component" > /dev/null
+		cat $MODFILE | grep "$module${component:+/}$component" > /dev/null
 		if [ $? -eq 0 ]; then
 		    build $module "$component" "$confopts"
 		    if [ $? -eq 0 ]; then
@@ -1376,7 +1372,7 @@ if [ X"$BUILT_MODULES_FILE" != X -a -r "$BUILT_MODULES_FILE" ]; then
 		    echo "can't create tmp file, $orig_BUILT_MODULES_FILE not modified"
 		else
 		    head -n `expr $curline - 1` $orig_BUILT_MODULES_FILE > $built_temp
-		    echo "PASS: $module/$component" >> $built_temp
+		    echo "PASS: $module${component:+/}$component" >> $built_temp
 		    tail -n `expr $built_lines - $curline` $orig_BUILT_MODULES_FILE >> $built_temp
 		    mv $built_temp $orig_BUILT_MODULES_FILE
 		fi
