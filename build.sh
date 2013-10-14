@@ -192,6 +192,9 @@ checkfortars() {
                 "libxtrans") component="xtrans" ;;
             esac
             ;;
+        "libevdev")
+            component="libevdev"
+            ;;
         "pixman")
             module="lib"
             component="pixman"
