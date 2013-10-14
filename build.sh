@@ -254,6 +254,7 @@ checkfortars() {
         for jj in bz2 gz xz; do
             TARFILE=`ls -1rt $ii${component:+/}$component-*.tar.$jj 2> /dev/null | tail -n 1`
             if [ X"$TARFILE" != X ]; then
+		old_srcdir=$SRCDIR
                 SRCDIR=`echo $TARFILE | sed "s,.tar.$jj,,"`
                 SRCDIR=`echo $SRCDIR | sed "s,MesaLib,Mesa,"`
                 if [ ! -d $SRCDIR ]; then
@@ -270,6 +271,7 @@ checkfortars() {
 		    esac
                     tar $TAROPTS $TARFILE -C $ii
 		    if [ $? -ne 0 ]; then
+			SRCDIR=${old_srcdir}
 			failed tar $module $component
 			return 1
 		    fi
