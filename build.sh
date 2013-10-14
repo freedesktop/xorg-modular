@@ -251,16 +251,23 @@ checkfortars() {
             ;;
     esac
     for ii in $module .; do
-        for jj in bz2 gz; do
+        for jj in bz2 gz xz; do
             TARFILE=`ls -1rt $ii${component:+/}$component-*.tar.$jj 2> /dev/null | tail -n 1`
             if [ X"$TARFILE" != X ]; then
                 SRCDIR=`echo $TARFILE | sed "s,.tar.$jj,,"`
                 SRCDIR=`echo $SRCDIR | sed "s,MesaLib,Mesa,"`
                 if [ ! -d $SRCDIR ]; then
-                    TAROPTS=xjf
-                    if [ X"$jj" = X"gz" ]; then
-                        TAROPTS=xzf
-                    fi
+		    case $jj in
+			"bz2")
+			    TAROPTS=xjf
+			    ;;
+			"gz")
+			    TAROPTS=xzf
+			    ;;
+			"xz")
+			    TAROPTS=xJf
+			    ;;
+		    esac
                     tar $TAROPTS $TARFILE -C $ii
 		    if [ $? -ne 0 ]; then
 			failed tar $module $component
