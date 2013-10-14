@@ -398,13 +398,16 @@ process() {
 	needs_config=1
     else
         checkfortars $module $component
-        CONFCMD="configure"
-    fi
-
-    if [ X"$SRCDIR" = X ]; then
-        echo "$module${component:+/}$component does not exist, skipping."
-        nonexistent_components="$nonexistent_components $module${component:+/}$component"
-        return 0
+        if [ $? -eq 0 ]; then
+	    if [ X"$SRCDIR" = X ]; then
+	        echo "$module${component:+/}$component does not exist, skipping."
+	        nonexistent_components="$nonexistent_components $module${component:+/}$component"
+	        return 0
+	    fi
+	    CONFCMD="configure"
+        else
+	    return 1
+	fi
     fi
 
     old_pwd=`pwd`
