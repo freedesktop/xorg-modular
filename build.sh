@@ -197,7 +197,6 @@ checkfortars() {
             component="libevdev"
             ;;
         "pixman")
-            module="lib"
             component="pixman"
             ;;
         "proto")
@@ -214,19 +213,15 @@ checkfortars() {
         "xcb")
             case $component in
                 "proto")
-                    module="xcb/proto"
                     component="xcb-proto"
                     ;;
                 "pthread-stubs")
-                    module="xcb/pthread-stubs"
                     component="libpthread-stubs"
                     ;;
                 "libxcb")
-                    module="xcb/libxcb"
                     component="libxcb"
                     ;;
                 util*)
-                    module="xcb/$component"
                     component="xcb-$component"
                     ;;
             esac
@@ -234,11 +229,9 @@ checkfortars() {
         "mesa")
             case $component in
                 "drm")
-                    module="mesa/drm"
                     component="libdrm"
                     ;;
                 "mesa")
-                    module="mesa/mesa"
                     component="MesaLib"
                     ;;
             esac
