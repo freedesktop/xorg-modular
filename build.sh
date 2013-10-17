@@ -172,99 +172,134 @@ module_title() {
     echo "==        configuration options:  $CONFFLAGS $confopts"
 }
 
+# Search for tarballs in either cwd or under a module directory
+# The tarball is always extracted in either one of these locations:
+#   - modules with components: under the module subdir (e.g lib/libX11-1.4.0)
+#   - modules without components: under cwd (e.g xserver-1.14.0)
+# The tarballs are expected to be under one of the locations described above
+# The location of the tarball does not dictate where it is extracted
+# arguments:
+#   $1 - module
+#   $2 - component
+# returns:
+#   0 - good (either no tarballs or successful extract)
+#   1 - bad
 checkfortars() {
     module=$1
     component=$2
+
+    # The package stem is the part of the tar file name that identifies
+    # the git module archived source. Ex: xclock, pixman, libX11
+    # For modules without components, the module name is used by default.
+    pkg_stem=${component:-$module}
+
+    # Handle special cases where the module or component directory
+    # does not match the package name and/or the package root dir
     case $module in
         "data")
             case $component in
-                "cursors") component="xcursor-themes" ;;
-                "bitmaps") component="xbitmaps" ;;
+                "cursors") pkg_stem="xcursor-themes" ;;
+                "bitmaps") pkg_stem="xbitmaps" ;;
             esac
             ;;
         "font")
             if [ X"$component" != X"encodings" ]; then
-                component="font-$component"
+                pkg_stem="font-$component"
             fi
             ;;
         "lib")
             case $component in
-                "libXRes") component="libXres" ;;
-                "libxtrans") component="xtrans" ;;
+                "libXRes") pkg_stem="libXres" ;;
+                "libxtrans") pkg_stem="xtrans" ;;
             esac
-            ;;
-        "libevdev")
-            component="libevdev"
-            ;;
-        "pixman")
-            component="pixman"
             ;;
         "proto")
             case $component in
-                "x11proto") component="xproto" ;;
+                "x11proto") pkg_stem="xproto" ;;
             esac
             ;;
         "util")
             case $component in
-                "cf") component="xorg-cf-files" ;;
-                "macros") component="util-macros" ;;
+                "cf") pkg_stem="xorg-cf-files" ;;
+                "macros") pkg_stem="util-macros" ;;
             esac
             ;;
         "xcb")
             case $component in
                 "proto")
-                    component="xcb-proto"
+                    pkg_stem="xcb-proto"
                     ;;
                 "pthread-stubs")
-                    component="libpthread-stubs"
+                    pkg_stem="libpthread-stubs"
                     ;;
                 "libxcb")
-                    component="libxcb"
+                    pkg_stem="libxcb"
                     ;;
                 util*)
-                    component="xcb-$component"
+                    pkg_stem="xcb-$component"
                     ;;
             esac
             ;;
         "mesa")
             case $component in
                 "drm")
-                    component="libdrm"
+                    pkg_stem="libdrm"
                     ;;
                 "mesa")
-                    component="MesaLib"
+                    pkg_stem="MesaLib"
                     ;;
             esac
             ;;
-        "xkeyboard-config")
-            component="xkeyboard-config"
-            ;;
         "xserver")
-            component="xorg-server"
+            pkg_stem="xorg-server"
             ;;
     esac
+
+    # Search for tarballs in both the module and the src top directory
     for ii in $module .; do
         for jj in bz2 gz xz; do
-            TARFILE=`ls -1rt $ii${component:+/}$component-*.tar.$jj 2> /dev/null | tail -n 1`
-            if [ X"$TARFILE" != X ]; then
+
+	    # Select from the list the last tarball with a specific pkg_stem
+            pkg_tarfile=`ls -1rt $ii/$pkg_stem-[0-9]*.tar.$jj 2> /dev/null | tail -n 1`
+
+	    # Extract the tarball under the module directory
+	    # For modules without components, extract in top level dir
+            if [ X"$pkg_tarfile" != X ]; then
+
+		# Get the package version and archived toplevel directory
+		pkg_version=`echo $pkg_tarfile | sed 's,.*'$pkg_stem'-\(.*\)\.tar\.'$jj',\1,'`
+		pkg_root_dir="$pkg_stem-$pkg_version"
+		pkg_root_dir=`echo $pkg_root_dir | sed 's,MesaLib,Mesa,'`
+
+		# Find where to extract the tar file
 		old_srcdir=$SRCDIR
-                SRCDIR=`echo $TARFILE | sed "s,.tar.$jj,,"`
-                SRCDIR=`echo $SRCDIR | sed "s,MesaLib,Mesa,"`
+		if [ X"$component" = X ]; then
+		    # For modules with no components (i.e xserver)
+		    pkg_extract_dir="."
+		    SRCDIR=$pkg_root_dir
+		else
+		    # For modules with components (i.e xcb/proto or lib/libXi)
+		    pkg_extract_dir=$module
+		    SRCDIR=$module/$pkg_root_dir
+		fi
+
                 if [ ! -d $SRCDIR ]; then
+		    mkdir -p $module
 		    case $jj in
 			"bz2")
-			    TAROPTS=xjf
+			    pkg_tar_opts=xjf
 			    ;;
 			"gz")
-			    TAROPTS=xzf
+			    pkg_tar_opts=xzf
 			    ;;
 			"xz")
-			    TAROPTS=xJf
+			    pkg_tar_opts=xJf
 			    ;;
 		    esac
-                    tar $TAROPTS $TARFILE -C $ii
+                    tar $pkg_tar_opts $pkg_tarfile -C $pkg_extract_dir
 		    if [ $? -ne 0 ]; then
 			SRCDIR=${old_srcdir}
+			echo "Unable to extract $pkg_tarfile for $module module"
 			failed tar $module $component
 			return 1
 		    fi
