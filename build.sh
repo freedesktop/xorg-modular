@@ -808,420 +808,6 @@ build() {
     fi
 }
 
-# protocol headers have no build order dependencies
-build_proto() {
-    case $HOST_OS in
-        Darwin)
-            build proto applewmproto
-        ;;
-        CYGWIN*)
-            build proto windowswmproto
-        ;;
-    esac
-    build proto bigreqsproto
-    build proto compositeproto
-    build proto damageproto
-    build proto dmxproto
-    build proto dri2proto
-    build proto dri3proto
-    build proto fixesproto
-    build proto fontsproto
-    build proto glproto
-    build proto inputproto
-    build proto kbproto
-    build proto presentproto
-    build proto randrproto
-    build proto recordproto
-    build proto renderproto
-    build proto resourceproto
-    build proto scrnsaverproto
-    build proto videoproto
-    build proto x11proto
-    build proto xcmiscproto
-    build proto xextproto
-    build proto xf86bigfontproto
-    build proto xf86dgaproto
-    build proto xf86driproto
-    build proto xf86vidmodeproto
-    build proto xineramaproto
-    build xcb proto
-}
-
-# bitmaps is needed for building apps, so has to be done separately first
-# cursors depends on apps/xcursorgen
-# xkbdata is obsolete - use xkbdesc from xkeyboard-config instead
-build_data() {
-#    build data bitmaps
-    build data cursors
-}
-
-# All protocol modules must be installed before the libs (okay, that's an
-# overstatement, but all protocol modules should be installed anyway)
-#
-# the libraries have a dependency order:
-# xtrans, Xau, Xdmcp before anything else
-# fontenc before Xfont
-# ICE before SM
-# X11 before Xext
-# (X11 and SM) before Xt
-# Xt before Xmu and Xpm
-# Xext before any other extension library
-# Xfixes before Xcomposite
-# Xp before XprintUtil before XprintAppUtil
-#
-build_lib() {
-    build lib libxtrans
-    build lib libXau
-    build lib libXdmcp
-    build xcb pthread-stubs
-    build xcb libxcb
-    build xcb util
-    build xcb util-image
-    build xcb util-keysyms
-    build xcb util-renderutil
-    build xcb util-wm
-    build lib libX11
-    build lib libXext
-    case $HOST_OS in
-        Darwin)
-            build lib libAppleWM
-        ;;
-        CYGWIN*)
-            build lib libWindowsWM
-        ;;
-    esac
-    build lib libdmx
-    build lib libfontenc
-    build lib libFS
-    build lib libICE
-    build lib libSM
-    build lib libXt
-    build lib libXmu
-    build lib libXpm
-    build lib libXaw
-    build lib libXaw3d
-    build lib libXfixes
-    build lib libXcomposite
-    build lib libXrender
-    build lib libXdamage
-    build lib libXcursor
-    build lib libXfont
-    build lib libXft
-    build lib libXi
-    build lib libXinerama
-    build lib libxkbfile
-    build lib libXrandr
-    build lib libXRes
-    build lib libXScrnSaver
-    case $HOST_OS in
-	Linux)
-            build lib libxshmfence
-	    ;;
-    esac
-    build lib libXtst
-    build lib libXv
-    build lib libXvMC
-    build lib libXxf86dga
-    build lib libXxf86vm
-    build lib libpciaccess
-    build pixman ""
-}
-
-# Most apps depend at least on libX11.
-#
-# bdftopcf depends on libXfont
-# mkfontscale depends on libfontenc and libfreetype
-# mkfontdir depends on mkfontscale
-#
-# TODO: detailed breakdown of which apps require which libs
-build_app() {
-    build app appres
-    build app bdftopcf
-    build app beforelight
-    build app bitmap
-    build app editres
-    build app fonttosfnt
-    build app fslsfonts
-    build app fstobdf
-    build app iceauth
-    build app ico
-    build app listres
-    build app luit
-    build app mkcomposecache
-    build app mkfontdir
-    build app mkfontscale
-    build app oclock
-    build app rgb
-    build app rendercheck
-    build app rstart
-    build app scripts
-    build app sessreg
-    build app setxkbmap
-    build app showfont
-    build app smproxy
-    build app twm
-    build app viewres
-    build app x11perf
-    build app xauth
-    build app xbacklight
-    build app xbiff
-    build app xcalc
-    build app xclipboard
-    build app xclock
-    build app xcmsdb
-    build app xconsole
-    build app xcursorgen
-    build app xdbedizzy
-    build app xditview
-    build app xdm
-    build app xdpyinfo
-    build app xdriinfo
-    build app xedit
-    build app xev
-    build app xeyes
-    build app xf86dga
-    build app xfd
-    build app xfontsel
-    build app xfs
-    build app xfsinfo
-    build app xgamma
-    build app xgc
-    build app xhost
-    build app xinit
-    build app xinput
-    build app xkbcomp
-    build app xkbevd
-    build app xkbprint
-    build app xkbutils
-    build app xkill
-    build app xload
-    build app xlogo
-    build app xlsatoms
-    build app xlsclients
-    build app xlsfonts
-    build app xmag
-    build app xman
-    build app xmessage
-    build app xmh
-    build app xmodmap
-    build app xmore
-    build app xprop
-    build app xrandr
-    build app xrdb
-    build app xrefresh
-    build app xscope
-    build app xset
-    build app xsetmode
-    build app xsetroot
-    build app xsm
-    build app xstdcmap
-    build app xvidtune
-    build app xvinfo
-    build app xwd
-    build app xwininfo
-    build app xwud
-}
-
-build_mesa() {
-    build mesa drm
-    build mesa mesa
-}
-
-# The server requires at least the following libraries:
-# Xfont, Xau, Xdmcp, pciaccess
-build_xserver() {
-    build xserver ""
-}
-
-build_driver_input() {
-    # Some drivers are only buildable on some OS'es
-    case $HOST_OS in
-	Linux)
-	    build driver xf86-input-evdev
-	    build driver xf86-input-joystick
-	    ;;
-	FreeBSD | NetBSD | OpenBSD | Dragonfly | GNU/kFreeBSD)
-	    build driver xf86-input-joystick
-	    ;;
-    esac
-
-    # And some drivers are only buildable on some CPUs.
-    case $HOST_CPU in
-	i*86 | amd64 | x86_64 | i86pc)
-	    build driver xf86-input-vmmouse
-	    ;;
-    esac
-
-    build driver xf86-input-keyboard
-    build driver xf86-input-mouse
-    build driver xf86-input-synaptics
-    build driver xf86-input-void
-}
-
-build_driver_video() {
-    # Some drivers are only buildable on some OS'es
-    case $HOST_OS in
-	FreeBSD)
-	    case $HOST_CPU in
-		sparc64)
-		    build driver xf86-video-sunffb
-		    ;;
-	    esac
-	    ;;
-	NetBSD | OpenBSD)
-	    build driver xf86-video-wsfb
-	    build driver xf86-video-sunffb
-	    ;;
-	Linux)
-	    build driver xf86-video-sisusb
-	    build driver xf86-video-sunffb
-	    build driver xf86-video-v4l
-	    build driver xf86-video-xgixp
-	    case $HOST_CPU in
-		i*86)
-                    # AMD Geode CPU. Driver contains 32 bit assembler code
-		    build driver xf86-video-geode
-		    ;;
-	    esac
-	    ;;
-    esac
-
-    # Some drivers are only buildable on some architectures
-    case $HOST_CPU in
-	sparc | sparc64)
-	    build driver xf86-video-suncg14
-	    build driver xf86-video-suncg3
-	    build driver xf86-video-suncg6
-	    build driver xf86-video-sunleo
-	    build driver xf86-video-suntcx
-	    ;;
-	i*86 | amd64 | x86_64 | i86pc)
-            build driver xf86-video-i740
-            build driver xf86-video-intel
-	    ;;
-    esac
-
-    build driver xf86-video-apm
-    build driver xf86-video-ark
-    build driver xf86-video-ast
-    build driver xf86-video-ati
-    build driver xf86-video-chips
-    build driver xf86-video-cirrus
-    build driver xf86-video-dummy
-    build driver xf86-video-fbdev
-#    build driver xf86-video-glide
-    build driver xf86-video-glint
-    build driver xf86-video-i128
-    build driver xf86-video-mach64
-    build driver xf86-video-mga
-    build driver xf86-video-modesetting
-    build driver xf86-video-neomagic
-    build driver xf86-video-nv
-    build driver xf86-video-rendition
-    build driver xf86-video-r128
-    build driver xf86-video-s3
-    build driver xf86-video-s3virge
-    build driver xf86-video-savage
-    build driver xf86-video-siliconmotion
-    build driver xf86-video-sis
-    build driver xf86-video-tdfx
-    build driver xf86-video-tga
-    build driver xf86-video-trident
-    build driver xf86-video-tseng
-    build driver xf86-video-vesa
-    build driver xf86-video-vmware
-    build driver xf86-video-voodoo
-}
-
-# The server must be built before the drivers
-build_driver() {
-    # XQuartz doesn't need these...
-    case $HOST_OS in
-        Darwin) return 0 ;;
-    esac
-
-# Build the Wrapper library for evdev devices
-    case $HOST_OS in
-	Linux)
-	    build libevdev ""
-	    ;;
-    esac
-    build_driver_input
-    build_driver_video
-}
-
-# All fonts require mkfontscale and mkfontdir to be available
-#
-# The following fonts require bdftopcf to be available:
-#   adobe-100dpi, adobe-75dpi, adobe-utopia-100dpi, adobe-utopia-75dpi,
-#   arabic-misc, bh-100dpi, bh-75dpi, bh-lucidatypewriter-100dpi,
-#   bh-lucidatypewriter-75dpi, bitstream-100dpi, bitstream-75dpi,
-#   cronyx-cyrillic, cursor-misc, daewoo-misc, dec-misc, isas-misc,
-#   jis-misc, micro-misc, misc-cyrillic, misc-misc, mutt-misc,
-#   schumacher-misc, screen-cyrillic, sony-misc, sun-misc and
-#   winitzki-cyrillic
-#
-# The font util component must be built before any of the fonts, since they
-# use the fontutil.m4 installed by it.   (As do several other modules, such
-# as libfontenc and app/xfs, which is why it is moved up to the top.)
-#
-# The alias component is recommended to be installed after the other fonts
-# since the fonts.alias files reference specific fonts installed from the
-# other font components
-build_font() {
-    build font encodings
-    build font adobe-100dpi
-    build font adobe-75dpi
-    build font adobe-utopia-100dpi
-    build font adobe-utopia-75dpi
-    build font adobe-utopia-type1
-    build font arabic-misc
-    build font bh-100dpi
-    build font bh-75dpi
-    build font bh-lucidatypewriter-100dpi
-    build font bh-lucidatypewriter-75dpi
-    build font bh-ttf
-    build font bh-type1
-    build font bitstream-100dpi
-    build font bitstream-75dpi
-    build font bitstream-type1
-    build font cronyx-cyrillic
-    build font cursor-misc
-    build font daewoo-misc
-    build font dec-misc
-    build font ibm-type1
-    build font isas-misc
-    build font jis-misc
-    build font micro-misc
-    build font misc-cyrillic
-    build font misc-ethiopic
-    build font misc-meltho
-    build font misc-misc
-    build font mutt-misc
-    build font schumacher-misc
-    build font screen-cyrillic
-    build font sony-misc
-    build font sun-misc
-    build font winitzki-cyrillic
-    build font xfree86-type1
-    build font alias
-}
-
-# makedepend requires xproto
-build_util() {
-    build util cf
-    build util imake
-    build util gccmakedep
-    build util lndir
-
-    build xkeyboard-config ""
-}
-
-# xorg-docs requires xorg-sgml-doctools
-build_doc() {
-    build doc xorg-sgml-doctools
-    build doc xorg-docs
-}
 
 # just process the sub-projects supplied in the given file ($MODFILE)
 # in the order in which they are found in the list
@@ -1377,6 +963,335 @@ required_arg() {
 	exit 1
     fi
 }
+
+#==============================================================================
+#				Build All Modules
+# Globals:
+#   HOST_OS HOST_CPU
+# Arguments:
+#   None
+# Returns:
+#   None
+#==============================================================================
+build_all_modules() {
+
+    build util macros
+    build font util
+    build doc xorg-sgml-doctools
+    build doc xorg-docs
+    case $HOST_OS in
+        Darwin)  build proto applewmproto;;
+        CYGWIN*) build proto windowswmproto;;
+    esac
+    build proto bigreqsproto
+    build proto compositeproto
+    build proto damageproto
+    build proto dmxproto
+    build proto dri2proto
+    build proto dri3proto
+    build proto fixesproto
+    build proto fontsproto
+    build proto glproto
+    build proto inputproto
+    build proto kbproto
+    build proto presentproto
+    build proto randrproto
+    build proto recordproto
+    build proto renderproto
+    build proto resourceproto
+    build proto scrnsaverproto
+    build proto videoproto
+    build proto x11proto
+    build proto xcmiscproto
+    build proto xextproto
+    build proto xf86bigfontproto
+    build proto xf86dgaproto
+    build proto xf86driproto
+    build proto xf86vidmodeproto
+    build proto xineramaproto
+    build xcb proto
+    # Required by mesa and depends on xproto
+    build util makedepend
+    build lib libxtrans
+    build lib libXau
+    build lib libXdmcp
+    build xcb pthread-stubs
+    build xcb libxcb
+    build xcb util
+    build xcb util-image
+    build xcb util-keysyms
+    build xcb util-renderutil
+    build xcb util-wm
+    build lib libX11
+    build lib libXext
+    case $HOST_OS in
+        Darwin)  build lib libAppleWM;;
+        CYGWIN*) build lib libWindowsWM;;
+    esac
+    build lib libdmx
+    build lib libfontenc
+    build lib libFS
+    build lib libICE
+    build lib libSM
+    build lib libXt
+    build lib libXmu
+    build lib libXpm
+    build lib libXaw
+    build lib libXaw3d
+    build lib libXfixes
+    build lib libXcomposite
+    build lib libXrender
+    build lib libXdamage
+    build lib libXcursor
+    build lib libXfont
+    build lib libXft
+    build lib libXi
+    build lib libXinerama
+    build lib libxkbfile
+    build lib libXrandr
+    build lib libXRes
+    build lib libXScrnSaver
+    case $HOST_OS in
+	Linux)
+            build lib libxshmfence
+	    ;;
+    esac
+    build lib libXtst
+    build lib libXv
+    build lib libXvMC
+    build lib libXxf86dga
+    build lib libXxf86vm
+    build lib libpciaccess
+    build pixman ""
+    build mesa drm
+    build mesa mesa
+    build data bitmaps
+    build app appres
+    build app bdftopcf
+    build app beforelight
+    build app bitmap
+    build app editres
+    build app fonttosfnt
+    build app fslsfonts
+    build app fstobdf
+    build app iceauth
+    build app ico
+    build app listres
+    build app luit
+    build app mkcomposecache
+    build app mkfontdir
+    build app mkfontscale
+    build app oclock
+    build app rgb
+    build app rendercheck
+    build app rstart
+    build app scripts
+    build app sessreg
+    build app setxkbmap
+    build app showfont
+    build app smproxy
+    build app twm
+    build app viewres
+    build app x11perf
+    build app xauth
+    build app xbacklight
+    build app xbiff
+    build app xcalc
+    build app xclipboard
+    build app xclock
+    build app xcmsdb
+    build app xconsole
+    build app xcursorgen
+    build app xdbedizzy
+    build app xditview
+    build app xdm
+    build app xdpyinfo
+    build app xdriinfo
+    build app xedit
+    build app xev
+    build app xeyes
+    build app xf86dga
+    build app xfd
+    build app xfontsel
+    build app xfs
+    build app xfsinfo
+    build app xgamma
+    build app xgc
+    build app xhost
+    build app xinit
+    build app xinput
+    build app xkbcomp
+    build app xkbevd
+    build app xkbprint
+    build app xkbutils
+    build app xkill
+    build app xload
+    build app xlogo
+    build app xlsatoms
+    build app xlsclients
+    build app xlsfonts
+    build app xmag
+    build app xman
+    build app xmessage
+    build app xmh
+    build app xmodmap
+    build app xmore
+    build app xpr
+    build app xprop
+    build app xrandr
+    build app xrdb
+    build app xrefresh
+    build app xscope
+    build app xset
+    build app xsetmode
+    build app xsetroot
+    build app xsm
+    build app xstdcmap
+    build app xvidtune
+    build app xvinfo
+    build app xwd
+    build app xwininfo
+    build app xwud
+    build xserver ""
+    case $HOST_OS in
+	Linux) build libevdev "";;
+    esac
+    case $HOST_OS in
+	Linux)
+	    build driver xf86-input-evdev
+	    build driver xf86-input-joystick
+	    ;;
+	FreeBSD | NetBSD | OpenBSD | Dragonfly | GNU/kFreeBSD)
+	    build driver xf86-input-joystick
+	    ;;
+    esac
+    case $HOST_CPU in
+	i*86 | amd64 | x86_64 | i86pc)
+	    build driver xf86-input-vmmouse
+	    ;;
+    esac
+    case $HOST_OS in
+        Darwin)
+	    ;;
+	*)
+	    build driver xf86-input-keyboard
+	    build driver xf86-input-mouse
+	    build driver xf86-input-synaptics
+	    build driver xf86-input-void
+	    case $HOST_OS in
+		FreeBSD)
+		    case $HOST_CPU in
+			sparc64)
+			    build driver xf86-video-sunffb
+			    ;;
+		    esac
+		    ;;
+		NetBSD | OpenBSD)
+		    build driver xf86-video-wsfb
+		    build driver xf86-video-sunffb
+		    ;;
+		Linux)
+		    build driver xf86-video-sisusb
+		    build driver xf86-video-sunffb
+		    build driver xf86-video-v4l
+		    build driver xf86-video-xgixp
+		    case $HOST_CPU in
+			i*86)
+	                    # AMD Geode CPU. Driver contains 32 bit assembler code
+			    build driver xf86-video-geode
+			    ;;
+		    esac
+		    ;;
+	    esac
+	    case $HOST_CPU in
+		sparc | sparc64)
+		    build driver xf86-video-suncg14
+		    build driver xf86-video-suncg3
+		    build driver xf86-video-suncg6
+		    build driver xf86-video-sunleo
+		    build driver xf86-video-suntcx
+		    ;;
+		i*86 | amd64 | x86_64 | i86pc)
+	            build driver xf86-video-i740
+	            build driver xf86-video-intel
+		    ;;
+	    esac
+	    build driver xf86-video-apm
+	    build driver xf86-video-ark
+	    build driver xf86-video-ast
+	    build driver xf86-video-ati
+	    build driver xf86-video-chips
+	    build driver xf86-video-cirrus
+	    build driver xf86-video-dummy
+	    build driver xf86-video-fbdev
+	    build driver xf86-video-glint
+	    build driver xf86-video-i128
+	    build driver xf86-video-mach64
+	    build driver xf86-video-mga
+	    build driver xf86-video-modesetting
+	    build driver xf86-video-neomagic
+	    build driver xf86-video-nv
+	    build driver xf86-video-rendition
+	    build driver xf86-video-r128
+	    build driver xf86-video-s3
+	    build driver xf86-video-s3virge
+	    build driver xf86-video-savage
+	    build driver xf86-video-siliconmotion
+	    build driver xf86-video-sis
+	    build driver xf86-video-tdfx
+	    build driver xf86-video-tga
+	    build driver xf86-video-trident
+	    build driver xf86-video-tseng
+	    build driver xf86-video-vesa
+	    build driver xf86-video-vmware
+	    build driver xf86-video-voodoo
+	    ;;
+    esac
+    build data cursors
+    build font encodings
+    build font adobe-100dpi
+    build font adobe-75dpi
+    build font adobe-utopia-100dpi
+    build font adobe-utopia-75dpi
+    build font adobe-utopia-type1
+    build font arabic-misc
+    build font bh-100dpi
+    build font bh-75dpi
+    build font bh-lucidatypewriter-100dpi
+    build font bh-lucidatypewriter-75dpi
+    build font bh-ttf
+    build font bh-type1
+    build font bitstream-100dpi
+    build font bitstream-75dpi
+    build font bitstream-type1
+    build font cronyx-cyrillic
+    build font cursor-misc
+    build font daewoo-misc
+    build font dec-misc
+    build font ibm-type1
+    build font isas-misc
+    build font jis-misc
+    build font micro-misc
+    build font misc-cyrillic
+    build font misc-ethiopic
+    build font misc-meltho
+    build font misc-misc
+    build font mutt-misc
+    build font schumacher-misc
+    build font screen-cyrillic
+    build font sony-misc
+    build font sun-misc
+    build font winitzki-cyrillic
+    build font xfree86-type1
+    build font alias
+    build util cf
+    build util imake
+    build util gccmakedep
+    build util lndir
+    build xkeyboard-config ""
+    return 0
+}
+
 
 #------------------------------------------------------------------------------
 #			Script main line
@@ -1616,24 +1531,7 @@ if [ X"$BUILT_MODULES_FILE" != X -a -r "$BUILT_MODULES_FILE" ]; then
 fi
 
 if [ X"$MODFILE" = X ]; then
-    # We must install the global macros before anything else
-    build util macros
-    build font util
-
-    build_doc
-    build_proto
-    # Required by mesa and depends on xproto
-    build util makedepend
-    build_lib
-    build_mesa
-
-    build data bitmaps
-    build_app
-    build_xserver
-    build_driver
-    build_data
-    build_font
-    build_util
+    build_all_modules
 else
     process_module_file
 fi
