@@ -1,9 +1,179 @@
 #!/bin/sh
+# ===========================================================================
 #
-# Note on portability:
-# This script is intended to run on any platform supported by X.Org.
-# The Autoconf generated configure script is a good reference as to what is permitted.
-# Basically, it should be able to run in a Bourne shell.
+# NAME
+#   build.sh - extract, configure, build and install the X Window System
+#
+# SYNOPSIS
+#   build.sh [options] [prefix]
+#   build.sh [-L]
+#
+# DESCRIPTION
+#   The script ultimate goal is to build all of the X Window and some of its
+#   dependencies from source.
+#
+#   X.Org Modular Tree Developer's Guide
+#
+#   Please consult the guide at http://www.x.org/wiki/ModularDevelopersGuide
+#   It provides detailed instructions on the build tools to install, where to
+#   find the script and how to invoke it.
+#
+#   The X Window System Source Code
+#
+#   The source code is hosted by freedesktop.org and is composed of over 200
+#   modules under the git source code management system. X.Org releases are
+#   available at http://www.x.org/releases/ in the form of software packages.
+#
+#   Basic Operation
+#
+#   The script goes through its list of modules to build. If the source code is
+#   not on disk, it attempts to obtain it from git if the --clone option is
+#   specified. If not, it looks for a package archive file on disk. If it is
+#   still not found, the module is skipped.
+#
+#   The script then runs the appropriate configure script, either autogen.sh
+#   for git modules or the autoconf generated configure script for package
+#   archives.
+#
+# FEATURES
+#   Over time, functionality have been added to help building a large
+#   number modules. Progress report, handling build breaks, supporting the
+#   GNU Build System features, final build report, and so on.
+#
+#   Building from a Custom Modules List
+#
+#   Starting from the list generated using the -L option, remove unwanted
+#   modules. You may also add your own module or add specific configure
+#   options for some modules to meet your configuration needs. Using the
+#   --modfile option, your list replaces the built-in list of the script.
+#
+#   Resuming Build After a Break
+#
+#   The script can resume building at the last point of failure. This saves a
+#   lot of build time as the modules already built are skipped. The --autoresume
+#   option can be used with --modfile such that only the modules you care about
+#   are built and revisited until successful completion.
+#
+#   Specifying Custom Build Commands
+#
+#   By default, the script invokes the make program with the target "all" and
+#   "install". Some options like -c, -D, or -d alter the targets the make
+#   program builds, but you can specify your own command instead. Using the
+#   --cmd option, provide a different make or git command.
+#
+#   Specifying Configuration Options to Specific Modules
+#
+#   In the modulesfile used by the --modfile option, add any configuration
+#   options you want to pass to the modules as it gets configures by autoconf.
+#   Write the configure options next to the module name in the file.
+#   It could be something like --enable-strict-compilation for example.
+#
+# OPTIONS
+#   -a          Do NOT run auto config tools (autogen.sh, configure)
+#   -b          Use .build.unknown build directory
+#   -c          Run make clean in addition to "all install"
+#   -D          Run make dist in addition to "all install"
+#   -d          Run make distcheck in addition "all install"
+#   -g          Compile and link with debug information
+#   -L          Just list modules to build
+#   -h, --help  Display this help and exit successfully
+#   -n          Do not quit after error; just print error message
+#   -o module/component
+#               Build just this module/component
+#   -p          Update source code before building (git pull --rebase)
+#   -s sudo   The command name providing superuser privilege
+#   --autoresume resumefile
+#               Append module being built to, and autoresume from, resumefile
+#   --check     Run make check in addition "all install"
+#   --clone     Clone non-existing repositories (uses \$GITROOT if set)
+#   --cmd command
+#               Execute arbitrary git, gmake, or make command
+#   --confflags options
+#               Pass options to autgen.sh/configure of all modules
+#   --modfile modulesfile
+#               Only process the module/components specified in modulesfile
+#               Any text after, and on the same line as, the module/component
+#               is assumed to be configuration options for the configuration
+#               of each module/component specifically
+#   --retry-v1  Remake 'all' on failure with Automake silent rules disabled
+#
+# PREFIX
+#   An absolute filename where GNU "make" will install binaries, libraries and
+#   other installable files. The value is passed to Autoconf through the
+#   --prefix option.
+#
+# FILES
+#   resumefile
+#   When using --autoresume, the script reads and skips modules tagged with
+#   "PASS" and resume building at the module tagged with "FAIL". The resumefile
+#   file is not intended to be user edited.
+#
+#   modulesfile
+#   When using --modfile, the script replaces its internal modules list with
+#   the list contained in the file. This allows you to build only the modules
+#   you care about and to add third party modules or modules you create.
+#   It is helpful to initialized the file using the -L option.#
+#
+# ENVIRONMENT
+#   Environment variables specific to build.sh:
+#
+#   PREFIX      Install architecture-independent files in PREFIX [/usr/local]
+#               Each module/components is invoked with --prefix
+#   EPREFIX     Install architecture-dependent files in EPREFIX [PREFIX]
+#               Each module/components is invoked with --exec-prefix
+#   BINDIR      Install user executables [EPREFIX/bin]
+#               Each module/components is invoked with --bindir
+#   DATAROOTDIR Install read-only arch-independent data root [PREFIX/share]
+#               Each module/components is invoked with --datarootdir
+#   DATADIR     Install read-only architecture-independent data [DATAROOTDIR]
+#               Each module/components is invoked with --datadir
+#   LIBDIR      Install object code libraries [EPREFIX/lib]
+#               Each module/components is invoked with --libdir
+#   LOCALSTATEDIR
+#               Modifiable single-machine data [PREFIX/var]
+#               Each module/components is invoked with --localstatedir
+#   QUIET       Do not print messages saying which checks are being made
+#               Each module/components is invoked with --quite
+#   GITROOT     Source code repository path [git://anongit.freedesktop.org/git]
+#               Optional when using --clone to update source code before building
+#   CONFFLAGS   Configure options to pass to all Autoconf configure scripts
+#               Refer to 'configure --help' from any module/components
+#
+#  Environment variables defined by the GNU Build System:
+#
+#  ACLOCAL     The aclocal cmd name [aclocal -I ${DESTDIR}/${DATADIR}/aclocal]
+#  DESTDIR     Path to the staging area where installed objects are relocated
+#  MAKE        The name of the make command [make]
+#  MAKEFLAGS   Options to pass to all $(MAKE) invocations
+#  CC          C compiler command
+#  CFLAGS      C compiler flags
+#  LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
+#              nonstandard directory <lib dir>
+#  CPPFLAGS    C/C++/Objective C preprocessor flags, e.g. -I<include dir> if
+#              you have headers in a nonstandard directory <include dir>
+#  CPP         C preprocessor
+#
+#  Environment variables defined by the shell:
+#  PATH        List of directories that the shell searches for commands
+#              $DESTDIR/$BINDIR is prepended
+#
+#  Environment variables defined by the dynamic linker:
+#  LD_LIBRARY_PATH
+#              List directories that the linker searches for shared objects
+#              $DESTDIR/$LIBDIR is prepended
+#
+#  Environment variables defined by the pkg-config system:
+#
+#  PKG_CONFIG_PATH
+#              List directories that pkg-config searches for libraries
+#              $DESTDIR/$DATADIR/pkgconfig and
+#              $DESTDIR/$LIBDIR/pkgconfig are prepended
+#
+# PORTABILITY
+#  This script is intended to run on any platform supported by X.Org.
+#  The script must be able to run in a Bourne shell.
+#
+# ===========================================================================
 
 envoptions() {
 cat << EOF
@@ -1107,19 +1277,20 @@ usage() {
     echo "  -g          Compile and link with debug information"
     echo "  -h, --help  Display this help and exit successfully"
     echo "  -n          Do not quit after error; just print error message"
-    echo "  -o <module/component>"
-    echo "              Build just this <module/component>"
+    echo "  -o module/component"
+    echo "              Build just this module/component"
     echo "  -p          Update source code before building (git pull --rebase)"
-    echo "  -s <sudo>   The command name providing superuser privilege"
-    echo "  --autoresume <file>"
+    echo "  -s sudo     The command name providing superuser privilege"
+    echo "  --autoresume resumefile"
     echo "              Append module being built to, and autoresume from, <file>"
     echo "  --check     Run make check in addition \"all install\""
     echo "  --clone     Clone non-existing repositories (uses \$GITROOT if set)"
-    echo "  --cmd <cmd> Execute arbitrary git, gmake, or make command <cmd>"
-    echo "  --confflags <options>"
-    echo "              Pass <options> to autgen.sh/configure of all modules"
-    echo "  --modfile <file>"
-    echo "              Only process the module/components specified in <file>"
+    echo "  --cmd command"
+    echo "              Execute arbitrary git, gmake, or make command"
+    echo "  --confflags options"
+    echo "              Pass options to autgen.sh/configure of all modules"
+    echo "  --modfile modulefile"
+    echo "              Only process the module/components specified in modulefile"
     echo "              Any text after, and on the same line as, the module/component"
     echo "              is assumed to be configuration options for the configuration"
     echo "              of each module/component specifically"
