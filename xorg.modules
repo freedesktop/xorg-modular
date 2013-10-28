@@ -1656,11 +1656,35 @@
       <dep package="font-adobe-utopia-100dpi"/>
       <dep package="font-adobe-utopia-75dpi"/>
       <dep package="font-adobe-utopia-type1"/>
+      <dep package="font-arabic-misc"/>
+      <dep package="font-bh-100dpi"/>
+      <dep package="font-bh-75dpi"/>
+      <dep package="font-bh-lucidatypewriter-100dpi"/>
+      <dep package="font-bh-lucidatypewriter-75dpi"/>
+      <dep package="font-bh-ttf"/>
+      <dep package="font-bh-type1"/>
       <dep package="font-bitstream-100dpi"/>
       <dep package="font-bitstream-75dpi"/>
       <dep package="font-bitstream-type1"/>
+      <dep package="font-cronyx-cyrillic"/>
       <dep package="font-cursor-misc"/>
+      <dep package="font-daewoo-misc"/>
+      <dep package="font-dec-misc"/>
+      <dep package="font-ibm-type1"/>
+      <dep package="font-isas-misc"/>
+      <dep package="font-jis-misc"/>
+      <dep package="font-micro-misc"/>
+      <dep package="font-misc-cyrillic"/>
+      <dep package="font-misc-ethiopic"/>
+      <dep package="font-misc-meltho"/>
       <dep package="font-misc-misc"/>
+      <dep package="font-mutt-misc"/>
+      <dep package="font-schumacher-misc"/>
+      <dep package="font-screen-cyrillic"/>
+      <dep package="font-sony-misc"/>
+      <dep package="font-sun-misc"/>
+      <dep package="font-winitzki-cyrillic"/>
+      <dep package="font-xfree86-type1"/>
       <dep package="font-alias"/>
     </dependencies>
   </metamodule>
