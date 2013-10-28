@@ -9,7 +9,7 @@
               href="git://anongit.freedesktop.org/git/"/>
 
   <!-- external modules -->
-  <autotools id="fontconfig">
+  <autotools id="fontconfig" autogenargs="--disable-docs">
     <branch module="fontconfig"
             checkoutdir="fontconfig"/>
   </autotools>
