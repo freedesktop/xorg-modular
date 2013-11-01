@@ -823,11 +823,13 @@ build_proto() {
     build proto damageproto
     build proto dmxproto
     build proto dri2proto
+    build proto dri3proto
     build proto fixesproto
     build proto fontsproto
     build proto glproto
     build proto inputproto
     build proto kbproto
+    build proto presentproto
     build proto randrproto
     build proto recordproto
     build proto renderproto
@@ -911,6 +913,7 @@ build_lib() {
     build lib libXrandr
     build lib libXRes
     build lib libXScrnSaver
+    build lib libxshmfence
     build lib libXtst
     build lib libXv
     build lib libXvMC
