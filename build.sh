@@ -913,7 +913,11 @@ build_lib() {
     build lib libXrandr
     build lib libXRes
     build lib libXScrnSaver
-    build lib libxshmfence
+    case $HOST_OS in
+	Linux)
+            build lib libxshmfence
+	    ;;
+    esac
     build lib libXtst
     build lib libXv
     build lib libXvMC
