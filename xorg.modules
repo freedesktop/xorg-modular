@@ -97,6 +97,12 @@
     <dependencies/>
   </autotools>
 
+  <autotools id="libxshmfence">
+    <branch module="xorg/lib/libxshmfence"
+            checkoutdir="xorg/lib/libxshmfence"/>
+    <dependencies/>
+  </autotools>
+
   <!-- mesa -->
 
   <!-- Need nouveau API to build xf86-video-nouveau -->
@@ -116,6 +122,7 @@
     <dependencies>
       <dep package="xf86driproto"/>
       <dep package="dri2proto"/>
+      <dep package="dri3proto"/>
       <dep package="glproto"/>
       <dep package="libXxf86vm"/>
       <dep package="libXdamage"/>
@@ -305,6 +312,10 @@
     <branch module="xorg/proto/dri2proto"
             checkoutdir="xorg/proto/dri2proto"/>
   </autotools>
+  <autotools id="dri3proto">
+    <branch module="xorg/proto/dri3proto"
+            checkoutdir="xorg/proto/dri3proto"/>
+  </autotools>
 
   <metamodule id="xorg-protos">
     <dependencies>
@@ -333,6 +344,7 @@
       <dep package="xf86vidmodeproto"/>
       <dep package="x11proto"/>
       <dep package="dri2proto"/>
+      <dep package="dri3proto"/>
     </dependencies>
   </metamodule>
 
@@ -2247,6 +2259,7 @@
       <dep package="libXRes"/>
       <dep package="pixman"/>
       <dep package="libpciaccess"/>
+      <dep package="libxshmfence"/>
     </dependencies>
   </autotools>
 
