@@ -245,6 +245,10 @@
     <branch module="xorg/proto/kbproto"
             checkoutdir="xorg/proto/kbproto"/>
   </autotools>
+  <autotools id="presentproto">
+    <branch module="xorg/proto/presentproto"
+            checkoutdir="xorg/proto/presentproto"/>
+  </autotools>
   <autotools id="randrproto">
     <branch module="xorg/proto/randrproto"
             checkoutdir="xorg/proto/randrproto"/>
@@ -330,6 +334,7 @@
       <dep package="inputproto"/>
       <dep package="kbproto"/>
       <dep package="xineramaproto"/>
+      <dep package="presentproto"/>
       <dep package="randrproto"/>
       <dep package="recordproto"/>
       <dep package="renderproto"/>
