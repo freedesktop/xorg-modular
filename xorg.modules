@@ -3357,7 +3357,7 @@
    </autotools>
 
   <!--  The Mesa 3D Graphics Library - Modules Definition -->
-  <autotools id="mesa-mesa">
+  <autotools id="mesa-mesa" autogenargs="--enable-xa">
     <branch module="mesa/mesa"
             checkoutdir="mesa/mesa"/>
     <dependencies>
