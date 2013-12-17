@@ -241,8 +241,6 @@
   <!-- X Input and Video Drivers - Meta Module -->
   <metamodule id="The X Input Drivers">
     <dependencies>
-      <dep package="xf86-input-acecad"/>
-      <dep package="xf86-input-aiptek"/>
       <dep package="xf86-input-evdev"/>			  <!-- Linux -->
       <dep package="xf86-input-joystick"/>	  <!-- Linux and BSDs-->
       <dep package="xf86-input-keyboard"/>
@@ -1920,29 +1918,6 @@
   </autotools>
 
   <!-- X Input Drivers - Modules Definition -->
-  <autotools id="xf86-input-acecad">
-    <branch module="xorg/driver/xf86-input-acecad"
-            checkoutdir="xorg/driver/xf86-input-acecad"/>
-    <dependencies>
-      <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="inputproto"/>
-      <dep package="kbproto"/>
-      <dep package="xserver"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="xf86-input-aiptek">
-    <branch module="xorg/driver/xf86-input-aiptek"
-            checkoutdir="xorg/driver/xf86-input-aiptek"/>
-    <dependencies>
-      <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="inputproto"/>
-      <dep package="xserver"/>
-    </dependencies>
-  </autotools>
-
   <autotools id="xf86-input-evdev">
     <branch module="xorg/driver/xf86-input-evdev"
             checkoutdir="xorg/driver/xf86-input-evdev"/>
