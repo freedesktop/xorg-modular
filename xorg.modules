@@ -31,12 +31,12 @@
   <!--  To build with HTML output, run 'jhbuild tinderbox -o directory' -->
   <metamodule id="The X Window System">
     <dependencies>
-      <dep package="The Build Prerequisites"/>
-      <dep package="The X11 Protocol and Extensions"/>
+      <dep package="Build Prerequisites"/>
+      <dep package="The X11 Protocols"/>
       <dep package="util-makedepend"/>
-      <dep package="The X11/XCB Libraries"/>
-      <dep package="The X C Binding (XCB) Utilities"/>
-      <dep package="The Mesa 3D Graphics Library"/>
+      <dep package="X11/XCB Libraries"/>
+      <dep package="The XCB Utilities"/>
+      <dep package="Mesa 3D Graphics"/>
       <dep package="data-bitmaps"/>
       <dep package="The X11 Applications"/>
       <dep package="data-cursors"/>
@@ -52,7 +52,7 @@
 
 
   <!-- Build Prerequisites -->
-  <metamodule id="The Build Prerequisites">
+  <metamodule id="Build Prerequisites">
     <dependencies>
       <dep package="util-macros"/>
       <dep package="xcb-pthread-stubs"/>
@@ -63,7 +63,7 @@
   </metamodule>
 
   <!-- X11 Protocol & Extensions - Meta Module -->
-  <metamodule id="The X11 Protocol and Extensions">
+  <metamodule id="The X11 Protocols">
     <dependencies>
       <dep package="applewmproto"/>
       <dep package="bigreqsproto"/>
@@ -98,7 +98,7 @@
   </metamodule>
 
   <!--  XCB (X protocol C-language Binding) - Meta Module -->
-   <metamodule id="The X C Binding (XCB) Utilities">
+   <metamodule id="The XCB Utilities">
      <dependencies>
        <dep package="xcb-util"/>
        <dep package="xcb-util-image"/>
@@ -109,7 +109,7 @@
    </metamodule>
 
   <!-- X11 Libraries - Meta Module -->
-  <metamodule id="The X11/XCB Libraries">
+  <metamodule id="X11/XCB Libraries">
     <dependencies>
       <dep package="libAppleWM"/>				  <!-- Darwin-->
       <dep package="libFS"/>
@@ -155,7 +155,7 @@
   </metamodule>
 
   <!--  The Mesa 3D Graphics Library - Meta Module -->
-  <metamodule id="The Mesa 3D Graphics Library">
+  <metamodule id="Mesa 3D Graphics">
     <dependencies>
       <dep package="mesa-drm"/>
       <dep package="mesa-mesa"/>
