@@ -1174,6 +1174,7 @@ build_all_modules() {
         Darwin)
 	    ;;
 	*)
+	    build driver glamor
 	    build driver xf86-input-keyboard
 	    build driver xf86-input-mouse
 	    build driver xf86-input-synaptics
