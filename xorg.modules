@@ -4,25 +4,6 @@
 <moduleset>
   <repository type="git" name="git.freedesktop.org" default="yes"
               href="git://anongit.freedesktop.org/git/"/>
-
-  <!-- external modules -->
-  <autotools id="fontconfig">
-    <branch module="fontconfig"
-            checkoutdir="fontconfig"/>
-  </autotools>
-
-  <autotools id="harfbuzz">
-    <branch module="harfbuzz"
-            checkoutdir="harfbuzz"/>
-  </autotools>
-
-  <metamodule id="external-modules">
-    <dependencies>
-      <dep package="fontconfig"/>
-      <dep package="harfbuzz"/>
-    </dependencies>
-  </metamodule>
-
 <!--
 		The X Window System JHBuild Modules List Sample File
 
@@ -65,7 +46,6 @@
       <dep package="The X Video Drivers"/>		 <!-- Not for Darwin -->
       <dep package="The X11 Fonts"/>
       <dep package="xorg-docs"/>
-      <dep package="external-modules"/>
       <!--dep package="xts"/-->			       <!-- The X Test Suite -->
     </dependencies>
   </metamodule>
