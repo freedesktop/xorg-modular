@@ -179,9 +179,6 @@
     <dependencies>
       <dep package="mesa-drm"/>
       <dep package="mesa-mesa"/>
-      <dep package="mesa-demos"/>
-      <dep package="mesa-glut"/>
-      <dep package="mesa-glu"/>
     </dependencies>
   </metamodule>
 
@@ -3383,33 +3380,6 @@
             checkoutdir="mesa/drm"/>
     <dependencies>
       <dep package="libpciaccess"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="mesa-demos">
-    <branch module="mesa/demos"
-            checkoutdir="mesa/demos"/>
-    <dependencies>
-      <dep package="libGL"/>
-      <dep package="mesa-glut"/>
-      <dep package="mesa-glu"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="mesa-glut" supports-non-srcdir-builds="no" check-target="false"
-             skip-autogen="never">
-    <branch module="mesa/glut"
-            checkoutdir="mesa/glut"/>
-    <dependencies>
-      <dep package="libGL"/>
-      <dep package="makedepend"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="mesa-glu">
-    <branch module="mesa/glu" checkoutdir="mesa/glu"/>
-    <dependencies>
-      <dep package="libGL"/>
     </dependencies>
   </autotools>
 
