@@ -285,6 +285,7 @@ process_module() {
     pkg_name=`$GREP '^PACKAGE = ' Makefile | sed 's|PACKAGE = ||'`
     pkg_version=`$GREP '^VERSION = ' Makefile | sed 's|VERSION = ||'`
     tar_name="$pkg_name-$pkg_version"
+    tag_name="$tar_name"
     targz=$tar_name.tar.gz
     tarbz2=$tar_name.tar.bz2
     tarxz=$tar_name.tar.xz
@@ -336,31 +337,31 @@ process_module() {
 
     # If a tag exists with the the tar name, ensure it is tagging the top commit
     # It may happen if the version set in configure.ac has been previously released
-    tagged_commit_sha=`git  rev-list --max-count=1 $tar_name 2>/dev/null`
+    tagged_commit_sha=`git  rev-list --max-count=1 $tag_name 2>/dev/null`
     if [ $? -eq 0 ]; then
 	# Check if the tag is pointing to the top commit
 	if [ x"$tagged_commit_sha" != x"$remote_top_commit_sha" ]; then
-	    echo "Error: the \"$tar_name\" already exists."
+	    echo "Error: the \"$tag_name\" already exists."
 	    echo "       this tag is not tagging the top commit."
 	    remote_top_commit_descr=`git log --oneline --max-count=1 $remote_top_commit_sha`
 	    echo "       the top commit is: \"$remote_top_commit_descr\""
 	    local_tag_commit_descr=`git log --oneline --max-count=1 $tagged_commit_sha`
-	    echo "       tag \"$tar_name\" is tagging some other commit: \"$local_tag_commit_descr\""
+	    echo "       tag \"$tag_name\" is tagging some other commit: \"$local_tag_commit_descr\""
 	    cd $top_src
 	    return 1
 	else
-	    echo "Info: module already tagged with \"$tar_name\"."
+	    echo "Info: module already tagged with \"$tag_name\"."
 	fi
     else
 	# Tag the top commit with the tar name
 	if [ x"$DRY_RUN" = x ]; then
-	    git tag -m $tar_name $tar_name
+	    git tag -m $tag_name $tag_name
 	    if [ $? -ne 0 ]; then
-		echo "Error:  unable to tag module with \"$tar_name\"."
+		echo "Error:  unable to tag module with \"$tag_name\"."
 		cd $top_src
 		return 1
 	    else
-		echo "Info: module tagged with \"$tar_name\"."
+		echo "Info: module tagged with \"$tag_name\"."
 	    fi
 	else
 	    echo "Info: skipping the commit tagging in dry-run mode."
