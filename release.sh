@@ -216,12 +216,13 @@ get_section() {
 	module_url=`echo $module_url | cut -d'/' -f3,4`
     else
 	# The look for mesa, xcb, etc...
-	module_url=`echo "$full_module_url" | $GREP -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config" -e "/nouveau/xf86-video-nouveau" -e "/libevdev"`
+	module_url=`echo "$full_module_url" | $GREP -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config" -e "/nouveau/xf86-video-nouveau" -e "/libevdev" -e "/wayland/.*"`
 	if [ $? -eq 0 ]; then
 	     module_url=`echo $module_url | cut -d'/' -f2,3`
 	else
 	    echo "Error: unable to locate a valid project url from \"$full_module_url\"."
-	    echo "Cannot establish url as one of xorg, mesa, xcb, xf86-video-nouveau or xkeyboard-config."
+	    echo "Cannot establish url as one of xorg, mesa, xcb, xf86-video-nouveau, xkeyboard-config or wayland"
+	    cd $top_src
 	    return 1
 	fi
     fi
@@ -241,6 +242,14 @@ get_section() {
 	    return 1
 	elif [ x"$section" != xdrm ]; then
 	    echo "Error: section $section is not supported, only libdrm is."
+	    return 1
+	fi
+    fi
+
+    if [ x"$section" = xwayland ]; then
+	section=`echo $module_url | cut -d'/' -f2`
+	if [ $? -ne 0 ]; then
+	    echo "Error: unable to extract section from $module_url second field."
 	    return 1
 	fi
     fi
@@ -349,7 +358,6 @@ process_module() {
     pkg_name=`$GREP '^PACKAGE = ' Makefile | sed 's|PACKAGE = ||'`
     pkg_version=`$GREP '^VERSION = ' Makefile | sed 's|VERSION = ||'`
     tar_name="$pkg_name-$pkg_version"
-    tag_name="$tar_name"
     targz=$tar_name.tar.gz
     tarbz2=$tar_name.tar.bz2
     tarxz=$tar_name.tar.xz
@@ -364,6 +372,14 @@ process_module() {
 	return 1
     fi
 
+    # wayland/weston/libinput tag with the version number only
+    tag_name="$tar_name"
+    if [ x"$section" = xwayland ] ||
+       [ x"$section" = xweston ] ||
+       [ x"$section" = xlibinput ]; then
+	tag_name="$pkg_version"
+    fi
+
     # Obtain the top commit SHA which should be the version bump
     # It should not have been tagged yet (the script will do it later)
     local_top_commit_sha=`git  rev-list --max-count=1 HEAD`
@@ -376,12 +392,16 @@ process_module() {
     # Check that the top commit looks like a version bump
     git diff --unified=0 HEAD^ | $GREP -F $pkg_version >/dev/null 2>&1
     if [ $? -ne 0 ]; then
-	echo "Error: the local top commit does not look like a version bump."
-	echo "       the diff does not contain the string \"$pkg_version\"."
-	local_top_commit_descr=`git log --oneline --max-count=1 $local_top_commit_sha`
-	echo "       the local top commit is: \"$local_top_commit_descr\""
-	cd $top_src
-	return 1
+	# Wayland repos use  m4_define([wayland_major_version], [0])
+	git diff --unified=0 HEAD^ | $GREP -E "(major|minor|micro)_version" >/dev/null 2>&1
+	if [ $? -ne 0 ]; then
+	    echo "Error: the local top commit does not look like a version bump."
+	    echo "       the diff does not contain the string \"$pkg_version\"."
+	    local_top_commit_descr=`git log --oneline --max-count=1 $local_top_commit_sha`
+	    echo "       the local top commit is: \"$local_top_commit_descr\""
+	    cd $top_src
+	    return 1
+	fi
     fi
 
     # Check that the top commit has been pushed to remote
@@ -441,6 +461,7 @@ process_module() {
     host_fdo="www.freedesktop.org"
     host_xorg="xorg.freedesktop.org"
     host_dri="dri.freedesktop.org"
+    host_wayland="wayland.freedesktop.org"
 
     # Mailing lists where to post the all [Announce] e-mails
     list_to="xorg-announce@lists.freedesktop.org"
@@ -451,6 +472,7 @@ process_module() {
     list_xkb="xkb@listserv.bat.ru"
     list_xcb="xcb@lists.freedesktop.org"
     list_nouveau="nouveau@lists.freedesktop.org"
+    list_wayland="wayland-devel@lists.freedesktop.org"
 
     # nouveau is very special.. sigh
     if [ x"$section" = xnouveau ]; then
@@ -492,6 +514,16 @@ process_module() {
 	srv_path="/srv/$host_current/www/$section_path"
 	list_to=input-tools@lists.freedesktop.org
 	unset list_cc
+    fi
+
+    if [ x"$section" = xwayland ] ||
+       [ x"$section" = xweston ] ||
+       [ x"$section" = xlibinput ]; then
+        host_current=$host_wayland
+        section_path="releases"
+        srv_path="/srv/$host_current/www/releases"
+        list_to=$list_wayland
+        unset list_cc
     fi
 
     # Use personal web space on the host for unit testing (leave commented out)
