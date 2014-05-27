@@ -193,6 +193,63 @@ process_modules() {
 }
 
 #------------------------------------------------------------------------------
+#			Function: get_section
+#------------------------------------------------------------------------------
+# Code 'return 0' on success
+# Code 'return 1' on error
+# Sets global variable $section
+get_section() {
+    local module_url
+    local full_module_url
+
+    # Obtain the git url in order to find the section to which this module belongs
+    full_module_url=`git config --get remote.$remote_name.url | sed 's:\.git$::'`
+    if [ $? -ne 0 ]; then
+	echo "Error: unable to obtain git url for remote \"$remote_name\"."
+	return 1
+    fi
+
+    # The last part of the git url will tell us the section. Look for xorg first
+    echo "$full_module_url"
+    module_url=`echo "$full_module_url" | $GREP -o "/xorg/.*"`
+    if [ $? -eq 0 ]; then
+	module_url=`echo $module_url | cut -d'/' -f3,4`
+    else
+	# The look for mesa, xcb, etc...
+	module_url=`echo "$full_module_url" | $GREP -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config" -e "/nouveau/xf86-video-nouveau" -e "/libevdev"`
+	if [ $? -eq 0 ]; then
+	     module_url=`echo $module_url | cut -d'/' -f2,3`
+	else
+	    echo "Error: unable to locate a valid project url from \"$full_module_url\"."
+	    echo "Cannot establish url as one of xorg, mesa, xcb, xf86-video-nouveau or xkeyboard-config."
+	    return 1
+	fi
+    fi
+
+    # Find the section (subdirs) where the tarballs are to be uploaded
+    # The module relative path can be app/xfs, xserver, or mesa/drm for example
+    section=`echo $module_url | cut -d'/' -f1`
+    if [ $? -ne 0 ]; then
+	echo "Error: unable to extract section from $module_url first field."
+	return 1
+    fi
+
+    if [ x"$section" = xmesa ]; then
+	section=`echo $module_url | cut -d'/' -f2`
+	if [ $? -ne 0 ]; then
+	    echo "Error: unable to extract section from $module_url second field."
+	    return 1
+	elif [ x"$section" != xdrm ]; then
+	    echo "Error: section $section is not supported, only libdrm is."
+	    return 1
+	fi
+    fi
+
+    return 0
+}
+
+
+#------------------------------------------------------------------------------
 #			Function: process_module
 #------------------------------------------------------------------------------
 # Code 'return 0' on success to process the next module
@@ -388,76 +445,39 @@ process_module() {
     list_xcb="xcb@lists.freedesktop.org"
     list_nouveau="nouveau@lists.freedesktop.org"
 
-    # Obtain the git url in order to find the section to which this module belongs
-    full_module_url=`git config --get remote.$remote_name.url | sed 's:\.git$::'`
+    # Obtain the section
+    get_section
     if [ $? -ne 0 ]; then
-	echo "Error: unable to obtain git url for remote \"$remote_name\"."
 	cd $top_src
 	return 1
     fi
 
-    # The last part of the git url will tell us the section. Look for xorg first
-    echo "$full_module_url"
-    module_url=`echo "$full_module_url" | $GREP -o "/xorg/.*"`
-    if [ $? -eq 0 ]; then
-	module_url=`echo $module_url | cut -d'/' -f3,4`
+    # nouveau is very special.. sigh
+    if [ x"$section" = xnouveau ]; then
+            section=driver
+            list_cc=$list_nouveau
     else
-	# The look for mesa, xcb, etc...
-	module_url=`echo "$full_module_url" | $GREP -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config" -e "/nouveau/xf86-video-nouveau" -e "/libevdev"`
-	if [ $? -eq 0 ]; then
-	     module_url=`echo $module_url | cut -d'/' -f2,3`
-	else
-	    echo "Error: unable to locate a valid project url from \"$full_module_url\"."
-	    echo "Cannot establish url as one of xorg, mesa, xcb, xf86-video-nouveau or xkeyboard-config."
-	    cd $top_src
-	    return 1
-	fi
+            list_cc=$list_xorg_user
     fi
 
-    # Find the section (subdirs) where the tarballs are to be uploaded
-    # The module relative path can be app/xfs, xserver, or mesa/drm for example
-    section=`echo $module_url | cut -d'/' -f1`
-    if [ $? -ne 0 ]; then
-	echo "Error: unable to extract section from $module_url first field."
-	cd $top_src
-	return 1
-    else
-	# nouveau is very special.. sigh
-	if [ x"$section" = xnouveau ]; then
-		section=driver
-		list_cc=$list_nouveau
-	else
-		list_cc=$list_xorg_user
-	fi
-
-	host_current=$host_xorg
-	section_path=archive/individual/$section
-	srv_path="/srv/$host_current/$section_path"
-    fi
+    host_current=$host_xorg
+    section_path=archive/individual/$section
+    srv_path="/srv/$host_current/$section_path"
 
     # Handle special cases such as non xorg projects or migrated xorg projects
     # Xcb has a separate mailing list
     if [ x"$section" = xxcb ]; then
 	list_cc=$list_xcb
     fi
+
     # Module mesa/drm goes in the dri "libdrm" section
-    if [ x"$section" = xmesa ]; then
-	section=`echo $module_url | cut -d'/' -f2`
-	if [ $? -ne 0 ]; then
-	    echo "Error: unable to extract section from $module_url second field."
-	    cd $top_src
-	    return 1
-	elif [ x"$section" = xdrm ]; then
-	    host_current=$host_dri
-	    section_path=libdrm
-	    srv_path="/srv/$host_current/www/$section_path"
-	    list_cc=$list_dri_devel
-	else
-	    echo "Error: section $section is not supported, only libdrm is."
-	    cd $top_src
-	    return 1
-	fi
+    if [ x"$section" = xdrm ]; then
+        host_current=$host_dri
+        section_path=libdrm
+        srv_path="/srv/$host_current/www/$section_path"
+        list_cc=$list_dri_devel
     fi
+
     # Module xkeyboard-config goes in a subdir of the xorg "data" section
     if [ x"$section" = xxkeyboard-config ]; then
 	host_current=$host_xorg
