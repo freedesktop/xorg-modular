@@ -328,6 +328,13 @@ process_module() {
     remote_branch=`git config --get branch.$current_branch.merge | cut -d'/' -f3,4`
     echo "Info: working off the \"$current_branch\" branch tracking the remote \"$remote_name/$remote_branch\"."
 
+    # Obtain the section
+    get_section
+    if [ $? -ne 0 ]; then
+	cd $top_src
+	return 1
+    fi
+
     # Run 'make dist/distcheck' to ensure the tarball matches the git module content
     # Important to run make dist/distcheck before looking in Makefile, may need to reconfigure
     echo "Info: running \"make $MAKE_DIST_CMD\" to create tarballs:"
@@ -444,13 +451,6 @@ process_module() {
     list_xkb="xkb@listserv.bat.ru"
     list_xcb="xcb@lists.freedesktop.org"
     list_nouveau="nouveau@lists.freedesktop.org"
-
-    # Obtain the section
-    get_section
-    if [ $? -ne 0 ]; then
-	cd $top_src
-	return 1
-    fi
 
     # nouveau is very special.. sigh
     if [ x"$section" = xnouveau ]; then
