@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 #		Creates and upload a git module tarball
 #
