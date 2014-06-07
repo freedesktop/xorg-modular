@@ -257,6 +257,27 @@ get_section() {
     return 0
 }
 
+#                       Function: sign_or_fail
+#------------------------------------------------------------------------------
+#
+# Sign the given file, if any
+# Output the name of the signature generated to stdout (all other output to
+# stderr)
+# Return 0 on success, 1 on fail
+#
+sign_or_fail() {
+    if [ -n "$1" ]; then
+	sig=$1.sig
+	rm -f $sig
+	$GPG -b $1 1>&2
+	if [ $? -ne 0 ]; then
+	    echo "Error: failed to sign $1." >&2
+	    return 1
+	fi
+	echo $sig
+    fi
+    return 0
+}
 
 #------------------------------------------------------------------------------
 #			Function: process_module
@@ -380,6 +401,19 @@ process_module() {
 	tag_name="$pkg_version"
     fi
 
+    gpgsignerr=0
+    siggz="$(sign_or_fail ${targz})"
+    gpgsignerr=$((${gpgsignerr} + $?))
+    sigbz2="$(sign_or_fail ${tarbz2})"
+    gpgsignerr=$((${gpgsignerr} + $?))
+    sigxz="$(sign_or_fail ${tarxz})"
+    gpgsignerr=$((${gpgsignerr} + $?))
+    if [ ${gpgsignerr} -ne 0 ]; then
+        echo "Error: unable to sign at least one of the tarballs."
+        cd $top_src
+        return 1
+    fi
+
     # Obtain the top commit SHA which should be the version bump
     # It should not have been tagged yet (the script will do it later)
     local_top_commit_sha=`git  rev-list --max-count=1 HEAD`
@@ -439,7 +473,7 @@ process_module() {
     else
 	# Tag the top commit with the tar name
 	if [ x"$DRY_RUN" = x ]; then
-	    git tag -m $tag_name $tag_name
+	    git tag -s -m $tag_name $tag_name
 	    if [ $? -ne 0 ]; then
 		echo "Error:  unable to tag module with \"$tag_name\"."
 		cd $top_src
@@ -554,7 +588,7 @@ process_module() {
     # Upload to host using the 'scp' remote file copy program
     if [ x"$DRY_RUN" = x ]; then
 	echo "Info: uploading tarballs to web server:"
-	scp $targz $tarbz2 $tarxz $USER_NAME$hostname:$srv_path
+	scp $targz $tarbz2 $tarxz $siggz $sigbz2 $sigxz $USER_NAME$hostname:$srv_path
 	if [ $? -ne 0 ]; then
 	    echo "Error: the tarballs uploading failed."
 	    cd $top_src
@@ -680,6 +714,14 @@ if [ "x$GREP" = "x" ] ; then
     fi
 fi
 
+# Find path for GnuPG v2
+if [ "x$GPG" = "x" ] ; then
+    if [ -x /usr/bin/gpg2 ] ; then
+	GPG=/usr/bin/gpg2
+    else
+	GPG=gpg
+    fi
+fi
 
 # Set the default make tarball creation command
 MAKE_DIST_CMD=distcheck
