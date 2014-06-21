@@ -107,6 +107,7 @@ http://$host_current/$section_path/$tarball
 MD5:  `$MD5SUM $tarball`
 SHA1: `$SHA1SUM $tarball`
 SHA256: `$SHA256SUM $tarball`
+PGP:  http://${host_current}/${section_path}/${tarball}.sig
 
 RELEASE
     done
