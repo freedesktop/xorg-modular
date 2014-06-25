@@ -97,7 +97,7 @@ Cc: $list_cc
 
 `git log --no-merges "$tag_range" | git shortlog`
 
-git tag: $tar_name
+git tag: $tag_name
 
 RELEASE
 
@@ -602,16 +602,16 @@ process_module() {
 
     # Pushing the top commit tag to the remote repository
     if [ x$DRY_RUN = x ]; then
-	echo "Info: pushing tag \"$tar_name\" to remote \"$remote_name\":"
-	git push $remote_name $tar_name
+	echo "Info: pushing tag \"$tag_name\" to remote \"$remote_name\":"
+	git push $remote_name $tag_name
 	if [ $? -ne 0 ]; then
-	    echo "Error: unable to push tag \"$tar_name\" to the remote repository."
+	    echo "Error: unable to push tag \"$tag_name\" to the remote repository."
 	    echo "       it is recommended you fix this manually and not run the script again"
 	    cd $top_src
 	    return 1
 	fi
     else
-	echo "Info: skipped pushing tag \"$tar_name\" to the remote repository in dry-run mode."
+	echo "Info: skipped pushing tag \"$tag_name\" to the remote repository in dry-run mode."
     fi
 
     MD5SUM=`which md5sum || which gmd5sum`
@@ -636,7 +636,7 @@ process_module() {
 	# The top commit may not have been tagged in dry-run mode. Use commit.
 	tag_range=$tag_previous..$local_top_commit_sha
     else
-	tag_range=$tar_name
+	tag_range=$tag_name
     fi
     generate_announce > "$tar_name.announce"
     echo "Info: [ANNOUNCE] template generated in \"$tar_name.announce\" file."
