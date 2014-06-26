@@ -552,11 +552,16 @@ process_module() {
     fi
 
     if [ x"$section" = xwayland ] ||
-       [ x"$section" = xweston ] ||
-       [ x"$section" = xlibinput ]; then
+       [ x"$section" = xweston ]; then
         host_current=$host_wayland
         section_path="releases"
         srv_path="/srv/$host_current/www/releases"
+        list_to=$list_wayland
+        unset list_cc
+    elif [ x"$section" = xlibinput ]; then
+        host_current=$host_fdo
+        section_path="software/libinput"
+        srv_path="/srv/$host_current/www/$section_path"
         list_to=$list_wayland
         unset list_cc
     fi
