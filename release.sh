@@ -217,7 +217,7 @@ get_section() {
 	module_url=`echo $module_url | cut -d'/' -f3,4`
     else
 	# The look for mesa, xcb, etc...
-	module_url=`echo "$full_module_url" | $GREP -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config" -e "/nouveau/xf86-video-nouveau" -e "/libevdev" -e "/wayland/.*"`
+	module_url=`echo "$full_module_url" | $GREP -o -e "/mesa/.*" -e "/xcb/.*" -e "/xkeyboard-config" -e "/nouveau/xf86-video-nouveau" -e "/libevdev" -e "/wayland/.*" -e "/evemu"`
 	if [ $? -eq 0 ]; then
 	     module_url=`echo $module_url | cut -d'/' -f2,3`
 	else
@@ -402,6 +402,11 @@ process_module() {
 	tag_name="$pkg_version"
     fi
 
+    # evemu tag with the version number prefixed by 'v'
+    if [ x"$section" = xevemu ]; then
+        tag_name="v$pkg_version"
+    fi
+
     gpgsignerr=0
     siggz="$(sign_or_fail ${targz})"
     gpgsignerr=$((${gpgsignerr} + $?))
@@ -563,6 +568,12 @@ process_module() {
         section_path="software/libinput"
         srv_path="/srv/$host_current/www/$section_path"
         list_to=$list_wayland
+        unset list_cc
+    elif [ x"$section" = xevemu ]; then
+        host_current=$host_fdo
+        section_path="software/evemu"
+        srv_path="/srv/$host_current/www/$section_path"
+        list_to=input-tools@lists.freedesktop.org
         unset list_cc
     fi
 
