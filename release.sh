@@ -504,10 +504,10 @@ process_module() {
     host_wayland="wayland.freedesktop.org"
 
     # Mailing lists where to post the all [Announce] e-mails
-    list_to="xorg-announce@lists.freedesktop.org"
+    list_to="xorg-announce@lists.x.org"
 
     # Mailing lists to be CC according to the project (xorg|dri|xkb)
-    list_xorg_user="xorg@lists.freedesktop.org"
+    list_xorg_user="xorg@lists.x.org"
     list_dri_devel="dri-devel@lists.freedesktop.org"
     list_xkb="xkb@listserv.bat.ru"
     list_xcb="xcb@lists.freedesktop.org"
