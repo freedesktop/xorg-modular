@@ -142,7 +142,6 @@
       <dep package="libXxf86dga"/>
       <dep package="libXxf86vm"/>
       <dep package="libdmx"/>
-      <dep package="libevdev"/>				     <!-- Linux Only -->
       <dep package="libfontenc"/>
       <dep package="libpciaccess"/>
       <dep package="libpixman"/>
