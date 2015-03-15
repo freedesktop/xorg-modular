@@ -1974,6 +1974,7 @@
       <dep package="libX11"/>
       <dep package="libXi"/>
       <dep package="xserver"/>
+      <dep package="libevdev"/>			<!-- Linux only -->
     </dependencies>
   </autotools>
 
