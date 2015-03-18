@@ -3402,7 +3402,7 @@
 
   <!-- Multitouch protocol translation library for evdev devices -->
   <repository type="git" name="bitmath.org" href="http://bitmath.org/git/"/>
-  <autotools id="mtdev" autogen-sh="configure">
+  <autotools id="mtdev">
     <branch repo="bitmath.org"
             module="mtdev.git"
             checkoutdir="mtdev"/>
