@@ -1229,7 +1229,6 @@ build_all_modules() {
 	    build driver xf86-video-i128
 	    build driver xf86-video-mach64
 	    build driver xf86-video-mga
-	    build driver xf86-video-modesetting
 	    build driver xf86-video-neomagic
 	    build driver xf86-video-nested
 	    build driver xf86-video-nv
