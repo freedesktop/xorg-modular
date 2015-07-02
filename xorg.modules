@@ -253,7 +253,6 @@
   <!-- X Input and Video Drivers - Meta Module -->
   <metamodule id="The X Video Drivers">
     <dependencies>
-      <dep package="glamor"/>
       <dep package="xf86-video-apm"/>
       <dep package="xf86-video-ark"/>
       <dep package="xf86-video-ast"/>
@@ -2000,20 +1999,6 @@
   </autotools>
 
   <!-- X Video Drivers - Modules Definition -->
-  <autotools id="glamor">
-    <branch module="xorg/driver/glamor"
-            checkoutdir="xorg/driver/glamor"/>
-    <dependencies>
-      <dep package="util-macros"/>
-      <dep package="mesa-drm"/>
-      <dep package="xserver"/>
-    </dependencies>
-    <suggests>
-      <dep package="dri2proto"/>
-      <dep package="mesa-mesa"/>
-    </suggests>
-  </autotools>
-
   <autotools id="xf86-video-apm">
     <branch module="xorg/driver/xf86-video-apm"
             checkoutdir="xorg/driver/xf86-video-apm"/>
@@ -2081,7 +2066,6 @@
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="glamor"/>
       <dep package="videoproto"/>
     </suggests>
   </autotools>
@@ -2247,7 +2231,6 @@
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="glamor"/>
       <dep package="dri2proto"/>
       <dep package="xf86driproto"/>
       <dep package="libX11"/>
