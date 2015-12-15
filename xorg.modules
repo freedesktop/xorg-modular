@@ -827,6 +827,23 @@
 
   <autotools id="libXfont">
     <branch module="xorg/lib/libXfont"
+            checkoutdir="xorg/lib/libXfont"
+            tag="da4246c98bc51297daeec47c15181e179df94013"/>
+    <dependencies>
+      <dep package="util-macros"/>
+      <dep package="x11proto"/>
+      <dep package="fontsproto"/>
+      <dep package="libxtrans"/>
+      <dep package="libfontenc"/>
+      <dep package="libX11"/>
+    </dependencies>
+    <suggests>
+      <dep package="xorg-sgml-doctools"/>
+    </suggests>
+  </autotools>
+
+  <autotools id="libXfont2">
+    <branch module="xorg/lib/libXfont"
             checkoutdir="xorg/lib/libXfont"/>
     <dependencies>
       <dep package="util-macros"/>
@@ -1879,6 +1896,7 @@
       <dep package="xcmiscproto"/>
       <dep package="xextproto"/>
       <dep package="libXfont"/>
+      <dep package="libXfont2"/>
       <dep package="libxtrans"/>
       <dep package="libXau"/>
       <dep package="libxkbfile"/>
