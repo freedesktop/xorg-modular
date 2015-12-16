@@ -261,7 +261,7 @@
       <dep package="xf86-video-cirrus"/>
       <dep package="xf86-video-dummy"/>
       <dep package="xf86-video-fbdev"/>
-      <dep package="xf86-video-geode"/>		     <!-- Linux i386 -->
+      <dep package="xf86-video-geode"/>		     <!-- Linux and BSDs i386 -->
       <dep package="xf86-video-glint"/>
       <dep package="xf86-video-i128"/>
       <dep package="xf86-video-i740"/>
