@@ -515,17 +515,16 @@ process_module() {
     list_wayland="wayland-devel@lists.freedesktop.org"
     list_input="input-tools@lists.freedesktop.org"
 
-    # nouveau is very special.. sigh
-    if [ x"$section" = xnouveau ]; then
-            section=driver
-            list_cc=$list_nouveau
-    else
-            list_cc=$list_xorg_user
-    fi
-
     host_current=$host_xorg
     section_path=archive/individual/$section
     srv_path="/srv/$host_current/$section_path"
+    list_cc=$list_xorg_user
+
+    if [ x"$section" = xnouveau ]; then
+        section_path=archive/individual/driver
+        srv_path="/srv/$host_current/$section_path"
+        list_cc=$list_nouveau
+    fi
 
     # Handle special cases such as non xorg projects or migrated xorg projects
     # Xcb has a separate mailing list
