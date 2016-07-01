@@ -459,7 +459,7 @@ process_module() {
 	return 1
     fi
 
-    # If a tag exists with the the tar name, ensure it is tagging the top commit
+    # If a tag exists with the tar name, ensure it is tagging the top commit
     # It may happen if the version set in configure.ac has been previously released
     tagged_commit_sha=`git  rev-list --max-count=1 $tag_name 2>/dev/null`
     if [ $? -eq 0 ]; then
