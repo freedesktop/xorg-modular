@@ -581,7 +581,7 @@ process_module() {
     # srv_path="~/public_html$srv_path"
 
     # Check that the server path actually does exist
-    ssh $USER_NAME$hostname ls $srv_path >/dev/null 2>&1 ||
+    ssh $USER_NAME$hostname ls $srv_path >/dev/null 2>&1
     if [ $? -ne 0 ]; then
 	echo "Error: the path \"$srv_path\" on the web server does not exist."
 	cd $top_src
