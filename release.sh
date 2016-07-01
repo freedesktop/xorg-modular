@@ -560,7 +560,7 @@ process_module() {
        [ x"$section" = xweston ]; then
         host_current=$host_wayland
         section_path="releases"
-        srv_path="/srv/$host_current/www/releases"
+        srv_path="/srv/$host_current/www/$section_path"
         list_to=$list_wayland
         unset list_cc
     elif [ x"$section" = xlibinput ]; then
