@@ -513,6 +513,7 @@ process_module() {
     list_xcb="xcb@lists.freedesktop.org"
     list_nouveau="nouveau@lists.freedesktop.org"
     list_wayland="wayland-devel@lists.freedesktop.org"
+    list_input="input-tools@lists.freedesktop.org"
 
     # nouveau is very special.. sigh
     if [ x"$section" = xnouveau ]; then
@@ -552,7 +553,7 @@ process_module() {
 	host_current=$host_fdo
 	section_path="software/$section"
 	srv_path="/srv/$host_current/www/$section_path"
-	list_to=input-tools@lists.freedesktop.org
+	list_to=$list_input
 	unset list_cc
     fi
 
@@ -573,7 +574,7 @@ process_module() {
         host_current=$host_fdo
         section_path="software/evemu"
         srv_path="/srv/$host_current/www/$section_path"
-        list_to=input-tools@lists.freedesktop.org
+        list_to=$list_input
         unset list_cc
     fi
 
