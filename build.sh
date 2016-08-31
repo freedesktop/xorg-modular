@@ -516,6 +516,9 @@ clone() {
     "libevdev")
         BASEDIR=""
         ;;
+    "libinput")
+	BASEDIR="wayland/"
+	;;
     *)
         BASEDIR="xorg/"
         ;;
@@ -1154,12 +1157,16 @@ build_all_modules() {
     build app xwud
     build xserver ""
     case $HOST_OS in
-	Linux) build libevdev "";;
+	Linux)
+	    build libevdev ""
+	    build libinput ""
+	    ;;
     esac
     case $HOST_OS in
 	Linux)
 	    build driver xf86-input-evdev
 	    build driver xf86-input-joystick
+	    build driver xf86-input-libinput
 	    ;;
 	FreeBSD | NetBSD | OpenBSD | Dragonfly | GNU/kFreeBSD)
 	    build driver xf86-input-joystick
