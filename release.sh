@@ -103,11 +103,11 @@ RELEASE
 
     for tarball in $tarbz2 $targz $tarxz; do
 	cat <<RELEASE
-http://$host_current/$section_path/$tarball
+https://$host_current/$section_path/$tarball
 MD5:  `$MD5SUM $tarball`
 SHA1: `$SHA1SUM $tarball`
 SHA256: `$SHA256SUM $tarball`
-PGP:  http://${host_current}/${section_path}/${tarball}.sig
+PGP:  https://${host_current}/${section_path}/${tarball}.sig
 
 RELEASE
     done
