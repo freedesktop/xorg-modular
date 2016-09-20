@@ -520,13 +520,14 @@ process_module() {
     srv_path="/srv/$host_current/$section_path"
     list_cc=$list_xorg_user
 
+    # Handle special cases such as non xorg projects or migrated xorg projects
+    # Nouveau has its own list and section, but goes with the other drivers
     if [ x"$section" = xnouveau ]; then
         section_path=archive/individual/driver
         srv_path="/srv/$host_current/$section_path"
         list_cc=$list_nouveau
     fi
 
-    # Handle special cases such as non xorg projects or migrated xorg projects
     # Xcb has a separate mailing list
     if [ x"$section" = xxcb ]; then
 	list_cc=$list_xcb
