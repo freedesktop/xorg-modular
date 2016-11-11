@@ -331,7 +331,10 @@ process_module() {
     # ----- Now in the git module *root* directory ----- #
 
     # Check that this is indeed a git module
-    if [ ! -d .git ]; then
+    # Don't assume that $(top_srcdir)/.git is a directory. It may be
+    # a gitlink file if $(top_srcdir) is a submodule checkout or a linked
+    # worktree.
+    if [ ! -e .git ]; then
 	echo "Error: there is no git module here: `pwd`"
 	return 1
     fi
