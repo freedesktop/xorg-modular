@@ -264,8 +264,8 @@ get_section() {
 	if [ $? -ne 0 ]; then
 	    echo "Error: unable to extract section from $module_url second field."
 	    return 1
-	elif [ x"$section" != xdrm ]; then
-	    echo "Error: section $section is not supported, only libdrm is."
+	elif [ x"$section" != xdrm ] && [ x"$section" != xmesa ]; then
+	    echo "Error: section $section is not supported, only libdrm and mesa are."
 	    return 1
 	fi
     fi
@@ -525,6 +525,7 @@ process_module() {
     host_fdo="www.freedesktop.org"
     host_xorg="xorg.freedesktop.org"
     host_dri="dri.freedesktop.org"
+    host_mesa="mesa.freedesktop.org"
     host_wayland="wayland.freedesktop.org"
 
     # Mailing lists where to post the all [Announce] e-mails
@@ -533,6 +534,9 @@ process_module() {
     # Mailing lists to be CC according to the project (xorg|dri|xkb)
     list_xorg_user="xorg@lists.x.org"
     list_dri_devel="dri-devel@lists.freedesktop.org"
+    list_mesa_announce="mesa-announce@lists.freedesktop.org"
+    list_mesa_devel="mesa-dev@lists.freedesktop.org"
+
     list_xkb="xkb@listserv.bat.ru"
     list_xcb="xcb@lists.freedesktop.org"
     list_nouveau="nouveau@lists.freedesktop.org"
@@ -563,6 +567,22 @@ process_module() {
         section_path=libdrm
         srv_path="/srv/$host_current/www/$section_path"
         list_cc=$list_dri_devel
+    elif [ x"$section" = xmesa ]; then
+        host_current=$host_mesa
+        mesa_version=`echo $pkg_version | sed 's:-rc.*::'`
+        section_path=archive/$mesa_version
+        srv_path="/srv/$host_current/www/$section_path"
+        list_to=$list_mesa_announce
+        list_cc=$list_mesa_devel
+
+        # Mesa uses separate folder for each release
+        echo "Info: creating mesa directory on web server:"
+        ssh $USER_NAME$hostname mkdir -p $srv_path  &>/dev/null
+        if [ $? -ne 0 ]; then
+            echo "Error: cannot create the path \"$srv_path\" on the web server."
+            cd $top_src
+            return 1
+        fi
     fi
 
     # Module xkeyboard-config goes in a subdir of the xorg "data" section
