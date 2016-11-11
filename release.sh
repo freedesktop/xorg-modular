@@ -68,6 +68,29 @@ check_option_args() {
 }
 
 #------------------------------------------------------------------------------
+#			Function: check_gpgkey
+#------------------------------------------------------------------------------
+#
+# check if the gpg key provided is known/available
+# arguments:
+#   $1 - the gpg key
+# returns:
+#   if it returns, everything is good
+#   otherwise it exit's
+check_gpgkey() {
+    arg=$1
+
+    $GPG --list-keys "$arg" &>/dev/null
+    if [ $? -ne 0 ]; then
+	echo ""
+	echo "Error: the argument '$arg' is not a known gpg key."
+	echo ""
+	usage
+	exit 1
+    fi
+}
+
+#------------------------------------------------------------------------------
 #			Function: check_modules_specification
 #------------------------------------------------------------------------------
 #
@@ -270,7 +293,7 @@ sign_or_fail() {
     if [ -n "$1" ]; then
 	sig=$1.sig
 	rm -f $sig
-	$GPG -b $1 1>&2
+	$GPG -b $GPGKEY $1 1>&2
 	if [ $? -ne 0 ]; then
 	    echo "Error: failed to sign $1." >&2
 	    return 1
@@ -477,7 +500,7 @@ process_module() {
     else
 	# Tag the top commit with the tar name
 	if [ x"$DRY_RUN" = x ]; then
-	    git tag -s -m $tag_name $tag_name
+	    git tag $GPGKEY -s -m $tag_name $tag_name
 	    if [ $? -ne 0 ]; then
 		echo "Error:  unable to tag module with \"$tag_name\"."
 		cd $top_src
@@ -702,6 +725,7 @@ Options:
   --distcheck         Default, ignored for compatibility
   --dry-run           Does everything except tagging and uploading tarballs
   --force             Force overwriting an existing release
+  --gpgkey <key>      Specify the key used to sign the git tag/release tarballs
   --help              Display this help and exit successfully
   --modfile <file>    Release the git modules specified in <file>
   --moduleset <file>  The jhbuild moduleset full pathname to be updated
@@ -766,6 +790,13 @@ do
     # Use only if nothing changed in the git repo
     --force)
 	FORCE=yes
+	;;
+    # Allow user specified GPG key
+    --gpgkey)
+	check_option_args $1 $2
+	shift
+	check_gpgkey $1
+	GPGKEY="-u $1"
 	;;
     # Display this help and exit successfully
     --help)
