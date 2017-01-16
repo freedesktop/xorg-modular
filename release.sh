@@ -707,7 +707,7 @@ process_module() {
 	tag_range=$tag_name
     fi
     generate_announce > "$tar_name.announce"
-    echo "Info: [ANNOUNCE] template generated in \"$tar_name.announce\" file."
+    echo "Info: [ANNOUNCE] template generated in \"$build_dir/$tar_name.announce\" file."
     echo "      Please pgp sign and send it."
 
     # --------- Update the JH Build moduleset -----------------
