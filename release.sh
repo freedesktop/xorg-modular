@@ -234,7 +234,6 @@ get_section() {
     fi
 
     # The last part of the git url will tell us the section. Look for xorg first
-    echo "$full_module_url"
     module_url=`echo "$full_module_url" | $GREP -o "/xorg/.*"`
     if [ $? -eq 0 ]; then
 	module_url=`echo $module_url | cut -d'/' -f3,4`
