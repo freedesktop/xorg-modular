@@ -339,6 +339,19 @@ process_module() {
 	return 1
     fi
 
+    # Determine what is the current branch and the remote name
+    current_branch=`git branch | $GREP "\*" | sed -e "s/\* //"`
+    remote_name=`git config --get branch.$current_branch.remote`
+    remote_branch=`git config --get branch.$current_branch.merge | cut -d'/' -f3,4`
+    echo "Info: working off the \"$current_branch\" branch tracking the remote \"$remote_name/$remote_branch\"."
+
+    # Obtain the section
+    get_section
+    if [ $? -ne 0 ]; then
+	cd $top_src
+	return 1
+    fi
+
     # Check for uncommitted/queued changes.
     check_local_changes
     if [ $? -ne 0 ]; then
@@ -380,19 +393,6 @@ process_module() {
         echo "Error: failed to configure module."
         cd $top_src
         return 1
-    fi
-
-    # Determine what is the current branch and the remote name
-    current_branch=`git branch | $GREP "\*" | sed -e "s/\* //"`
-    remote_name=`git config --get branch.$current_branch.remote`
-    remote_branch=`git config --get branch.$current_branch.merge | cut -d'/' -f3,4`
-    echo "Info: working off the \"$current_branch\" branch tracking the remote \"$remote_name/$remote_branch\"."
-
-    # Obtain the section
-    get_section
-    if [ $? -ne 0 ]; then
-	cd $top_src
-	return 1
     fi
 
     # Run 'make dist/distcheck' to ensure the tarball matches the git module content
