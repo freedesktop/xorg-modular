@@ -357,25 +357,24 @@ process_module() {
 	return 1
     fi
 
-    if [ -e configure ]; then
-        echo "Error: the git repository contains configure"
-        echo "Did you forget to run git clean -fXd (and git clean -fxd) ?"
-        return 1
-    fi
-
-    # Create tmpdir for the build
+    # Create tmpdir for the release
     build_dir=`mktemp -d -p . build.XXXXXXXXXX`
     if [ $? -ne 0 ]; then
-        echo "Error: could not create a temporary directory for the build."
+        echo "Error: could not create a temporary directory for the release"
         echo "Do you have coreutils' mktemp ?"
         return 1
     fi
 
-    echo "Info: generating configure."
-    autoreconf --force --install >/dev/null
+    # Worktree removal is intentionally left to the user, due to:
+    #  - currently we cannot select only one worktree to prune
+    #  - requires to removal of $build_dir which might contradict with the
+    # user decision to keep some artefacts like tarballs or other
+    echo "Info: creating new git worktree."
+    git worktree add $build_dir
     if [ $? -ne 0 ]; then
-        echo "Error: failed to generate configure."
-        return 1
+	echo "Error: failed to create a git worktree."
+	cd $top_src
+	return 1
     fi
 
     cd $build_dir
@@ -385,9 +384,14 @@ process_module() {
 	return 1
     fi
 
-    # Using ../ here feels a bit nasty, yet $top_src is an absolute path. Thus
-    # it will get propagated in the generated sources, which we do not want.
-    ../configure >/dev/null
+    echo "Info: generating configure."
+    autoreconf --force --install >/dev/null
+    if [ $? -ne 0 ]; then
+        echo "Error: failed to generate configure."
+        return 1
+    fi
+
+    ./configure >/dev/null
     if [ $? -ne 0 ]; then
         echo "Error: failed to configure module."
         cd $top_src
