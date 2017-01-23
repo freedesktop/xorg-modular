@@ -883,7 +883,7 @@ usage() {
     echo "  --cmd command"
     echo "              Execute arbitrary git, gmake, or make command"
     echo "  --confflags options"
-    echo "              Pass options to autgen.sh/configure of all modules"
+    echo "              Pass options to autogen.sh/configure of all modules"
     echo "  --modfile modulefile"
     echo "              Only process the module/components specified in modulefile"
     echo "              Any text after, and on the same line as, the module/component"
