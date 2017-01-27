@@ -1223,6 +1223,7 @@ build_all_modules() {
 	            build driver xf86-video-intel
 		    ;;
 	    esac
+	    build driver xf86-video-amdgpu
 	    build driver xf86-video-apm
 	    build driver xf86-video-ark
 	    build driver xf86-video-ast
