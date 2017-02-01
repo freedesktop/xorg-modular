@@ -384,14 +384,8 @@ process_module() {
 	return 1
     fi
 
-    echo "Info: generating configure."
-    autoreconf --force --install >/dev/null
-    if [ $? -ne 0 ]; then
-        echo "Error: failed to generate configure."
-        return 1
-    fi
-
-    ./configure >/dev/null
+    echo "Info: running autogen.sh"
+    ./autogen.sh >/dev/null
     if [ $? -ne 0 ]; then
         echo "Error: failed to configure module."
         cd $top_src
