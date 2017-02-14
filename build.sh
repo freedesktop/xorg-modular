@@ -76,6 +76,7 @@
 #   -d          Run make distcheck in addition "all install"
 #   -g          Compile and link with debug information
 #   -L          Just list modules to build
+#   -m          Do NOT run any of the make targets
 #   -h, --help  Display this help and exit successfully
 #   -n          Do not quit after error; just print error message
 #   -o module/component
@@ -697,6 +698,12 @@ process() {
 	return 0
     fi
 
+    if [ X"$NOMAKE" != X ]; then
+	echo "build.sh: Skipping make targets"
+	cd $old_pwd
+	return 0
+    fi
+
     ${MAKE} $MAKEFLAGS
     if [ $? -ne 0 ]; then
 	# Rerun with Automake silent rules disabled to see failing gcc statement
@@ -870,6 +877,7 @@ usage() {
     echo "  -d          Run make distcheck in addition \"all install\""
     echo "  -g          Compile and link with debug information"
     echo "  -h, --help  Display this help and exit successfully"
+    echo "  -m          Do NOT run any of the make targets"
     echo "  -n          Do not quit after error; just print error message"
     echo "  -o module/component"
     echo "              Build just this module/component"
@@ -1349,6 +1357,9 @@ do
 	;;
     -L)
 	LISTONLY=1
+	;;
+    -m)
+	NOMAKE=1
 	;;
     -n)
 	NOQUIT=1
