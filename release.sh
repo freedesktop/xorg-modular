@@ -580,6 +580,7 @@ process_module() {
         # Prior to 17.0.x Mesa uses separate folder for each release
         if test `echo $mesa_version | cut -d'.' -f1` -lt 17; then
             section_path=$section_path/$mesa_version
+            srv_path="/srv/$host_current/www/$section_path"
             echo "Info: creating mesa directory on web server:"
             ssh $USER_NAME$hostname mkdir -p $srv_path  &>/dev/null
             if [ $? -ne 0 ]; then
