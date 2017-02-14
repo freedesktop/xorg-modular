@@ -680,6 +680,8 @@ process() {
 	    cd $old_pwd
 	    return 1
 	fi
+    else
+	echo "build.sh: Skipping autogen/configure"
     fi
 
     # A custom 'make' target list was supplied through --cmd option
