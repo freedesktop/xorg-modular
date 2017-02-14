@@ -572,8 +572,6 @@ clone() {
 #   0 - good
 #   1 - bad
 process() {
-    needs_config=0
-
     module=$1
     component=$2
     confopts="$3"
@@ -596,7 +594,6 @@ process() {
 	    SRCDIR="$module${component:+/}$component"
 	    CONFCMD="autogen.sh"
         fi
-	needs_config=1
     else
         checkfortars $module $component
         if [ $? -eq 0 ]; then
@@ -662,7 +659,7 @@ process() {
     fi
 
     # Use "sh autogen.sh" since some scripts are not executable in CVS
-    if [ $needs_config -eq 1 ] || [ X"$NOAUTOGEN" = X ]; then
+    if [ X"$NOAUTOGEN" = X ]; then
 	sh ${DIR_CONFIG}/${CONFCMD} \
 	    ${PREFIX_USER:+--prefix="$PREFIX"} \
 	    ${EPREFIX_USER:+--exec-prefix="$EPREFIX"} \
