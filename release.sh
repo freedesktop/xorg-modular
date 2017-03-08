@@ -357,8 +357,20 @@ process_module() {
 	return 1
     fi
 
+    # If AC_CONFIG_AUX_DIR isn't set, libtool will search down to ../.. for
+    # install-sh and then just guesses that's the aux dir, dumping
+    # config.sub and other files into that directory. make distclean then
+    # complains about leftover files. So let's put our real module dir out
+    # of reach of libtool.
+    #
+    # We use release/$section/$build_dir because git worktree will pick the
+    # last part as branch identifier, so it needs to be random to avoid
+    # conflicts.
+    build_dir="release/$section"
+    mkdir -p "$build_dir"
+
     # Create tmpdir for the release
-    build_dir=`mktemp -d -p . build.XXXXXXXXXX`
+    build_dir=`mktemp -d -p "$build_dir" build.XXXXXXXXXX`
     if [ $? -ne 0 ]; then
         echo "Error: could not create a temporary directory for the release"
         echo "Do you have coreutils' mktemp ?"
