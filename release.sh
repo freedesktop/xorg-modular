@@ -130,6 +130,7 @@ https://$host_current/$section_path/$tarball
 MD5:  `$MD5SUM $tarball`
 SHA1: `$SHA1SUM $tarball`
 SHA256: `$SHA256SUM $tarball`
+SHA512: `$SHA512SUM $tarball`
 PGP:  https://${host_current}/${section_path}/${tarball}.sig
 
 RELEASE
@@ -698,6 +699,7 @@ process_module() {
     MD5SUM=`which md5sum || which gmd5sum`
     SHA1SUM=`which sha1sum || which gsha1sum`
     SHA256SUM=`which sha256sum || which gsha256sum`
+    SHA512SUM=`which sha512sum || which gsha512sum`
 
     # --------- Generate the announce e-mail ------------------
     # Failing to generate the announce is not considered a fatal error
