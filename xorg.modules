@@ -1199,7 +1199,7 @@
     </dependencies>
   </autotools>
 
-  <autotools id="app-rendercheck">
+  <meson id="app-rendercheck">
     <branch module="xorg/app/rendercheck"
             checkoutdir="xorg/app/rendercheck"/>
     <dependencies>
@@ -1208,7 +1208,7 @@
       <dep package="libX11"/>
       <dep package="libXrender"/>
     </dependencies>
-  </autotools>
+  </meson>
 
   <autotools id="app-rgb">
     <branch module="xorg/app/rgb"
