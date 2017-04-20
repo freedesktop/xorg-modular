@@ -808,6 +808,9 @@ if [ "x$GPG" = "x" ] ; then
     fi
 fi
 
+# Avoid problems if GPGKEY is already set in the environment
+unset GPGKEY
+
 # Set the default make tarball creation command
 MAKE_DIST_CMD=distcheck
 
