@@ -659,9 +659,8 @@ process() {
 	fi
     fi
 
-    # Use "sh autogen.sh" since some scripts are not executable in CVS
     if [ X"$NOAUTOGEN" = X ]; then
-	sh ${DIR_CONFIG}/${CONFCMD} \
+	${DIR_CONFIG}/${CONFCMD} \
 	    ${PREFIX_USER:+--prefix="$PREFIX"} \
 	    ${EPREFIX_USER:+--exec-prefix="$EPREFIX"} \
 	    ${BINDIR_USER:+--bindir="$BINDIR"} \
