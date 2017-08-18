@@ -586,16 +586,30 @@ process() {
 
     module_title $module "$component" "$confopts"
 
+    local use_autogen=0
+    local use_configure=0
+    local use_meson=0
+
     SRCDIR=""
     CONFCMD=""
     if [ -f $module${component:+/}$component/autogen.sh ]; then
-        SRCDIR="$module${component:+/}$component"
-        CONFCMD="autogen.sh"
+	SRCDIR="$module${component:+/}$component"
+	use_autogen=1
+    elif [ -f $module${component:+/}$component/meson.build ]; then
+	SRCDIR="$module${component:+/}$component"
+	use_meson=1
     elif [ X"$CLONE" != X ]; then
         clone $module $component
         if [ $? -eq 0 ]; then
 	    SRCDIR="$module${component:+/}$component"
-	    CONFCMD="autogen.sh"
+	    if [ -f $module${component:+/}$component/autogen.sh ]; then
+		use_autogen=1
+	    elif [ -f $module${component:+/}$component/meson.build ]; then
+		use_meson=1
+	    else
+		echo "Cannot find autogen.sh or meson.build"
+		return 1
+	    fi
         fi
     else
         checkfortars $module $component
@@ -605,10 +619,19 @@ process() {
 	        nonexistent_components="$nonexistent_components $module${component:+/}$component"
 	        return 0
 	    fi
-	    CONFCMD="configure"
+	    use_configure=1
         else
 	    return 1
 	fi
+    fi
+
+    if [ $use_autogen != 0 ]; then
+	CONFCMD="${DIR_CONFIG}/autogen.sh"
+    elif [ $use_configure != 0 ]; then
+	CONFCMD="${DIR_CONFIG}/configure"
+    elif [ $use_meson != 0 ]; then
+	CONFCMD="meson"
+	confopts="$confopts builddir"
     fi
 
     old_pwd=`pwd`
@@ -661,8 +684,11 @@ process() {
 	fi
     fi
 
-    if [ X"$NOAUTOGEN" = X ]; then
-	${DIR_CONFIG}/${CONFCMD} \
+    # If the builddir already exists, just run ninja, not meson
+    if [ $use_meson != 0 ] && [ -e ${DIR_CONFIG}/builddir ]; then
+	:
+    elif [ X"$NOAUTOGEN" = X ]; then
+	${CONFCMD} \
 	    ${PREFIX_USER:+--prefix="$PREFIX"} \
 	    ${EPREFIX_USER:+--exec-prefix="$EPREFIX"} \
 	    ${BINDIR_USER:+--bindir="$BINDIR"} \
@@ -682,6 +708,7 @@ process() {
     fi
 
     # A custom 'make' target list was supplied through --cmd option
+    # This does not work for ninja atm
     if [ X"$MAKECMD" != X ]; then
 	${MAKE} $MAKEFLAGS $MAKECMD
 	rtn=$?
@@ -700,58 +727,78 @@ process() {
 	return 0
     fi
 
-    ${MAKE} $MAKEFLAGS
+
+    if [ $use_autogen != 0 ] || [ $use_configure != 0]; then
+	BUILDCMD="${MAKE} $MAKEFLAGS"
+	BUILDCMD_VERBOSE="${BUILDCMD} V=1"
+	BUILDCMD_CHECK="${BUILDCMD} check"
+	BUILDCMD_CLEAN="${BUILDCMD} clean"
+	BUILDCMD_DIST="${BUILDCMD} dist"
+	BUILDCMD_DISTCHECK="${BUILDCMD} distcheck"
+	BUILDCMD_INSTALL="${BUILDCMD} install"
+    else
+	BUILDCMD="ninja -C builddir"
+	BUILDCMD_VERBOSE="${BUILDCMD_VERBOSE} -v"
+	BUILDCMD_CHECK="${BUILDCMD} test"
+	BUILDCMD_CLEAN="${BUILDCMD} clean"
+	BUILDCMD_DIST="${BUILDCMD} dist"
+	BUILDCMD_DISTCHECK="${BUILDCMD} distcheck"
+	BUILDCMD_INSTALL="${BUILDCMD} install"
+    fi
+
+
+    $BUILDCMD
     if [ $? -ne 0 ]; then
 	# Rerun with Automake silent rules disabled to see failing gcc statement
 	if [ X"$RETRY_VERBOSE" != X ]; then
 	    echo ""
 	    echo "build.sh: Rebuilding $component with Automake silent rules disabled"
-	    ${MAKE} $MAKEFLAGS V=1
+	    $BUILDCMD_VERBOSE
 	fi
-	failed "$MAKE $MAKEFLAGS" $module $component
+	failed "$BUILDCMD" $module $component
 	cd $old_pwd
 	return 1
     fi
 
     if [ X"$CHECK" != X ]; then
-	${MAKE} $MAKEFLAGS check
+	$BUILDCMD_CHECK
 	if [ $? -ne 0 ]; then
-	    failed "$MAKE $MAKEFLAGS check" $module $component
+	    failed "$BUILDCMD_CHECK" $module $component
 	    cd $old_pwd
 	    return 1
 	fi
     fi
 
     if [ X"$CLEAN" != X ]; then
-	${MAKE} $MAKEFLAGS clean
+	$BUILDCMD_CLEAN
 	if [ $? -ne 0 ]; then
-	    failed "$MAKE $MAKEFLAGS clean" $module $component
+	    failed "$BUILDCMD_CLEAN" $module $component
 	    cd $old_pwd
 	    return 1
 	fi
     fi
 
     if [ X"$DIST" != X ]; then
-	${MAKE} $MAKEFLAGS dist
+	$BUILDCMD_DIST
 	if [ $? -ne 0 ]; then
-	    failed "$MAKE $MAKEFLAGS dist" $module $component
+	    failed "$BUILDCMD_DIST" $module $component
 	    cd $old_pwd
 	    return 1
 	fi
     fi
 
     if [ X"$DISTCHECK" != X ]; then
-	${MAKE} $MAKEFLAGS distcheck
+	$BUILDCMD_DISTCHECK
 	if [ $? -ne 0 ]; then
-	    failed "$MAKE $MAKEFLAGS distcheck" $module $component
+	    failed "$BUILDCMD_DISTCHECK" $module $component
 	    cd $old_pwd
 	    return 1
 	fi
     fi
 
-    $SUDO env LD_LIBRARY_PATH=$LD_LIBRARY_PATH ${MAKE} $MAKEFLAGS install
+    $SUDO env LD_LIBRARY_PATH=$LD_LIBRARY_PATH $BUILDCMD_INSTALL
     if [ $? -ne 0 ]; then
-	failed "$SUDO env LD_LIBRARY_PATH=$LD_LIBRARY_PATH $MAKE $MAKEFLAGS install" $module $component
+	failed "$SUDO env LD_LIBRARY_PATH=$LD_LIBRARY_PATH $BUILDCMD_INSTALL" $module $component
 	cd $old_pwd
 	return 1
     fi
