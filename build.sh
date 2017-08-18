@@ -670,12 +670,7 @@ process() {
 	    ${LIBDIR_USER:+--libdir="$LIBDIR"} \
 	    ${LOCALSTATEDIR_USER:+--localstatedir="$LOCALSTATEDIR"} \
 	    ${QUIET:+--quiet} \
-	    ${CONFFLAGS} $confopts \
-	    ${CC:+CC="$CC"} \
-	    ${CPP:+CPP="$CPP"} \
-	    ${CPPFLAGS:+CPPFLAGS="$CPPFLAGS"} \
-	    ${CFLAGS:+CFLAGS="$CFLAGS"} \
-	    ${LDFLAGS:+LDFLAGS="$LDFLAGS"}
+	    ${CONFFLAGS} $confopts
 	if [ $? -ne 0 ]; then
 	    failed ${CONFCMD} $module $component
 	    cd $old_pwd
@@ -1350,6 +1345,7 @@ do
 	;;
     -g)
 	CFLAGS="${CFLAGS} -g3 -O0"
+	export CFLAGS
 	;;
     -h|--help)
 	usage
