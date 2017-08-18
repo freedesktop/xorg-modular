@@ -137,6 +137,8 @@
 #               Each module/components is invoked with --quite
 #   GITROOT     Source code repository path [git://anongit.freedesktop.org/git]
 #               Optional when using --clone to update source code before building
+#   GITCLONEOPTS Options passed to git clone.
+#               Optional when using --clone to update source code before building
 #   CONFFLAGS   Configure options to pass to all Autoconf configure scripts
 #               Refer to 'configure --help' from any module/components
 #
@@ -529,7 +531,7 @@ clone() {
     GITROOT=${GITROOT:="git://anongit.freedesktop.org/git"}
 
     if [ ! -d "$DIR" ]; then
-        git clone "$GITROOT/$BASEDIR$DIR" "$DIR"
+        git clone $GITCLONEOPTS "$GITROOT/$BASEDIR$DIR" "$DIR"
         if [ $? -ne 0 ]; then
             echo "Failed to clone $module${component:+/}$component. Ignoring."
             clonefailed_components="$clonefailed_components $module${component:+/}$component"
