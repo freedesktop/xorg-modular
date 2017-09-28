@@ -125,6 +125,7 @@ git tag: $tag_name
 RELEASE
 
     for tarball in $tarbz2 $targz $tarxz; do
+	tarball=`basename $tarball`
 	cat <<RELEASE
 https://$host_current/$section_path/$tarball
 MD5:  `$MD5SUM $tarball`
@@ -314,6 +315,9 @@ sign_or_fail() {
 #
 process_module() {
 
+    local use_autogen=0
+    local use_meson=0
+
     top_src=`pwd`
     echo ""
     echo "========  Processing \"$top_src/$MODULE_RPATH\""
@@ -361,70 +365,107 @@ process_module() {
 	return 1
     fi
 
-    # If AC_CONFIG_AUX_DIR isn't set, libtool will search down to ../.. for
-    # install-sh and then just guesses that's the aux dir, dumping
-    # config.sub and other files into that directory. make distclean then
-    # complains about leftover files. So let's put our real module dir out
-    # of reach of libtool.
-    #
-    # We use release/$section/$build_dir because git worktree will pick the
-    # last part as branch identifier, so it needs to be random to avoid
-    # conflicts.
-    build_dir="release/$section"
-    mkdir -p "$build_dir"
-
-    # Create tmpdir for the release
-    build_dir=`mktemp -d -p "$build_dir" build.XXXXXXXXXX`
-    if [ $? -ne 0 ]; then
-        echo "Error: could not create a temporary directory for the release"
-        echo "Do you have coreutils' mktemp ?"
-        return 1
-    fi
-
-    # Worktree removal is intentionally left to the user, due to:
-    #  - currently we cannot select only one worktree to prune
-    #  - requires to removal of $build_dir which might contradict with the
-    # user decision to keep some artefacts like tarballs or other
-    echo "Info: creating new git worktree."
-    git worktree add $build_dir
-    if [ $? -ne 0 ]; then
-	echo "Error: failed to create a git worktree."
-	cd $top_src
+    if [ -f autogen.sh ]; then
+	use_autogen=1
+    elif [ -f meson.build ]; then
+	use_meson=1
+    else
+	echo "Cannot find autogen.sh or meson.build"
 	return 1
     fi
 
-    cd $build_dir
-    if [ $? -ne 0 ]; then
-	echo "Error: failed to cd to $MODULE_RPATH/$build_dir."
-	cd $top_src
-	return 1
+    if [ $use_autogen != 0 ]; then
+	# If AC_CONFIG_AUX_DIR isn't set, libtool will search down to ../.. for
+	# install-sh and then just guesses that's the aux dir, dumping
+	# config.sub and other files into that directory. make distclean then
+	# complains about leftover files. So let's put our real module dir out
+	# of reach of libtool.
+	#
+	# We use release/$section/$build_dir because git worktree will pick the
+	# last part as branch identifier, so it needs to be random to avoid
+	# conflicts.
+	build_dir="release/$section"
+	mkdir -p "$build_dir"
+
+	# Create tmpdir for the release
+	build_dir=`mktemp -d -p "$build_dir" build.XXXXXXXXXX`
+	if [ $? -ne 0 ]; then
+	    echo "Error: could not create a temporary directory for the release"
+	    echo "Do you have coreutils' mktemp ?"
+	    return 1
+	fi
+
+	# Worktree removal is intentionally left to the user, due to:
+	#  - currently we cannot select only one worktree to prune
+	#  - requires to removal of $build_dir which might contradict with the
+	# user decision to keep some artefacts like tarballs or other
+	echo "Info: creating new git worktree."
+	git worktree add $build_dir
+	if [ $? -ne 0 ]; then
+	    echo "Error: failed to create a git worktree."
+	    cd $top_src
+	    return 1
+	fi
+
+	cd $build_dir
+	if [ $? -ne 0 ]; then
+	    echo "Error: failed to cd to $MODULE_RPATH/$build_dir."
+	    cd $top_src
+	    return 1
+	fi
+
+	echo "Info: running autogen.sh"
+	./autogen.sh >/dev/null
+
+	if [ $? -ne 0 ]; then
+	    echo "Error: failed to configure module."
+	    cd $top_src
+	    return 1
+	fi
+
+	# Run 'make dist/distcheck' to ensure the tarball matches the git module content
+	# Important to run make dist/distcheck before looking in Makefile, may need to reconfigure
+	echo "Info: running \"make $MAKE_DIST_CMD\" to create tarballs:"
+	${MAKE} $MAKEFLAGS $MAKE_DIST_CMD > /dev/null
+	if [ $? -ne 0 ]; then
+	    echo "Error: \"$MAKE $MAKEFLAGS $MAKE_DIST_CMD\" failed."
+	    cd $top_src
+	    return 1
+	fi
+
+	# Find out the tarname from the makefile
+	pkg_name=`$GREP '^PACKAGE = ' Makefile | sed 's|PACKAGE = ||'`
+	pkg_version=`$GREP '^VERSION = ' Makefile | sed 's|VERSION = ||'`
+	tar_root="."
+    else
+	# meson sets up ninja dist so we don't have to do worktrees and it
+	# has the builddir enabled by default
+	build_dir="builddir"
+	meson $build_dir
+	if [ $? -ne 0 ]; then
+	    echo "Error: failed to configure module."
+	    cd $top_src
+	    return 1
+	fi
+
+	echo "Info: running \"ninja dist\" to create tarballs:"
+	ninja -C $build_dir dist
+	if [ $? -ne 0 ]; then
+	    echo "Error: ninja dist failed"
+	    cd $top_src
+	    return 1
+	fi
+
+	# Find out the package name from the meson.build file
+	pkg_name=`$GREP '^project(' meson.build | sed "s|project([\'\"]\([^\'\"]\+\)[\'\"].*|\1|"`
+	pkg_version=`git describe`
+	tar_root="$build_dir/meson-dist"
     fi
 
-    echo "Info: running autogen.sh"
-    ./autogen.sh >/dev/null
-    if [ $? -ne 0 ]; then
-        echo "Error: failed to configure module."
-        cd $top_src
-        return 1
-    fi
-
-    # Run 'make dist/distcheck' to ensure the tarball matches the git module content
-    # Important to run make dist/distcheck before looking in Makefile, may need to reconfigure
-    echo "Info: running \"make $MAKE_DIST_CMD\" to create tarballs:"
-    ${MAKE} $MAKEFLAGS $MAKE_DIST_CMD > /dev/null
-    if [ $? -ne 0 ]; then
-	echo "Error: \"$MAKE $MAKEFLAGS $MAKE_DIST_CMD\" failed."
-	cd $top_src
-	return 1
-    fi
-
-    # Find out the tarname from the makefile
-    pkg_name=`$GREP '^PACKAGE = ' Makefile | sed 's|PACKAGE = ||'`
-    pkg_version=`$GREP '^VERSION = ' Makefile | sed 's|VERSION = ||'`
     tar_name="$pkg_name-$pkg_version"
-    targz=$tar_name.tar.gz
-    tarbz2=$tar_name.tar.bz2
-    tarxz=$tar_name.tar.xz
+    targz="$tar_root/$tar_name.tar.gz"
+    tarbz2="$tar_root/$tar_name.tar.bz2"
+    tarxz="$tar_root/$tar_name.tar.xz"
 
     [ -e $targz ] && ls -l $targz || unset targz
     [ -e $tarbz2 ] && ls -l $tarbz2 || unset tarbz2
@@ -716,7 +757,9 @@ process_module() {
     else
 	tag_range=$tag_name
     fi
+    pushd "$tar_root"
     generate_announce > "$tar_name.announce"
+    popd
     echo "Info: [ANNOUNCE] template generated in \"$build_dir/$tar_name.announce\" file."
     echo "      Please pgp sign and send it."
 
