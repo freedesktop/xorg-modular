@@ -54,10 +54,6 @@ sanitycheck() {
 sanitycheck MESON 'meson'
 sanitycheck NINJA 'ninja' 'ninja-build'
 
-enable_docs='-Denable-gtk-doc=false'
-enable_man='-Denable-man=false'
-enable_introspection=''
-
 while (($# > 0)); do
     case "${1%%=*}" in
 	--prefix) read_arg prefix "$@" || shift;;
@@ -70,12 +66,6 @@ while (($# > 0)); do
 	--libdir) read_arg libdir "$@" || shift;;
 	--mandir) read_arg mandir "$@" || shift;;
 	--includedir) read_arg includedir "$@" || shift;;
-	--enable-gtk-doc) enable_docs='-Denable-gtk-doc=true';;
-	--disable-gtk-doc) enable_docs='-Denable-gtk-doc=false';;
-	--enable-man) enable_man='-Denable-man=true';;
-	--disable-man) enable_man='-Denable-man=false';;
-	--enable-introspection) enable_introspection='';;
-	--disable-introspection) enable_introspection='-Ddisable_introspection=true';;
 	*) echo -e "\e[1;33mINFO\e[0m: Ignoring unknown option '$1'";;
     esac
     shift
@@ -136,8 +126,6 @@ echo "  sysconfdir:.. ${sysconfdir}"
 echo "  libdir:...... ${libdir}"
 echo "  mandir:...... ${mandir}"
 echo "  includedir:.. ${includedir}"
-echo "  additional:.."
-echo "    - ${enable_docs} ${enable_man} ${enable_introspection}"
 
 exec ${MESON} \
 	--prefix=${prefix} \
@@ -149,9 +137,6 @@ exec ${MESON} \
 	--includedir=${includedir} \
 	--mandir=${mandir} \
 	--default-library shared \
-	${enable_docs} \
-	${enable_man} \
-	${enable_introspection} \
 	${builddir} \
 	${srcdir}
 
