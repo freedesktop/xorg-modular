@@ -1032,36 +1032,7 @@ build_all_modules() {
     build font util
     build doc xorg-sgml-doctools
     build doc xorg-docs
-    case $HOST_OS in
-        Darwin)  build proto applewmproto;;
-        CYGWIN*) build proto windowswmproto;;
-    esac
-    build proto bigreqsproto
-    build proto compositeproto
-    build proto damageproto
-    build proto dmxproto
-    build proto dri2proto
-    build proto dri3proto
-    build proto fixesproto
-    build proto fontsproto
-    build proto glproto
-    build proto inputproto
-    build proto kbproto
-    build proto presentproto
-    build proto randrproto
-    build proto recordproto
-    build proto renderproto
-    build proto resourceproto
-    build proto scrnsaverproto
-    build proto videoproto
-    build proto x11proto
-    build proto xcmiscproto
-    build proto xextproto
-    build proto xf86bigfontproto
-    build proto xf86dgaproto
-    build proto xf86driproto
-    build proto xf86vidmodeproto
-    build proto xineramaproto
+    build proto xorgproto
     build xcb proto
     # Required by mesa and depends on xproto
     build util makedepend
