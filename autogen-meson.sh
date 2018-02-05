@@ -54,6 +54,8 @@ sanitycheck() {
 sanitycheck MESON 'meson'
 sanitycheck NINJA 'ninja' 'ninja-build'
 
+declare -a enables[0]
+
 while (($# > 0)); do
     case "${1%%=*}" in
 	--prefix) read_arg prefix "$@" || shift;;
@@ -66,6 +68,8 @@ while (($# > 0)); do
 	--libdir) read_arg libdir "$@" || shift;;
 	--mandir) read_arg mandir "$@" || shift;;
 	--includedir) read_arg includedir "$@" || shift;;
+	--enable-*) enables+=("-D${1/--enable-/}=true");;
+	--disable-*) enables+=("-D${1/--disable-/}=false");;
 	*) echo -e "\e[1;33mINFO\e[0m: Ignoring unknown option '$1'";;
     esac
     shift
@@ -126,6 +130,7 @@ echo "  sysconfdir:.. ${sysconfdir}"
 echo "  libdir:...... ${libdir}"
 echo "  mandir:...... ${mandir}"
 echo "  includedir:.. ${includedir}"
+echo "  extra:        ${enables[@]}"
 
 exec ${MESON} \
 	--prefix=${prefix} \
@@ -137,6 +142,7 @@ exec ${MESON} \
 	--includedir=${includedir} \
 	--mandir=${mandir} \
 	--default-library shared \
+	"${enables[@]}" \
 	${builddir} \
 	${srcdir}
 
