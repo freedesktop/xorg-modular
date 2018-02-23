@@ -264,8 +264,10 @@ get_section() {
 	if [ $? -ne 0 ]; then
 	    echo "Error: unable to extract section from $module_url second field."
 	    return 1
-	elif [ x"$section" != xdrm ] && [ x"$section" != xmesa ]; then
-	    echo "Error: section $section is not supported, only libdrm and mesa are."
+	elif [ x"$section" != xdrm ] &&
+	     [ x"$section" != xmesa ] &&
+	     [ x"$section" != xdemos ]; then
+	    echo "Error: section $section is not supported, only libdrm, mesa and demos are."
 	    return 1
 	fi
     fi
@@ -585,6 +587,12 @@ process_module() {
     elif [ x"$section" = xmesa ]; then
         host_current=$host_mesa
         section_path=archive
+        srv_path="/srv/$host_current/www/$section_path"
+        list_to=$list_mesa_announce
+        list_cc=$list_mesa_devel
+    elif [ x"$section" = xdemos ]; then
+        host_current=$host_mesa
+        section_path=archive/$section
         srv_path="/srv/$host_current/www/$section_path"
         list_to=$list_mesa_announce
         list_cc=$list_mesa_devel
