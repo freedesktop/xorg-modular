@@ -584,24 +584,10 @@ process_module() {
         list_cc=$list_dri_devel
     elif [ x"$section" = xmesa ]; then
         host_current=$host_mesa
-        mesa_version=`echo $pkg_version | sed 's:-rc.*::'`
         section_path=archive
         srv_path="/srv/$host_current/www/$section_path"
         list_to=$list_mesa_announce
         list_cc=$list_mesa_devel
-
-        # Prior to 17.0.x Mesa uses separate folder for each release
-        if test `echo $mesa_version | cut -d'.' -f1` -lt 17; then
-            section_path=$section_path/$mesa_version
-            srv_path="/srv/$host_current/www/$section_path"
-            echo "Info: creating mesa directory on web server:"
-            ssh $USER_NAME$hostname mkdir -p $srv_path  &>/dev/null
-            if [ $? -ne 0 ]; then
-                echo "Error: cannot create the path \"$srv_path\" on the web server."
-                cd $top_src
-                return 1
-            fi
-        fi
     fi
 
     # Module xkeyboard-config goes in a subdir of the xorg "data" section
