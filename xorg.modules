@@ -65,35 +65,8 @@
   <!-- X11 Protocol & Extensions - Meta Module -->
   <metamodule id="The X11 Protocols">
     <dependencies>
-      <dep package="applewmproto"/>
-      <dep package="bigreqsproto"/>
-      <dep package="compositeproto"/>
-      <dep package="damageproto"/>
-      <dep package="dmxproto"/>
-      <dep package="dri2proto"/>
-      <dep package="dri3proto"/>
-      <dep package="fixesproto"/>
-      <dep package="fontsproto"/>
-      <dep package="glproto"/>
-      <dep package="inputproto"/>
-      <dep package="kbproto"/>
-      <dep package="presentproto"/>
-      <dep package="randrproto"/>
-      <dep package="recordproto"/>
-      <dep package="renderproto"/>
-      <dep package="resourceproto"/>
-      <dep package="scrnsaverproto"/>
-      <dep package="videoproto"/>
-      <dep package="windowswmproto"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="xcb-proto"/>
-      <dep package="xcmiscproto"/>
-      <dep package="xextproto"/>
-      <dep package="xf86bigfontproto"/>
-      <dep package="xf86dgaproto"/>
-      <dep package="xf86driproto"/>
-      <dep package="xf86vidmodeproto"/>
-      <dep package="xineramaproto"/>
     </dependencies>
   </metamodule>
 
@@ -366,250 +339,9 @@
   -->
 
   <!-- X11 Protocol & Extensions - Modules definition -->
-  <autotools id="applewmproto">
-    <branch module="xorg/proto/applewmproto"
-            checkoutdir="xorg/proto/applewmproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="bigreqsproto">
-    <branch module="xorg/proto/bigreqsproto"
-            checkoutdir="xorg/proto/bigreqsproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-    <suggests>
-      <dep package="xorg-sgml-doctools"/>
-    </suggests>
-  </autotools>
-
-  <autotools id="compositeproto">
-    <branch module="xorg/proto/compositeproto"
-            checkoutdir="xorg/proto/compositeproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-      <dep package="fixesproto"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="damageproto">
-    <branch module="xorg/proto/damageproto"
-            checkoutdir="xorg/proto/damageproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-      <dep package="fixesproto"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="dri2proto">
-    <branch module="xorg/proto/dri2proto"
-            checkoutdir="xorg/proto/dri2proto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="dri3proto">
-    <branch module="xorg/proto/dri3proto"
-            checkoutdir="xorg/proto/dri3proto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="dmxproto">
-    <branch module="xorg/proto/dmxproto"
-            checkoutdir="xorg/proto/dmxproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="fixesproto">
-    <branch module="xorg/proto/fixesproto"
-            checkoutdir="xorg/proto/fixesproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-      <dep package="xextproto"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="fontsproto">
-    <branch module="xorg/proto/fontsproto"
-            checkoutdir="xorg/proto/fontsproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-    <suggests>
-      <dep package="xorg-sgml-doctools"/>
-    </suggests>
-  </autotools>
-
-  <autotools id="glproto">
-    <branch module="xorg/proto/glproto"
-            checkoutdir="xorg/proto/glproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="inputproto">
-    <branch module="xorg/proto/inputproto"
-            checkoutdir="xorg/proto/inputproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="kbproto">
-    <branch module="xorg/proto/kbproto"
-            checkoutdir="xorg/proto/kbproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-    <suggests>
-      <dep package="xorg-sgml-doctools"/>
-    </suggests>
-  </autotools>
-
-  <autotools id="presentproto">
-    <branch module="xorg/proto/presentproto"
-            checkoutdir="xorg/proto/presentproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="randrproto">
-    <branch module="xorg/proto/randrproto"
-            checkoutdir="xorg/proto/randrproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-      <dep package="renderproto"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="recordproto">
-    <branch module="xorg/proto/recordproto"
-            checkoutdir="xorg/proto/recordproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-    <suggests>
-      <dep package="xorg-sgml-doctools"/>
-    </suggests>
-  </autotools>
-
-  <autotools id="renderproto">
-    <branch module="xorg/proto/renderproto"
-            checkoutdir="xorg/proto/renderproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="resourceproto">
-    <branch module="xorg/proto/resourceproto"
-            checkoutdir="xorg/proto/resourceproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="scrnsaverproto">
-    <branch module="xorg/proto/scrnsaverproto"
-            checkoutdir="xorg/proto/scrnsaverproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-    <suggests>
-      <dep package="xorg-sgml-doctools"/>
-    </suggests>
-  </autotools>
-
-  <autotools id="videoproto">
-    <branch module="xorg/proto/videoproto"
-            checkoutdir="xorg/proto/videoproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="windowswmproto">
-    <branch module="xorg/proto/windowswmproto"
-            checkoutdir="xorg/proto/windowswmproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="xcmiscproto">
-    <branch module="xorg/proto/xcmiscproto"
-            checkoutdir="xorg/proto/xcmiscproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-    <suggests>
-      <dep package="xorg-sgml-doctools"/>
-    </suggests>
-  </autotools>
-
-  <autotools id="xextproto">
-    <branch module="xorg/proto/xextproto"
-            checkoutdir="xorg/proto/xextproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-    <suggests>
-      <dep package="xorg-sgml-doctools"/>
-    </suggests>
-  </autotools>
-
-  <autotools id="xf86bigfontproto">
-    <branch module="xorg/proto/xf86bigfontproto"
-            checkoutdir="xorg/proto/xf86bigfontproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="xf86dgaproto">
-    <branch module="xorg/proto/xf86dgaproto"
-            checkoutdir="xorg/proto/xf86dgaproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="xf86driproto">
-    <branch module="xorg/proto/xf86driproto"
-            checkoutdir="xorg/proto/xf86driproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="xf86vidmodeproto">
-    <branch module="xorg/proto/xf86vidmodeproto"
-            checkoutdir="xorg/proto/xf86vidmodeproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="xineramaproto">
-    <branch module="xorg/proto/xineramaproto"
-            checkoutdir="xorg/proto/xineramaproto"/>
-    <dependencies>
-      <dep package="util-macros"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="x11proto">
-    <branch module="xorg/proto/x11proto"
-            checkoutdir="xorg/proto/x11proto"/>
+  <autotools id="xorgproto">
+    <branch module="xorg/proto/xorgproto"
+            checkoutdir="xorg/proto/xorgproto"/>
     <dependencies>
       <dep package="util-macros"/>
     <suggests>
@@ -624,8 +356,7 @@
             checkoutdir="xorg/lib/libAppleWM"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="applewmproto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
     </dependencies>
@@ -636,8 +367,7 @@
             checkoutdir="xorg/lib/libFS"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="fontsproto"/>
+      <dep package="xorgproto"/>
       <dep package="libxtrans"/>
     </dependencies>
   </autotools>
@@ -647,7 +377,7 @@
             checkoutdir="xorg/lib/libICE"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libxtrans"/>
     </dependencies>
     <suggests>
@@ -668,7 +398,7 @@
             checkoutdir="xorg/lib/libSM"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libICE"/>
       <dep package="libxtrans"/>
     </dependencies>
@@ -682,12 +412,7 @@
             checkoutdir="xorg/lib/libX11"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="bigreqsproto"/>
-      <dep package="kbproto"/>
-      <dep package="inputproto"/>
-      <dep package="xextproto"/>
-      <dep package="xf86bigfontproto"/>
+      <dep package="xorgproto"/>
       <dep package="libxcb"/>
       <dep package="libxtrans"/>
     </dependencies>
@@ -701,8 +426,7 @@
             checkoutdir="xorg/lib/libXScrnSaver"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="scrnsaverproto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
     </dependencies>
@@ -713,7 +437,7 @@
             checkoutdir="xorg/lib/libXau"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
     </dependencies>
   </autotools>
 
@@ -722,7 +446,7 @@
             checkoutdir="xorg/lib/libXaw"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXt"/>
       <dep package="libXmu"/>
@@ -738,7 +462,7 @@
             checkoutdir="xorg/lib/libXaw3d"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXt"/>
       <dep package="libXmu"/>
@@ -754,8 +478,7 @@
             checkoutdir="xorg/lib/libXcomposite"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="compositeproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXfixes"/>
       <dep package="libXext"/>
@@ -767,7 +490,7 @@
             checkoutdir="xorg/lib/libXcursor"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libXrender"/>
       <dep package="libX11"/>
       <dep package="libXfixes"/>
@@ -779,9 +502,7 @@
             checkoutdir="xorg/lib/libXdamage"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="damageproto"/>
-      <dep package="fixesproto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXfixes"/>
     </dependencies>
@@ -792,7 +513,7 @@
             checkoutdir="xorg/lib/libXdmcp"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
     </dependencies>
     <suggests>
       <dep package="xorg-sgml-doctools"/>
@@ -804,8 +525,7 @@
             checkoutdir="xorg/lib/libXext"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
     </dependencies>
     <suggests>
@@ -818,9 +538,7 @@
             checkoutdir="xorg/lib/libXfixes"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="fixesproto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
     </dependencies>
   </autotools>
@@ -831,8 +549,7 @@
             tag="da4246c98bc51297daeec47c15181e179df94013"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="fontsproto"/>
+      <dep package="xorgproto"/>
       <dep package="libxtrans"/>
       <dep package="libfontenc"/>
       <dep package="libX11"/>
@@ -847,8 +564,7 @@
             checkoutdir="xorg/lib/libXfont"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="fontsproto"/>
+      <dep package="xorgproto"/>
       <dep package="libxtrans"/>
       <dep package="libfontenc"/>
       <dep package="libX11"/>
@@ -863,7 +579,7 @@
             checkoutdir="xorg/lib/libXft"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libXrender"/>
       <dep package="fontconfig"/>
     </dependencies>
@@ -874,9 +590,7 @@
             checkoutdir="xorg/lib/libXi"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="inputproto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
       <dep package="libXfixes"/>
@@ -891,9 +605,7 @@
             checkoutdir="xorg/lib/libXinerama"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="xineramaproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
     </dependencies>
@@ -904,8 +616,7 @@
             checkoutdir="xorg/lib/libXmu"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXt"/>
       <dep package="libXext"/>
@@ -920,8 +631,7 @@
             checkoutdir="xorg/lib/libXpm"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXt"/>
       <dep package="libXext"/>
@@ -933,9 +643,7 @@
             checkoutdir="xorg/lib/libXrandr"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXrender"/>
       <dep package="libXext"/>
@@ -947,8 +655,7 @@
             checkoutdir="xorg/lib/libXrender"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
     </dependencies>
   </autotools>
@@ -958,8 +665,7 @@
             checkoutdir="xorg/lib/libXRes"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="resourceproto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
     </dependencies>
@@ -970,8 +676,7 @@
             checkoutdir="xorg/lib/libXt"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="kbproto"/>
+      <dep package="xorgproto"/>
       <dep package="libSM"/>
       <dep package="libICE"/>
       <dep package="libX11"/>
@@ -986,9 +691,7 @@
             checkoutdir="xorg/lib/libXtst"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="inputproto"/>
-      <dep package="recordproto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
       <dep package="libXi"/>
@@ -1003,8 +706,7 @@
             checkoutdir="xorg/lib/libXv"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="xextproto"/>
-      <dep package="videoproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
     </dependencies>
@@ -1015,8 +717,7 @@
             checkoutdir="xorg/lib/libXvMC"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="xextproto"/>
-      <dep package="videoproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
       <dep package="libXv"/>
@@ -1028,9 +729,7 @@
             checkoutdir="xorg/lib/libXxf86dga"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="xf86dgaproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
     </dependencies>
@@ -1041,9 +740,7 @@
             checkoutdir="xorg/lib/libXxf86vm"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="xf86vidmodeproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
     </dependencies>
@@ -1054,8 +751,7 @@
             checkoutdir="xorg/lib/libdmx"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="dmxproto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
     </dependencies>
@@ -1066,7 +762,7 @@
             checkoutdir="xorg/lib/libfontenc"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="font-util"/>
     </dependencies>
   </autotools>
@@ -1076,7 +772,7 @@
             checkoutdir="xorg/lib/libxkbfile"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="kbproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
     </dependencies>
   </autotools>
@@ -1086,8 +782,7 @@
             checkoutdir="xorg/lib/libxshmfence"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="dri3proto"/>
-      <dep package="presentproto"/>
+      <dep package="xorgproto"/>
     </dependencies>
   </autotools>
 
@@ -1107,8 +802,7 @@
             checkoutdir="xorg/lib/libWindowsWM"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="windowswmproto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
     </dependencies>
@@ -1120,7 +814,7 @@
             checkoutdir="xorg/app/appres"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXt"/>
     </dependencies>
@@ -1140,7 +834,7 @@
             checkoutdir="xorg/app/bitmap"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXaw"/>
       <dep package="libXmu"/>
@@ -1166,7 +860,7 @@
             checkoutdir="xorg/app/iceauth"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libICE"/>
     </dependencies>
   </autotools>
@@ -1194,7 +888,7 @@
             checkoutdir="xorg/app/mkfontscale"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libfontenc"/>
     </dependencies>
   </autotools>
@@ -1204,7 +898,7 @@
             checkoutdir="xorg/app/rendercheck"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXrender"/>
     </dependencies>
@@ -1215,7 +909,7 @@
             checkoutdir="xorg/app/rgb"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
     </dependencies>
   </autotools>
 
@@ -1224,7 +918,7 @@
             checkoutdir="xorg/app/rstart"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
     </dependencies>
   </autotools>
 
@@ -1241,7 +935,7 @@
             checkoutdir="xorg/app/sessreg"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
     </dependencies>
   </autotools>
 
@@ -1272,7 +966,7 @@
             checkoutdir="xorg/app/twm"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libICE"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
@@ -1286,7 +980,7 @@
             checkoutdir="xorg/app/x11perf"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXmu"/>
     </dependencies>
@@ -1302,7 +996,7 @@
             checkoutdir="xorg/app/xauth"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXau"/>
       <dep package="libXext"/>
@@ -1327,7 +1021,7 @@
             checkoutdir="xorg/app/xcalc"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXt"/>
       <dep package="libXaw"/>
@@ -1339,7 +1033,7 @@
             checkoutdir="xorg/app/xclipboard"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXt"/>
       <dep package="libXaw"/>
@@ -1355,7 +1049,7 @@
             checkoutdir="xorg/app/xclock"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXaw"/>
       <dep package="libXmu"/>
@@ -1382,7 +1076,7 @@
             checkoutdir="xorg/app/xconsole"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXaw"/>
       <dep package="libXmu"/>
@@ -1438,7 +1132,7 @@
             checkoutdir="xorg/app/xdpyinfo"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
       <dep package="libXtst"/>
@@ -1460,7 +1154,7 @@
             checkoutdir="xorg/app/xdriinfo"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="glproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="mesa-mesa"/>
     </dependencies>
@@ -1471,7 +1165,7 @@
             checkoutdir="xorg/app/xev"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXrandr"/>
     </dependencies>
@@ -1482,7 +1176,7 @@
             checkoutdir="xorg/app/xeyes"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
       <dep package="libXmu"/>
@@ -1499,7 +1193,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="fontconfig"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libXaw"/>
       <dep package="libXft"/>
       <dep package="libXrender"/>
@@ -1524,7 +1218,7 @@
             checkoutdir="xorg/app/xfs"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libXfont"/>
       <dep package="libxtrans"/>
     </dependencies>
@@ -1535,7 +1229,7 @@
             checkoutdir="xorg/app/xfsinfo"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libFS"/>
     </dependencies>
   </autotools>
@@ -1555,7 +1249,7 @@
             checkoutdir="xorg/app/xhost"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXmu"/>
     </dependencies>
@@ -1566,7 +1260,7 @@
             checkoutdir="xorg/app/xinit"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
     </dependencies>
   </autotools>
@@ -1576,7 +1270,7 @@
             checkoutdir="xorg/app/xinput"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="inputproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
       <dep package="libXi"/>
@@ -1590,7 +1284,7 @@
             checkoutdir="xorg/app/xkbcomp"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libxkbfile"/>
     </dependencies>
@@ -1611,7 +1305,7 @@
             checkoutdir="xorg/app/xkbutils"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXaw"/>
       <dep package="libXt"/>
@@ -1623,7 +1317,7 @@
             checkoutdir="xorg/app/xkill"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXmu"/>
     </dependencies>
@@ -1634,7 +1328,7 @@
             checkoutdir="xorg/app/xload"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXaw"/>
       <dep package="libXmu"/>
@@ -1690,7 +1384,7 @@
             checkoutdir="xorg/app/xmodmap"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
     </dependencies>
   </autotools>
@@ -1700,7 +1394,7 @@
             checkoutdir="xorg/app/xpr"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXmu"/>
     </dependencies>
@@ -1711,7 +1405,7 @@
             checkoutdir="xorg/app/xprop"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
     </dependencies>
   </autotools>
@@ -1721,7 +1415,7 @@
             checkoutdir="xorg/app/xrandr"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXrandr"/>
       <dep package="libXrender"/>
@@ -1733,7 +1427,7 @@
             checkoutdir="xorg/app/xrdb"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXmu"/>
     </dependencies>
@@ -1744,7 +1438,7 @@
             checkoutdir="xorg/app/xrefresh"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
     </dependencies>
   </autotools>
@@ -1754,7 +1448,7 @@
             checkoutdir="xorg/app/xset"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
       <dep package="libXmu"/>
@@ -1766,7 +1460,7 @@
             checkoutdir="xorg/app/xsetroot"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="data-bitmaps"/>
       <dep package="libX11"/>
       <dep package="libXcursor"/>
@@ -1792,7 +1486,7 @@
             checkoutdir="xorg/app/xstdcmap"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXmu"/>
     </dependencies>
@@ -1803,7 +1497,7 @@
             checkoutdir="xorg/app/xvidtune"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXaw"/>
       <dep package="libXmu"/>
@@ -1816,7 +1510,7 @@
             checkoutdir="xorg/app/xvinfo"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXv"/>
     </dependencies>
@@ -1827,7 +1521,7 @@
             checkoutdir="xorg/app/xwd"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
     </dependencies>
     <suggests>
@@ -1840,7 +1534,7 @@
             checkoutdir="xorg/app/xwininfo"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libxcb"/>
     </dependencies>
@@ -1854,7 +1548,7 @@
             checkoutdir="xorg/app/xwud"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
     </dependencies>
   </autotools>
@@ -1884,17 +1578,7 @@
             checkoutdir="xorg/xserver"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="bigreqsproto"/>
-      <dep package="damageproto"/>
-      <dep package="fixesproto"/>
-      <dep package="fontsproto"/>
-      <dep package="inputproto"/>
-      <dep package="kbproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
-      <dep package="x11proto"/>
-      <dep package="xcmiscproto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libXfont"/>
       <dep package="libXfont2"/>
       <dep package="libxtrans"/>
@@ -1905,21 +1589,6 @@
       <dep package="libxshmfence"/>			     <!-- Linux only -->
     </dependencies>
     <suggests>
-      <dep package="compositeproto"/>
-      <dep package="dmxproto"/>
-      <dep package="dri2proto"/>
-      <dep package="dri3proto"/>
-      <dep package="glproto"/>
-      <dep package="presentproto"/>
-      <dep package="recordproto"/>
-      <dep package="resourceproto"/>
-      <dep package="scrnsaverproto"/>
-      <dep package="videoproto"/>
-      <dep package="xf86bigfontproto"/>
-      <dep package="xf86dgaproto"/>
-      <dep package="xf86driproto"/>
-      <dep package="xf86vidmodeproto"/>
-      <dep package="xineramaproto"/>
       <dep package="libXaw"/>
       <dep package="libXdmcp"/>
       <dep package="libXmu"/>
@@ -1939,8 +1608,7 @@
             checkoutdir="xorg/driver/xf86-input-evdev"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="inputproto"/>
+      <dep package="xorgproto"/>
       <dep package="libevdev"/>
       <dep package="mtdev"/>
       <dep package="xserver"/>
@@ -1952,9 +1620,7 @@
             checkoutdir="xorg/driver/xf86-input-joystick"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="inputproto"/>
-      <dep package="kbproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
   </autotools>
@@ -1964,8 +1630,7 @@
             checkoutdir="xorg/driver/xf86-input-keyboard"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="inputproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
   </autotools>
@@ -1975,8 +1640,7 @@
             checkoutdir="xorg/driver/xf86-input-mouse"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="inputproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
   </autotools>
@@ -1986,8 +1650,7 @@
             checkoutdir="xorg/driver/xf86-input-synaptics"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="inputproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXi"/>
       <dep package="xserver"/>
@@ -2000,8 +1663,7 @@
             checkoutdir="xorg/driver/xf86-input-vmmouse"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="inputproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
   </autotools>
@@ -2011,7 +1673,7 @@
             checkoutdir="xorg/driver/xf86-input-void"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
   </autotools>
@@ -2022,11 +1684,7 @@
             checkoutdir="xorg/driver/xf86-video-apm"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libpciaccess"/>
       <dep package="xserver"/>
     </dependencies>
@@ -2040,9 +1698,7 @@
             checkoutdir="xorg/driver/xf86-video-ark"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
@@ -2055,15 +1711,10 @@
             checkoutdir="xorg/driver/xf86-video-ast"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
     </suggests>
   </autotools>
@@ -2073,19 +1724,11 @@
             checkoutdir="xorg/driver/xf86-video-ati"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
-      <dep package="xf86driproto"/>
+      <dep package="xorgproto"/>
       <dep package="mesa-drm"/>
       <dep package="libpciaccess"/>
       <dep package="xserver"/>
     </dependencies>
-    <suggests>
-      <dep package="videoproto"/>
-    </suggests>
   </autotools>
 
   <autotools id="xf86-video-chips">
@@ -2093,17 +1736,10 @@
             checkoutdir="xorg/driver/xf86-video-chips"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="libpciaccess"/>
       <dep package="xserver"/>
     </dependencies>
-    <suggests>
-      <dep package="videoproto"/>
-    </suggests>
   </autotools>
 
   <autotools id="xf86-video-cirrus">
@@ -2111,15 +1747,10 @@
             checkoutdir="xorg/driver/xf86-video-cirrus"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
     </suggests>
   </autotools>
@@ -2129,16 +1760,9 @@
             checkoutdir="xorg/driver/xf86-video-dummy"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
-    <suggests>
-      <dep package="videoproto"/>
-      <dep package="xf86dgaproto"/>
-    </suggests>
   </autotools>
 
   <autotools id="xf86-video-fbdev">
@@ -2146,14 +1770,10 @@
             checkoutdir="xorg/driver/xf86-video-fbdev"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
     </suggests>
   </autotools>
@@ -2163,15 +1783,10 @@
             checkoutdir="xorg/driver/xf86-video-geode"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
     </suggests>
   </autotools>
@@ -2181,14 +1796,10 @@
             checkoutdir="xorg/driver/xf86-video-glint"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
-      <dep package="xf86dgaproto"/>
       <dep package="libpciaccess"/>
     </suggests>
   </autotools>
@@ -2198,15 +1809,10 @@
             checkoutdir="xorg/driver/xf86-video-i128"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
     </suggests>
   </autotools>
@@ -2216,15 +1822,10 @@
             checkoutdir="xorg/driver/xf86-video-i740"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
     </suggests>
   </autotools>
@@ -2234,11 +1835,7 @@
             checkoutdir="xorg/driver/xf86-video-intel"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="libXrender"/>
       <dep package="libXrandr"/>
       <dep package="libXext"/>
@@ -2249,8 +1846,6 @@
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="dri2proto"/>
-      <dep package="xf86driproto"/>
       <dep package="libX11"/>
       <dep package="libXinerama"/>
       <dep package="libXdamage"/>
@@ -2266,16 +1861,10 @@
             checkoutdir="xorg/driver/xf86-video-mach64"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
-      <dep package="xf86driproto"/>
       <dep package="libpciaccess"/>
       <dep package="mesa-drm"/>
     </suggests>
@@ -2286,16 +1875,10 @@
             checkoutdir="xorg/driver/xf86-video-mga"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
-      <dep package="xf86driproto"/>
       <dep package="libpciaccess"/>
       <dep package="mesa-drm"/>
     </suggests>
@@ -2306,11 +1889,7 @@
             checkoutdir="xorg/driver/xf86-video-modesetting"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="libpciaccess"/>
       <dep package="xserver"/>
     </dependencies>
@@ -2324,8 +1903,7 @@
             checkoutdir="xorg/driver/xf86-video-neomagic"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
@@ -2338,10 +1916,7 @@
             checkoutdir="xorg/driver/xf86-video-nested"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
       <dep package="xserver"/>
@@ -2353,19 +1928,11 @@
             checkoutdir="xorg/driver/xf86-video-nouveau"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="libpciaccess"/>
       <dep package="mesa-drm"/>
       <dep package="xserver"/>
     </dependencies>
-    <suggests>
-      <dep package="dri2proto"/>
-      <dep package="videoproto"/>
-    </suggests>
   </autotools>
 
   <autotools id="xf86-video-nv">
@@ -2373,15 +1940,10 @@
             checkoutdir="xorg/driver/xf86-video-nv"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
     </suggests>
   </autotools>
@@ -2391,16 +1953,10 @@
             checkoutdir="xorg/driver/xf86-video-r128"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
-      <dep package="xf86driproto"/>
       <dep package="libpciaccess"/>
       <dep package="mesa-drm"/>
     </suggests>
@@ -2411,11 +1967,7 @@
             checkoutdir="xorg/driver/xf86-video-rendition"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
@@ -2428,15 +1980,10 @@
             checkoutdir="xorg/driver/xf86-video-s3"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
     </suggests>
   </autotools>
@@ -2446,15 +1993,10 @@
             checkoutdir="xorg/driver/xf86-video-s3virge"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
     </suggests>
   </autotools>
@@ -2465,16 +2007,10 @@
     <dependencies>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
-      <dep package="xf86driproto"/>
       <dep package="libpciaccess"/>
       <dep package="mesa-drm"/>
     </suggests>
@@ -2486,13 +2022,10 @@
             checkoutdir="xorg/driver/xf86-video-siliconmotion"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
     </suggests>
   </autotools>
@@ -2502,18 +2035,10 @@
             checkoutdir="xorg/driver/xf86-video-sis"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="xf86dgaproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
-      <dep package="xineramaproto"/>
-      <dep package="xf86driproto"/>
       <dep package="libpciaccess"/>
       <dep package="mesa-drm"/>
     </suggests>
@@ -2524,17 +2049,11 @@
             checkoutdir="xorg/driver/xf86-video-sisusb"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>>
       <dep package="libpciaccess"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
-      <dep package="xineramaproto"/>
       <dep package="mesa-drm"/>
     </suggests>
   </autotools>
@@ -2544,10 +2063,7 @@
             checkoutdir="xorg/driver/xf86-video-suncg14"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
@@ -2559,10 +2075,7 @@
             checkoutdir="xorg/driver/xf86-video-suncg3"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
   </autotools>
@@ -2572,10 +2085,7 @@
             checkoutdir="xorg/driver/xf86-video-suncg6"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
   </autotools>
@@ -2585,10 +2095,7 @@
             checkoutdir="xorg/driver/xf86-video-sunffb"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
   </autotools>
@@ -2598,10 +2105,7 @@
             checkoutdir="xorg/driver/xf86-video-sunleo"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
   </autotools>
@@ -2611,10 +2115,7 @@
             checkoutdir="xorg/driver/xf86-video-suntcx"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
   </autotools>
@@ -2624,16 +2125,10 @@
             checkoutdir="xorg/driver/xf86-video-tdfx"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
-      <dep package="xf86driproto"/>
       <dep package="libpciaccess"/>
       <dep package="mesa-drm"/>
     </suggests>
@@ -2644,16 +2139,10 @@
             checkoutdir="xorg/driver/xf86-video-tga"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="xf86dgaproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
       <dep package="mesa-drm"/>
     </suggests>
@@ -2668,16 +2157,10 @@
     </dependencies>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
-      <dep package="xf86dgaproto"/>
       <dep package="libpciaccess"/>
       <dep package="mesa-drm"/>
     </suggests>
@@ -2688,15 +2171,10 @@
             checkoutdir="xorg/driver/xf86-video-tseng"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
     </suggests>
   </autotools>
@@ -2706,9 +2184,7 @@
             checkoutdir="xorg/driver/xf86-video-v4l"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
-      <dep package="randrproto"/>
-      <dep package="videoproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
   </autotools>
@@ -2718,11 +2194,7 @@
             checkoutdir="xorg/driver/xf86-video-vesa"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
@@ -2735,18 +2207,12 @@
             checkoutdir="xorg/driver/xf86-video-vmware"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
-      <dep package="xineramaproto"/>
       <dep package="libpciaccess"/>
       <dep package="mesa-drm"/>
       <dep package="mesa-mesa"/>
@@ -2758,12 +2224,7 @@
             checkoutdir="xorg/driver/xf86-video-voodoo"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xf86dgaproto"/>
-      <dep package="xextproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
@@ -2777,7 +2238,7 @@
             checkoutdir="xorg/driver/xf86-video-wsfb"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
   </autotools>
@@ -2787,16 +2248,10 @@
             checkoutdir="xorg/driver/xf86-video-xgixp"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="fontsproto"/>
-      <dep package="x11proto"/>
-      <dep package="xextproto"/>
-      <dep package="xf86driproto"/>
-      <dep package="randrproto"/>
-      <dep package="renderproto"/>
+      <dep package="xorgproto"/>
       <dep package="xserver"/>
     </dependencies>
     <suggests>
-      <dep package="videoproto"/>
       <dep package="libpciaccess"/>
       <dep package="mesa-drm"/>
     </suggests>
@@ -3267,7 +2722,7 @@
       <dep package="app-xkbcomp"/>
     </dependencies>
     <suggests>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libX11"/>
     </suggests>
   </autotools>
@@ -3297,7 +2752,7 @@
     <branch module="xcb/util"
             checkoutdir="xcb/xcb-util"/>
     <dependencies>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libxcb"/>
     </dependencies>
   </autotools>
@@ -3305,7 +2760,7 @@
    <autotools id="xcb-util-image">
     <branch module="xcb/util-image" checkoutdir="xcb/xcb-util-image"/>
     <dependencies>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libxcb"/>
       <dep package="xcb-util"/>
     </dependencies>
@@ -3314,7 +2769,7 @@
    <autotools id="xcb-util-keysyms">
     <branch module="xcb/util-keysyms" checkoutdir="xcb/xcb-util-keysyms"/>
     <dependencies>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libxcb"/>
     </dependencies>
    </autotools>
@@ -3338,10 +2793,7 @@
     <branch module="mesa/mesa"
             checkoutdir="mesa/mesa"/>
     <dependencies>
-      <dep package="dri2proto"/>
-      <dep package="glproto"/>
-      <dep package="xextproto"/>
-      <dep package="xf86driproto"/>
+      <dep package="xorgproto"/>
       <dep package="libXdamage"/>
       <dep package="libX11"/>
       <dep package="libXext"/>
@@ -3377,7 +2829,7 @@
             checkoutdir="xorg/util/makedepend"/>
     <dependencies>
       <dep package="util-macros"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
     </dependencies>
   </autotools>
 
@@ -3446,14 +2898,7 @@
   -->
   <metamodule id="olink-docs">
     <dependencies>
-      <dep package="bigreqsproto"/>
-      <dep package="fontsproto"/>
-      <dep package="kbproto"/>
-      <dep package="recordproto"/>
-      <dep package="scrnsaverproto"/>
-      <dep package="xcmiscproto"/>
-      <dep package="xextproto"/>
-      <dep package="x11proto"/>
+      <dep package="xorgproto"/>
       <dep package="libICE"/>
       <dep package="libSM"/>
       <dep package="libX11"/>
