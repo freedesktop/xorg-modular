@@ -152,7 +152,6 @@
       <dep package="app-setxkbmap"/>
       <dep package="app-smproxy"/>
       <dep package="app-twm"/>
-      <dep package="app-x11perf"/>
       <dep package="app-xauth"/>
       <dep package="app-xbacklight"/>
       <dep package="app-xcalc"/>
@@ -974,9 +973,9 @@
     </dependencies>
   </autotools>
 
-  <autotools id="app-x11perf">
-    <branch module="xorg/app/x11perf"
-            checkoutdir="xorg/app/x11perf"/>
+  <autotools id="test-x11perf">
+      <branch module="xorg/test/x11perf"
+            checkoutdir="xorg/test/x11perf"/>
     <dependencies>
       <dep package="util-macros"/>
       <dep package="xorgproto"/>
@@ -2881,6 +2880,7 @@
       <dep package="app-xdpyinfo"/>
       <dep package="app-xset"/>
       <dep package="test-rendercheck"/>
+      <dep package="test-x11perf"/>
     </dependencies>
   </autotools>
 
