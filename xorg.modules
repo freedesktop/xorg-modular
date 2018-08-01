@@ -59,6 +59,7 @@
       <dep package="fontconfig"/>
       <dep package="font-util"/>
       <dep package="xorg-sgml-doctools"/>
+      <dep package="util-bdftopcf"/>
     </dependencies>
   </metamodule>
 
@@ -138,7 +139,6 @@
   <metamodule id="The X11 Applications">
     <dependencies>
       <dep package="app-appres"/>
-      <dep package="app-bdftopcf"/>
       <dep package="app-bitmap"/>
       <dep package="app-editres"/>
       <dep package="app-iceauth"/>
@@ -820,9 +820,9 @@
     </dependencies>
   </autotools>
 
-  <autotools id="app-bdftopcf">
-    <branch module="xorg/app/bdftopcf"
-            checkoutdir="xorg/app/bdftopcf"/>
+  <autotools id="util-bdftopcf">
+    <branch module="xorg/util/bdftopcf"
+            checkoutdir="xorg/util/bdftopcf"/>
     <dependencies>
       <dep package="util-macros"/>
       <dep package="libXfont"/>
@@ -2305,7 +2305,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2317,7 +2317,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2329,7 +2329,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2341,7 +2341,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2353,7 +2353,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2365,7 +2365,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2377,7 +2377,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2389,7 +2389,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2401,7 +2401,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2413,7 +2413,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2425,7 +2425,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2437,7 +2437,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2449,7 +2449,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2461,7 +2461,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2484,7 +2484,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2507,7 +2507,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2519,7 +2519,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2531,7 +2531,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2543,7 +2543,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2555,7 +2555,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2567,7 +2567,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2579,7 +2579,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2591,7 +2591,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2603,7 +2603,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2627,7 +2627,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2639,7 +2639,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2651,7 +2651,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2663,7 +2663,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2675,7 +2675,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2687,7 +2687,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2699,7 +2699,7 @@
     <dependencies>
       <dep package="util-macros"/>
       <dep package="font-util"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontscale"/>
       <dep package="app-mkfontdir"/>
     </dependencies>
@@ -2877,7 +2877,7 @@
       <dep package="libXtst"/>
       <dep package="libXt"/>
       <dep package="libXaw"/>
-      <dep package="app-bdftopcf"/>
+      <dep package="util-bdftopcf"/>
       <dep package="app-mkfontdir"/>
       <dep package="app-xdpyinfo"/>
       <dep package="app-xset"/>
