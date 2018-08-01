@@ -145,7 +145,6 @@
       <dep package="app-luit"/>
       <dep package="app-mkfontdir"/>
       <dep package="app-mkfontscale"/>
-      <dep package="app-rendercheck"/>
       <dep package="app-rgb"/>
       <dep package="app-rstart"/>
       <dep package="app-scripts"/>
@@ -893,9 +892,9 @@
     </dependencies>
   </autotools>
 
-  <meson id="app-rendercheck">
-    <branch module="xorg/app/rendercheck"
-            checkoutdir="xorg/app/rendercheck"/>
+  <meson id="test-rendercheck">
+    <branch module="xorg/test/rendercheck"
+            checkoutdir="xorg/test/rendercheck"/>
     <dependencies>
       <dep package="util-macros"/>
       <dep package="xorgproto"/>
@@ -2881,6 +2880,7 @@
       <dep package="app-mkfontdir"/>
       <dep package="app-xdpyinfo"/>
       <dep package="app-xset"/>
+      <dep package="test-rendercheck"/>
     </dependencies>
   </autotools>
 
