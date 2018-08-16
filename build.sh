@@ -1034,8 +1034,6 @@ build_all_modules() {
     build doc xorg-docs
     build proto xorgproto
     build xcb proto
-    # Required by mesa and depends on xproto
-    build util makedepend
     build lib libxtrans
     build lib libXau
     build lib libXdmcp
@@ -1317,6 +1315,7 @@ build_all_modules() {
     build util imake
     build util gccmakedep
     build util lndir
+    build util makedepend
     build xkeyboard-config ""
     return 0
 }
