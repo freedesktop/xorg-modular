@@ -728,7 +728,7 @@ process() {
     fi
 
 
-    if [ $use_autogen != 0 ] || [ $use_configure != 0]; then
+    if [ $use_autogen != 0 ] || [ $use_configure != 0 ]; then
 	BUILDCMD="${MAKE} $MAKEFLAGS"
 	BUILDCMD_VERBOSE="${BUILDCMD} V=1"
 	BUILDCMD_CHECK="${BUILDCMD} check"
