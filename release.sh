@@ -272,7 +272,7 @@ get_section() {
 	fi
     fi
 
-    if [ x"$section" = xwayland ]; then
+    if [ x"$section" = xwayland -o x"$section" = xxorg ]; then
 	section=`echo $module_url | cut -d'/' -f2`
 	if [ $? -ne 0 ]; then
 	    echo "Error: unable to extract section from $module_url second field."
