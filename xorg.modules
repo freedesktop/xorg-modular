@@ -3,7 +3,7 @@
 <?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
 <moduleset>
   <repository type="git" name="git.freedesktop.org" default="yes"
-              href="git://anongit.freedesktop.org/git/"/>
+              href="https://gitlab.freedesktop.org/"/>
 <!--
 		The X Window System JHBuild Modules List Sample File
 
