@@ -1101,7 +1101,6 @@ build_all_modules() {
     build app listres
     build app luit
     build app mkcomposecache
-    build app mkfontdir
     build app mkfontscale
     build app oclock
     build app rgb
