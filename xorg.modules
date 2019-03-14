@@ -559,7 +559,7 @@
 
   <autotools id="libXfont2">
     <branch module="xorg/lib/libXfont"
-            checkoutdir="xorg/lib/libXfont"/>
+            checkoutdir="xorg/lib/libXfont2"/>
     <dependencies>
       <dep package="util-macros"/>
       <dep package="xorgproto"/>
