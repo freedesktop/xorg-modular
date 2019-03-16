@@ -2,7 +2,7 @@
 <!DOCTYPE moduleset SYSTEM "moduleset.dtd">
 <?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
 <moduleset>
-  <repository type="git" name="git.freedesktop.org" default="yes"
+  <repository type="git" name="gitlab.freedesktop.org" default="yes"
               href="https://gitlab.freedesktop.org/"/>
 <!--
 		The X Window System JHBuild Modules List Sample File
@@ -2682,8 +2682,8 @@
 
   <!-- The X Keyboard Extension -->
   <autotools id="xkeyboard-config">
-    <branch module="xkeyboard-config"
-            checkoutdir="xkeyboard-config"/>
+    <branch module="xkeyboard-config/xkeyboard-config"
+            checkoutdir="xkeyboard-config/xkeyboard-config"/>
     <dependencies>
       <dep package="app-xkbcomp"/>
     </dependencies>
@@ -2695,18 +2695,18 @@
 
   <!--  XCB (X protocol C-language Binding)  Modules Defintion -->
   <autotools id="xcb-pthread-stubs">
-    <branch module="xcb/pthread-stubs"
-            checkoutdir="xcb/pthread-stubs"/>
+    <branch module="xorg/lib/pthread-stubs"
+            checkoutdir="xorg/lib/pthread-stubs"/>
   </autotools>
 
   <autotools id="xcb-proto">
-    <branch module="xcb/proto"
-            checkoutdir="xcb/proto"/>
+    <branch module="xorg/proto/xcbproto"
+            checkoutdir="xorg/proto/xcbproto"/>
   </autotools>
 
   <autotools id="libxcb">
-    <branch module="xcb/libxcb"
-            checkoutdir="xcb/libxcb"/>
+    <branch module="xorg/lib/libxcb"
+            checkoutdir="xorg/lib/libxcb"/>
     <dependencies>
       <dep package="xcb-proto"/>
       <dep package="xcb-pthread-stubs"/>
@@ -2715,8 +2715,8 @@
   </autotools>
 
   <autotools id="xcb-util">
-    <branch module="xcb/util"
-            checkoutdir="xcb/xcb-util"/>
+    <branch module="xorg/lib/libxcb-util"
+            checkoutdir="xorg/lib/libxcb-util"/>
     <dependencies>
       <dep package="xorgproto"/>
       <dep package="libxcb"/>
@@ -2724,7 +2724,7 @@
   </autotools>
 
    <autotools id="xcb-util-image">
-    <branch module="xcb/util-image" checkoutdir="xcb/xcb-util-image"/>
+    <branch module="xorg/lib/libxcb-image" checkoutdir="xorg/lib/libxcb-image"/>
     <dependencies>
       <dep package="xorgproto"/>
       <dep package="libxcb"/>
@@ -2733,7 +2733,7 @@
    </autotools>
 
    <autotools id="xcb-util-keysyms">
-    <branch module="xcb/util-keysyms" checkoutdir="xcb/xcb-util-keysyms"/>
+    <branch module="xorg/lib/libxcb-keysyms" checkoutdir="xorg/lib/libxcb-keysyms"/>
     <dependencies>
       <dep package="xorgproto"/>
       <dep package="libxcb"/>
@@ -2741,14 +2741,14 @@
    </autotools>
 
    <autotools id="xcb-util-renderutil">
-    <branch module="xcb/util-renderutil" checkoutdir="xcb/xcb-util-renderutil"/>
+    <branch module="xorg/lib/libxcb-render-util" checkoutdir="xorg/lib/libxcb-render-util"/>
     <dependencies>
       <dep package="libxcb"/>
     </dependencies>
    </autotools>
 
    <autotools id="xcb-util-wm">
-    <branch module="xcb/util-wm" checkoutdir="xcb/xcb-util-wm"/>
+    <branch module="xorg/lib/libxcb-wm" checkoutdir="xorg/lib/libxcb-wm"/>
     <dependencies>
       <dep package="libxcb"/>
     </dependencies>
@@ -2801,15 +2801,15 @@
 
   <!-- Pixman (Pixel Manipulation Library) - Module Definition -->
   <autotools id="libpixman">
-    <branch module="pixman"
-            checkoutdir="pixman"/>
+    <branch module="pixman/pixman"
+            checkoutdir="pixman/pixman"/>
     <dependencies/>
   </autotools>
 
   <!--  Fontconfig (Font customization and configuration library)  -->
   <autotools id="fontconfig" autogenargs="--disable-docs">
-    <branch module="fontconfig"
-            checkoutdir="fontconfig"/>
+    <branch module="fontconfig/fontconfig"
+            checkoutdir="fontconfig/fontconfig"/>
   </autotools>
 
   <!-- 	Wrapper library for evdev devices -->
