@@ -7,7 +7,7 @@
   <repository type="tarball" name="www.x.org" default="yes"
               href="http://www.x.org/releases/individual/"/>
   <repository type="git" name="git.freedesktop.org"
-              href="https://gitlab.freedesktop.org/"/>
+              href="git://anongit.freedesktop.org/git/"/>
   <repository type="tarball" name="ftp.freedesktop.org"
               href="ftp://ftp.freedesktop.org/pub/"/>
   <repository type="tarball" name="xcb.freedesktop.org"
