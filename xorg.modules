@@ -2755,7 +2755,7 @@
    </autotools>
 
   <!--  The Mesa 3D Graphics Library - Modules Definition -->
-  <autotools id="mesa-mesa" autogenargs="--enable-xa">
+  <meson id="mesa-mesa">
     <branch module="mesa/mesa"
             checkoutdir="mesa/mesa"/>
     <dependencies>
@@ -2771,7 +2771,7 @@
       <dep package="libXvMC"/>
       <dep package="libXxf86vm"/>
     </suggests>
-  </autotools>
+  </meson>
 
   <!-- Mesa DRM accessing the Direct Rendering Manager - Module Definition -->
   <!-- Need nouveau API to build xf86-video-nouveau -->
