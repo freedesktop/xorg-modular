@@ -8,7 +8,8 @@
 #
 #
 
-export LC_ALL=C
+export LC_ALL=en_US.UTF-8
+
 
 #------------------------------------------------------------------------------
 #			Function: check_local_changes
