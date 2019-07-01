@@ -438,6 +438,7 @@ process_module() {
 	pkg_name=`$GREP '^PACKAGE = ' Makefile | sed 's|PACKAGE = ||'`
 	pkg_version=`$GREP '^VERSION = ' Makefile | sed 's|VERSION = ||'`
 	tar_root="."
+	announce_dir=$tar_root
     else
 	# meson sets up ninja dist so we don't have to do worktrees and it
 	# has the builddir enabled by default
@@ -461,6 +462,7 @@ process_module() {
 	pkg_name=`$GREP '^project(' meson.build | sed "s|project([\'\"]\([^\'\"]\+\)[\'\"].*|\1|"`
 	pkg_version=`git describe`
 	tar_root="$build_dir/meson-dist"
+	announce_dir=$tar_root
     fi
 
     tar_name="$pkg_name-$pkg_version"
@@ -761,7 +763,8 @@ process_module() {
     pushd "$tar_root"
     generate_announce > "$tar_name.announce"
     popd
-    echo "Info: [ANNOUNCE] template generated in \"$build_dir/$tar_name.announce\" file."
+
+    echo "Info: [ANNOUNCE] template generated in \"$announce_dir/$tar_name.announce\" file."
     echo "      Please pgp sign and send it."
 
     # --------- Update the JH Build moduleset -----------------
