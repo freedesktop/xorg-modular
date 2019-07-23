@@ -266,8 +266,9 @@ get_section() {
 	    return 1
 	elif [ x"$section" != xdrm ] &&
 	     [ x"$section" != xmesa ] &&
+	     [ x"$section" != xglu ] &&
 	     [ x"$section" != xdemos ]; then
-	    echo "Error: section $section is not supported, only libdrm, mesa and demos are."
+	    echo "Error: section $section is not supported, only libdrm, mesa, glu and demos are."
 	    return 1
 	fi
     fi
@@ -590,7 +591,7 @@ process_module() {
         srv_path="/srv/$host_current/www/$section_path"
         list_to=$list_mesa_announce
         list_cc=$list_mesa_devel
-    elif [ x"$section" = xdemos ]; then
+    elif [ x"$section" = xdemos ] || [ x"$section" = xglu ]; then
         host_current=$host_mesa
         section_path=archive/$section
         srv_path="/srv/$host_current/www/$section_path"
