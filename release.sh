@@ -370,6 +370,11 @@ process_module() {
 	use_autogen=1
     elif [ -f meson.build ]; then
 	use_meson=1
+        which jq >& /dev/null
+        if [ $? -ne 0 ]; then
+            echo "Cannot find required jq(1) to parse project metadata"
+            return 1
+        fi
     else
 	echo "Cannot find autogen.sh or meson.build"
 	return 1
@@ -459,8 +464,8 @@ process_module() {
 	fi
 
 	# Find out the package name from the meson.build file
-	pkg_name=`$GREP '^project(' meson.build | sed "s|project([\'\"]\([^\'\"]\+\)[\'\"].*|\1|"`
-	pkg_version=`git describe`
+        pkg_name=$(meson introspect $build_dir --projectinfo | jq -r .descriptive_name)
+        pkg_version=$(meson introspect $build_dir --projectinfo | jq -r .version)
 	tar_root="$build_dir/meson-dist"
 	announce_dir=$tar_root
     fi
