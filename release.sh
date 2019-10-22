@@ -455,7 +455,7 @@ process_module() {
 	    return 1
 	fi
 
-	echo "Info: running \"ninja dist\" to create tarballs:"
+	echo "Info: running \"ninja dist\" to create tarball:"
 	ninja -C $build_dir dist
 	if [ $? -ne 0 ]; then
 	    echo "Error: ninja dist failed"
@@ -464,8 +464,8 @@ process_module() {
 	fi
 
 	# Find out the package name from the meson.build file
-        pkg_name=$(meson introspect $build_dir --projectinfo | jq -r .descriptive_name)
-        pkg_version=$(meson introspect $build_dir --projectinfo | jq -r .version)
+	pkg_name=$(meson introspect $build_dir --projectinfo | jq -r .descriptive_name)
+	pkg_version=$(meson introspect $build_dir --projectinfo | jq -r .version)
 	tar_root="$build_dir/meson-dist"
 	announce_dir=$tar_root
     fi
