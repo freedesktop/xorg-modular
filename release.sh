@@ -129,8 +129,6 @@ RELEASE
 	tarball=`basename $tarball`
 	cat <<RELEASE
 https://$host_current/$section_path/$tarball
-MD5:  `$MD5SUM $tarball`
-SHA1: `$SHA1SUM $tarball`
 SHA256: `$SHA256SUM $tarball`
 SHA512: `$SHA512SUM $tarball`
 PGP:  https://${host_current}/${section_path}/${tarball}.sig
@@ -740,7 +738,6 @@ process_module() {
 	echo "Info: skipped pushing tag \"$tag_name\" to the remote repository in dry-run mode."
     fi
 
-    MD5SUM=`which md5sum || which gmd5sum`
     SHA1SUM=`which sha1sum || which gsha1sum`
     SHA256SUM=`which sha256sum || which gsha256sum`
     SHA512SUM=`which sha512sum || which gsha512sum`
