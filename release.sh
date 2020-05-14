@@ -446,7 +446,11 @@ process_module() {
 	# meson sets up ninja dist so we don't have to do worktrees and it
 	# has the builddir enabled by default
 	build_dir="builddir"
-	meson $build_dir
+        if [ -e "$build_dir" ]; then
+                meson $build_dir --wipe
+        else
+                meson $build_dir
+        fi
 	if [ $? -ne 0 ]; then
 	    echo "Error: failed to configure module."
 	    cd $top_src
