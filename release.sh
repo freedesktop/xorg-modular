@@ -944,6 +944,14 @@ do
     shift
 done
 
+umask=$(umask)
+if [ "${umask}" != "022" -o "${umask}" != "0022" ]; then
+    echo ""
+    echo "Error: umask is not 022"
+    echo ""
+    exit 1
+fi
+
 # If no modules specified (blank cmd line) display help
 check_modules_specification
 
