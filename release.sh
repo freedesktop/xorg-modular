@@ -949,7 +949,7 @@ do
 done
 
 umask=$(umask)
-if [ "${umask}" != "022" -o "${umask}" != "0022" ]; then
+if [ "${umask}" != "022" -a "${umask}" != "0022" ]; then
     echo ""
     echo "Error: umask is not 022"
     echo ""
