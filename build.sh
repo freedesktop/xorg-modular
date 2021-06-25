@@ -1034,6 +1034,7 @@ build_all_modules() {
     build doc xorg-docs
     build proto xorgproto
     build xcb proto
+    build lib libxcvt
     build lib libxtrans
     build lib libXau
     build lib libXdmcp

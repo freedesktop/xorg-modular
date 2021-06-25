@@ -120,6 +120,7 @@
       <dep package="libpciaccess"/>
       <dep package="libpixman"/>
       <dep package="libxcb"/>
+      <dep package="libxcvt"/>
       <dep package="libxkbfile"/>
       <dep package="libxshmfence"/>
       <dep package="libxtrans"/>
@@ -764,6 +765,11 @@
       <dep package="font-util"/>
     </dependencies>
   </autotools>
+
+  <meson id="libxcvt">
+    <branch module="xorg/lib/libxcvt"
+            checkoutdir="xorg/lib/libxcvt"/>
+  </meson>
 
   <autotools id="libxkbfile">
     <branch module="xorg/lib/libxkbfile"
